@@ -29,11 +29,24 @@ SeriesND::~SeriesND()
 	if (m_series_name != NULL && m_series_name != s_series_name_null)
 		free(m_series_name);
 
+//delete renderer
 	if (m_renderer != NULL)
+	{
+		m_renderer->SetOwner(NULL);
 		delete m_renderer;
+	}
 
+//delete datas
 	for (auto data : m_datas)
+	{
+		if (data == NULL)
+			continue;
+		data->SetOwner(NULL);
 		delete data;
+	}
+
+	if(m_owner_space != NULL)
+		m_owner_space->RemoveSeries(this);
 }
 
 void SeriesND::SetSeriesName(const char * series_name, bool update)
@@ -74,12 +87,18 @@ Renderer * SeriesND::GetRenderer()
 void SeriesND::SetNData(DataNoType * data, AXIS_DIR axis_dir, bool update)
 {
 	wxASSERT(axis_dir < m_dims_count);
-	wxASSERT(axis_dir == data->GetAxisDir());
-	if(m_datas[axis_dir] != NULL)
+
+	if(data != NULL)
+		wxASSERT(axis_dir == data->GetAxisDir());
+
+	if (m_datas[axis_dir] != NULL && m_datas[axis_dir]->GetOwner() != NULL)
+	{
 		delete m_datas[axis_dir];
+	}
 
 	m_datas[axis_dir] = data;
-	data->SetOwner(this);
+	if(data != NULL)
+		data->SetOwner(this);
 
 	if (update)
 		SeriesUpdated();
@@ -100,14 +119,22 @@ void SeriesND::Fit(bool update)
 	}
 
 	if (update)
-		SeriesUpdated();
+	{
+		for (size_t indx = 0; indx < m_owner_space->GetDimsCount(); indx++) //auto axis : m_owner_space->GetAxes())
+		{
+			m_owner_space->GetAxis((AXIS_DIR)indx)->AxisUpdated();
+		}
+	}
 }
 
 void SeriesND::SetRenderer(Renderer2D * renderer2d)
 {
 	assert(renderer2d != NULL);
 	if (m_renderer != NULL)
+	{
+		m_renderer->SetOwner(NULL);
 		delete m_renderer;
+	}
 
 	m_renderer = renderer2d;
 	m_renderer->SetOwner(this);

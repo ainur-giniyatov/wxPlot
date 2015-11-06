@@ -17,7 +17,8 @@ Renderer::Renderer()
 Renderer::~Renderer()
 {
 	DPRINTF("Renderer dtor\n");
-
+	if (m_owner_series != NULL)
+		m_owner_series->SetRenderer(NULL);
 }
 
 void Renderer::SetOwner(SeriesND * series)
@@ -55,7 +56,7 @@ void Renderer2DTyped<T1, T2>::Render(wxGraphicsContext * gc)
 	int width, height;
 
 	assert(m_owner_series != NULL);
-
+	
 	m_owner_series->GetOwner()->GetOwner()->GetSize(&width, &height);
 
 	gc->DrawText("Renderer2DTyped", 10, m_text_pos);
@@ -68,6 +69,12 @@ void Renderer2DTyped<T1, T2>::Render(wxGraphicsContext * gc)
 
 	DataTyped<T1> *xdata = (DataTyped<T1> *)series->GetNData(AXIS_X);
 	DataTyped<T2> *ydata = (DataTyped<T2> *)series->GetNData(AXIS_Y);
+
+	if (xdata == NULL || ydata == NULL)
+	{
+		gc->DrawText("Renderer2DTyped: incosistent series", 10, m_text_pos);
+		return;
+	}
 
 	wxASSERT(xdata->GetSize() == ydata->GetSize());
 	size_t data_size;

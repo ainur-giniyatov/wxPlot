@@ -42,8 +42,13 @@ void MyFrame::m_menuItem_ExitOnMenuSelection(wxCommandEvent & event)
 void MyFrame::m_button1OnButtonClick(wxCommandEvent & event)
 {
 	int datasize = 500;
-	DataTyped<float> *xdata = new DataTyped<float>(AXIS_X, datasize, "TIME");
-	DataTyped<float> *ydata = new DataTyped<float>(AXIS_Y, datasize, "DATA");
+	if (m_plotwindow == NULL)
+	{
+		wxBell();
+		return;
+	}
+	DataTyped<int> *xdata = new DataTyped<int>(AXIS_X, datasize, "TIME");
+	DataTyped<int> *ydata = new DataTyped<int>(AXIS_Y, datasize, "DATA");
 
 	for (int i = 0; i < datasize; i++)
 	{
@@ -65,11 +70,11 @@ void MyFrame::m_button1OnButtonClick(wxCommandEvent & event)
 
 
 	Renderer2D *renderer2d;
-	renderer2d = new Renderer2DTyped<float, float>();
+	renderer2d = new Renderer2DTyped<int, int>();
 
 	series->SetRenderer(renderer2d);
 
-	TimeValueAdaptor<float> *tvadap = new TimeValueAdaptor<float>();
+	TimeValueAdaptor<int> *tvadap = new TimeValueAdaptor<int>();
 	xdata->SetValueAdaptor(tvadap);
 
 	fill_series_choices();
@@ -77,6 +82,12 @@ void MyFrame::m_button1OnButtonClick(wxCommandEvent & event)
 
 void MyFrame::m_button2OnButtonClick(wxCommandEvent & event)
 {
+	if (m_plotwindow == NULL)
+	{
+		wxBell();
+		return;
+	}
+
 	int datasize = 500;
 	DataTyped<float> *xdata = new DataTyped<float>(AXIS_X, datasize, "FTIME");
 	DataTyped<float> *ydata = new DataTyped<float>(AXIS_Y, datasize, "FDATA");
@@ -250,6 +261,28 @@ void MyFrame::m_button_RenameOnButtonClick(wxCommandEvent & event)
 
 void MyFrame::m_button_DeleteOnButtonClick(wxCommandEvent & event)
 {
+	if (m_data != NULL)
+	{
+		delete m_data;
+		m_data = NULL;
+		m_choice_data->Clear();
+		return;
+	}
+
+	if (m_series != NULL)
+	{
+		delete m_series;
+		m_series = NULL;
+		m_choice_series->Clear();
+		return;
+	}
+	if (m_plotwindow != NULL)
+	{
+		m_plotwindow->Destroy();
+		m_plotwindow = NULL;
+		m_choice_plots->Clear();
+		return;
+	}
 }
 
 void MyFrame::OnMouseWheel(wxMouseEvent & event)
@@ -312,7 +345,8 @@ void MyFrame::fill_datas_choices()
 
 	for (auto data : m_series->GetDatas())
 	{
-		m_choice_data->Append(data->GetDataName(), data);
+		if(data != NULL)
+			m_choice_data->Append(data->GetDataName(), data);
 	}
 }
 

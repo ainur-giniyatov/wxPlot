@@ -33,10 +33,14 @@ void SpaceND::RemoveSeries(SeriesND * series, bool update)
 void SpaceND::Clear(bool update)
 {
 	std::vector<SeriesND *> serie(m_serie);
+
+//delete series
 	for (auto series : serie)
 	{
+		series->SetOwner(NULL);
 		delete series;
 	}
+
 	m_serie.clear();
 
 	if (update)
@@ -60,12 +64,11 @@ SpaceND::SpaceND(size_t dims_count)
 
 	m_dims_count = dims_count;
 
-	for (size_t i = 0; i < m_dims_count; i++)
+	m_axes = (Axis **)malloc(sizeof(Axis *) * m_dims_count);
+	for (size_t indx = 0; indx < m_dims_count; indx++)
 	{
-		Axis *axis;
-		axis = new Axis();
-		axis->SetOwner(this);
-		m_axes.push_back(axis);
+		m_axes[indx] = new Axis();
+		m_axes[indx]->SetOwner(this);
 	}
 }
 
@@ -73,13 +76,20 @@ SpaceND::~SpaceND()
 {
 	DPRINTF("SpaceND dtor\n");
 
-	if (m_owner_plot != NULL)
-		m_owner_plot->RemoveSpace(this, false);
 
+//delete all serie
 	Clear(false);
 
-	for (auto axis : m_axes)
-		delete axis;
+//delete all axes
+	for (size_t indx = 0; indx < m_dims_count; indx++)
+		delete m_axes[indx];
+	
+	free(m_axes);
+
+	if (m_owner_plot != NULL)
+		m_owner_plot->RemoveSpace(this, true);
+
+
 }
 
 Axis * SpaceND::GetAxis(AXIS_DIR axis_dir)

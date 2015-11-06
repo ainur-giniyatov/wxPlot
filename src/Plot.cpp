@@ -73,7 +73,10 @@ Plot::~Plot()
 	DPRINTF("Plot dtor\n");
 	std::vector<SpaceND *> spaces(m_spaces);
 	for (auto space : spaces)
+	{
+		space->SetOwner(NULL);
 		delete space;
+	}
 
 	if (m_plot_name != NULL && m_plot_name != s_plotname)
 		free(m_plot_name);

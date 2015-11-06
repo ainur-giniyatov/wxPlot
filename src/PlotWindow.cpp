@@ -15,12 +15,14 @@ END_EVENT_TABLE()
 
 PlotWindow::PlotWindow(wxWindow * parent) :wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER)
 {
+	DPRINTF("PlotWindow: ctor\n");
 	SetName("plot");
 	SetBackgroundStyle(wxBG_STYLE_PAINT);
 }
 
 PlotWindow::~PlotWindow()
 {
+	DPRINTF("PlotWindow: dtor\n");
 }
 
 void PlotWindow::OnPaint(wxPaintEvent & event)

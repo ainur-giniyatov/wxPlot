@@ -2,9 +2,11 @@
 #include "plot_defs.h"
 #include "Series.h"
 #include "Renderer.h"
+#include "Axis.h"
 
 class WXDLLIMPEXP_PLOTLIB SeriesND;
 class WXDLLIMPEXP_PLOTLIB Renderer;
+class WXDLLIMPEXP_PLOTLIB Axis;
 class WXDLLIMPEXP_PLOTLIB Renderer2D;
 template <class T> class WXDLLIMPEXP_PLOTLIB ValueAdaptor;
 
@@ -16,9 +18,11 @@ public:
 
 	AXIS_DIR GetAxisDir() { return m_axis_dir; }
 
-	void SetSeriesName(const char *name, bool update = true);
+	void SetDataName(const char *name, bool update = true);
 	const char *GetDataName() { return m_data_name; }
+	
 	void DataUpdated();
+	
 	void SetOwner(SeriesND *series) { m_owner_series = series; };
 	SeriesND *GetOwner() { return m_owner_series; }
 
@@ -27,6 +31,7 @@ public:
 	void SetMaxMinMode(bool manual, bool update = false);
 	virtual double GetDataMax() = 0;
 	virtual double GetDataMin() = 0;
+	
 	virtual void Fit(bool update = true) = 0;
 
 protected:
@@ -37,6 +42,9 @@ protected:
 
 	bool m_maxmin_manual;
 	AXIS_DIR m_axis_dir;
+
+	//helper funcs
+	Axis *get_adj_axis();
 };
 
 
@@ -59,7 +67,7 @@ public:
 	void SetMaxMinValues(T max, T min, bool update = true);
 	virtual double GetDataMax();
 	virtual double GetDataMin();
-	void SetVisibleRange(double offs, double range, bool update = true);
+	
 	virtual void Fit(bool update = true);
 
 protected:

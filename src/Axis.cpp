@@ -16,6 +16,8 @@ Axis::Axis()
 Axis::~Axis()
 {
 	DPRINTF("Axis dtor\n");
+	if (m_commonscale != NULL)
+		m_commonscale->RemoveAxis(this);
 }
 
 void Axis::AxisUpdated()

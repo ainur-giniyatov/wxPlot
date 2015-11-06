@@ -23,8 +23,10 @@ public:
 
 	Axis *GetAxis(AXIS_DIR axis_dir);
 
+	size_t GetDimsCount() { return m_dims_count; }
 	void AddSeries(SeriesND *series, bool update = true);
 	void RemoveSeries(SeriesND *series, bool update = true);
+
 	void Clear(bool update = true);
 
 	void SpaceUpdated();
@@ -41,6 +43,8 @@ public:
 
 protected:
 	std::vector<SeriesND *> m_serie;
+	Axis ** m_axes;
+
 	Plot *m_owner_plot;
 
 	double m_pan_start_at_rx;
@@ -49,7 +53,6 @@ protected:
 	double m_pan_start_at_vy;
 
 	size_t m_dims_count;//count of dimensions in this space
-	std::vector <Axis *> m_axes;
 
 private:
 

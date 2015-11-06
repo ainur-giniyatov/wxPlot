@@ -9,7 +9,7 @@ DataNoType::DataNoType(AXIS_DIR axis_dir, size_t size, const char *data_name)
 	m_data_name = NULL;
 	m_owner_series = NULL;
 	m_data_size = 0;
-	SetSeriesName(data_name, false);
+	SetDataName(data_name, false);
 
 	m_maxmin_manual = false;
 
@@ -23,11 +23,15 @@ DataNoType::~DataNoType()
 	if (m_data_name != NULL && m_data_name != s_data_name_null)
 		free(m_data_name);
 
-
-
+	if (m_owner_series != NULL)
+	{
+		SeriesND *series = m_owner_series;
+		m_owner_series = NULL;
+		series->SetNData(NULL, m_axis_dir, true);
+	}
 }
 
-void DataNoType::SetSeriesName(const char * name, bool update)
+void DataNoType::SetDataName(const char * name, bool update)
 {
 	if (name != NULL)
 	{
@@ -56,6 +60,15 @@ void DataNoType::SetMaxMinMode(bool manual, bool update)
         DataUpdated();
 }
 
+Axis * DataNoType::get_adj_axis()
+{
+	Axis *axis;
+	wxASSERT(m_owner_series != NULL && m_owner_series->GetOwner() != NULL);
+	axis = m_owner_series->GetOwner()->GetAxis(m_axis_dir);
+	wxASSERT(axis != NULL);
+	return axis;
+}
+
 template<class T>
 DataTyped<T>::DataTyped(AXIS_DIR axis_dir, size_t size, const char *data_name):DataNoType(axis_dir, size, data_name)
 {
@@ -71,8 +84,12 @@ DataTyped<T>::DataTyped(AXIS_DIR axis_dir, size_t size, const char *data_name):D
 template<class T>
 DataTyped<T>::~DataTyped()
 {
-	DPRINTF("DataTyped dtor\n")
+	DPRINTF("DataTyped dtor\n");
+
+//free data arrays
 	Clear(false);
+
+//delete valueadaptor
 	if (m_valueadaptor != NULL)
 		delete m_valueadaptor;
 }
@@ -192,17 +209,6 @@ double DataTyped<T>::GetDataMin()
 	return tmp;
 }
 
-template<class T>
-void DataTyped<T>::SetVisibleRange(double offs, double range, bool update)
-{
-	wxASSERT(range > 0);
-
-	Axis *axis;
-	axis = m_owner_series->GetOwner()->GetAxis(m_axis_dir);
-
-	axis->SetVisibleRange(offs, range, update);
-
-}
 
 template<class T>
 void DataTyped<T>::Fit(bool update)
@@ -215,7 +221,13 @@ void DataTyped<T>::Fit(bool update)
 
 	wxASSERT(maxv > minv);
 
-	SetVisibleRange(minv, maxv - minv, update);
+	range = maxv - minv;
+
+	
+
+	get_adj_axis()->SetVisibleRange(minv, range, update);
+
+	
 
 }
 
