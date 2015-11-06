@@ -1,0 +1,44 @@
+#pragma once
+#include "mainframe.h"
+#include "PlotWindow.h"
+#include "Space.h"
+#include "ChartWindow.h"
+
+class MyFrame :
+	public MainFrame
+{
+public:
+	MyFrame();
+	virtual ~MyFrame();
+
+private:
+	virtual void m_menuItem_ExitOnMenuSelection(wxCommandEvent& event) override;
+	virtual void m_button1OnButtonClick(wxCommandEvent& event) override;
+	virtual void m_button2OnButtonClick(wxCommandEvent& event) override;
+	virtual void m_button3OnButtonClick(wxCommandEvent& event) override;
+	virtual void m_button_newplotOnButtonClick(wxCommandEvent& event) override;
+	virtual void m_choice_plotsOnChoice(wxCommandEvent& event) override;
+	virtual void m_menuItem_timeOnMenuSelection(wxCommandEvent& event) override;
+	virtual void m_menuItem_secsOnMenuSelection(wxCommandEvent& event) override;
+	virtual void m_menuItem_nullOnMenuSelection(wxCommandEvent& event) override;
+	virtual void m_checkBox_connecttoscaleOnCheckBox(wxCommandEvent& event) override;
+	virtual void m_choice_seriesOnChoice(wxCommandEvent& event) override;
+	virtual void m_choice_dataOnChoice(wxCommandEvent& event) override;
+	virtual void m_button_FitOnButtonClick(wxCommandEvent& event) override;
+	virtual void m_button_RenameOnButtonClick(wxCommandEvent& event) override;
+	virtual void m_button_DeleteOnButtonClick(wxCommandEvent& event) override;
+	void OnMouseWheel(wxMouseEvent &event);
+
+
+	ChartWindow *m_chartwindow;
+	PlotWindow *m_plotwindow;
+	SeriesND *m_series;
+	DataNoType *m_data;
+
+	//help functions
+	void fill_plot_choices();
+	void fill_series_choices();
+	void fill_datas_choices();
+	DECLARE_EVENT_TABLE()
+};
+

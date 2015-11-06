@@ -1,0 +1,30 @@
+#pragma once
+#include <wx/window.h>
+#include <wx/panel.h>
+
+#include <wx/graphics.h>
+#include "Plot.h"
+
+class WXDLLIMPEXP_PLOTLIB PlotWindow :
+	  public wxWindow, public Plot //let wxPanel come first!!
+{
+public:
+	PlotWindow(wxWindow *parent);
+	virtual ~PlotWindow();
+
+private:
+	void OnPaint(wxPaintEvent &event);
+	void OnResize(wxSizeEvent &event);
+	void OnLeftDown(wxMouseEvent &event);
+	void OnLeftUp(wxMouseEvent &event);
+	void OnMouseMove(wxMouseEvent &event);
+	void OnMouseWheel(wxMouseEvent &event);
+	void OnMouseCaptureLost(wxMouseCaptureLostEvent &event);
+
+	void Render(wxGraphicsContext *gc);
+    virtual void PlotUpdated();
+
+	virtual void GetSize(int *width, int *height);
+	DECLARE_EVENT_TABLE()
+};
+
