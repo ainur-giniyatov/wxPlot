@@ -98,12 +98,20 @@ void Renderer2DTyped<T1, T2>::Render(wxGraphicsContext * gc)
 	yoffset = yaxis->GetOffset();
 	yrange = yaxis->GetRange();
 
-	for (size_t indx = 0; indx < data_size; indx++)
+	size_t indx = 0;
+	int x1, y1, x2, y2;
+	x1 = ((double)xda[indx] - xoffset) / xrange * (double)width;
+	y1 = ((double)yda[indx] - yoffset) / yrange * (double)height;
+	x2 = ((double)xda[indx + 1] - xoffset) / xrange * (double)width;
+	y2 = ((double)yda[indx + 1] - yoffset) / yrange * (double)height;
+	gc->StrokeLine(x1, y1, x2, y2);
+	for (; indx < data_size - 1; indx++)
 	{
-		int x, y;
-		x = ((double)xda[indx] - xoffset) / xrange * (double)width;
-		y = ((double)yda[indx] - yoffset) / yrange * (double)height;
-		gc->DrawEllipse(x, y, 2, 2);
+		x1 = ((double)xda[indx] - xoffset) / xrange * (double)width;
+		y1 = ((double)yda[indx] - yoffset) / yrange * (double)height;
+		x2 = ((double)xda[indx + 1] - xoffset) / xrange * (double)width;
+		y2 = ((double)yda[indx + 1] - yoffset) / yrange * (double)height;
+		gc->StrokeLine(x1, y1, x2, y2);
 	}
 
 }

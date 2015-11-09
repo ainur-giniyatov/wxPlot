@@ -22,7 +22,7 @@ ChartWindow::ChartWindow(wxWindow *parent, int orientation) :wxPanel(parent, wxI
 
 	if (m_orientation == wxVERTICAL)
 	{
-		m_scale->SetMinClientSize(wxSize(wxDefaultCoord, 55));
+		m_scale->SetMinClientSize(wxSize(wxDefaultCoord, 120));
 		m_sizer->Add(m_scale, 0, wxEXPAND | wxALL, 1);
 	}
 	else
@@ -78,4 +78,12 @@ PlotWindow * ChartWindow::CreatePlotWindow()
 	addplot(plotwindow);
 
 	return plotwindow;
+}
+
+void ChartWindow::DeletePlot(PlotWindow * plot)
+{
+	wxASSERT(plot != NULL);
+	m_mgr.DetachPane(plot);
+	m_mgr.Update();
+	plot->Destroy();
 }

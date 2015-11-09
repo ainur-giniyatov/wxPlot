@@ -28,6 +28,7 @@ public:
 
 	PlotWindow *CreatePlotWindow();
 	ScaleWindow* GetScaleWindow() { return m_scale; }
+	void DeletePlot(PlotWindow *plot);
 private:
 
 	wxSizer *m_sizer;

@@ -57,30 +57,26 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 	int x;
 	bool isbold;
 
-	m_valueadaptor->InitState(m_offset, m_range, m_range / (double)width);
-	double ticker = 0;
+	m_valueadaptor->InitState(m_offset, m_range, 15. / (double)width);
 	gc->SetPen(*wxBLACK_PEN);
-	for (;m_valueadaptor->Step(); ticker = m_valueadaptor->GetTicker())
+
+	while (m_valueadaptor->Step())
 	{
+		double ticker = m_valueadaptor->GetTicker();
 		int tick_len;
-		//ticker = tv;
 		x = (ticker) / m_range * width;
+		if (x < 0)
+			continue;
 		if (x > width)
 			break;
-		tick_len = 5.; // m_scaleticks->GetTickLength();
+		tick_len = 5.; 
 		gc->StrokeLine(x, 0, x, tick_len);
-		//if (m_scaleticks->GetTickText(text, isbold))
-		//{
-		//	if (isbold)
-		//		gc->SetFont(wxNORMAL_FONT->Bold(), *wxBLACK);
-		//	else
-		//		gc->SetFont(*wxNORMAL_FONT, *wxBLACK);
 
-			//dc.GetTextExtent(text, &font_width, &font_height);
 		m_valueadaptor->ValToStr(s_buff, 20, ticker + m_offset);
 		text = s_buff;
-		//gc->DrawText(text, x + fh / 2 + 3, 7, M_PI / 2. * 3.);
-//		}
+
+		gc->DrawText(text, x + fh / 2 + 3, 7, M_PI / 2. * 3.);
+
 	}
 
 	delete gc;

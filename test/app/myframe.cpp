@@ -52,7 +52,7 @@ void MyFrame::m_button1OnButtonClick(wxCommandEvent & event)
 
 	for (int i = 0; i < datasize; i++)
 	{
-		xdata->SetValue(i, i);
+		xdata->SetValue(i + 1447034055, i);
 		ydata->SetValue((int)(sin((double)i / (double)datasize * 10) * 30.) + 50, i);
 	}
 
@@ -278,7 +278,7 @@ void MyFrame::m_button_DeleteOnButtonClick(wxCommandEvent & event)
 	}
 	if (m_plotwindow != NULL)
 	{
-		m_plotwindow->Destroy();
+		m_chartwindow->DeletePlot(m_plotwindow);
 		m_plotwindow = NULL;
 		m_choice_plots->Clear();
 		return;

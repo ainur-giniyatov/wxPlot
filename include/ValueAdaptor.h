@@ -29,9 +29,9 @@ public:
 	virtual size_t ValToStr(char *str, size_t len, T val) = 0;
 	//DataTyped<T> *GetData(){return m_data;}
 
-	void InitState(T offset, T range, T wdth);
-	bool Step();
-	T inline GetTicker() { return m_ticker; }
+	virtual void InitState(T offset, T range, T wdth);
+	virtual bool Step();
+	virtual T GetTicker();
 	virtual double GetStep(double r) = 0;
 	//virtual int GetTickLenght() = 0;
 	//virtual int GetTickWeight() = 0;
@@ -53,9 +53,33 @@ public:
 	virtual ~TimeValueAdaptor();
 	virtual size_t ValToStr(char *str, size_t len, T val);
 
+	virtual void InitState(T offset, T range, T wdth);
+	virtual bool Step();
 	virtual double GetStep(double r);
-
+	virtual T GetTicker();
 protected:
+
+private:
+
+	enum TIME_TICK_GRAN {
+		TIMETICK_1S,
+		TIMETICK_10S,
+		TIMETICK_1MIN,
+		TIMETICK_10MIN,
+		TIMETICK_1H,
+		TIMETICK_6H,
+		TIMETICK_12H,
+		TIMETICK_1DAY,
+		TIMETICK_1WEEK,
+		TIMETICK_1MONTH,
+		TIMETICK_1YEAR,
+		TIMETICK_10YEARS,
+		TIMETICK_20YEARS
+	};
+
+	TIME_TICK_GRAN m_timetick_granularity;
+	time_t time_value_integer;
+	float time_value_fraction;
 };
 
 template<typename T> class WXDLLIMPEXP_PLOTLIB SecsValueAdaptor :public ValueAdaptor<T>

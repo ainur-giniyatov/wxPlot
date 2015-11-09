@@ -1,5 +1,6 @@
 //#include "stdafx.h"
 #include "PlotWindow.h"
+//#include "ChartWindow.h"
 
 #include <wx/dcbuffer.h>
 
@@ -23,6 +24,7 @@ PlotWindow::PlotWindow(wxWindow * parent) :wxWindow(parent, wxID_ANY, wxDefaultP
 PlotWindow::~PlotWindow()
 {
 	DPRINTF("PlotWindow: dtor\n");
+	
 }
 
 void PlotWindow::OnPaint(wxPaintEvent & event)

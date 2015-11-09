@@ -1,13 +1,13 @@
 //#include "stdafx.h"
 #include "Scale.h"
-
+#include <float.h>
 
 Scale::Scale()
 {
 	m_offset = 0.;
 	m_range = 1000.;
 
-	m_range_max = 10000000;
+	m_range_max = DBL_MAX;
 	m_range_min = 3;
 
 	m_valueadaptor = new TimeValueAdaptor<double>();
@@ -113,7 +113,7 @@ void Scale::EndPanAt()
 {
 	DPRINTF("Scale::EndPanAt\n");
 
-	
+
 }
 
 void Scale::SetValueAdaptor(ValueAdaptor<double>* valueadaptor)
