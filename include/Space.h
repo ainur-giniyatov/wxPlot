@@ -5,7 +5,9 @@
 #include "Data.h"
 #include "Axis.h"
 #include "Plot.h"
+#include "Scale.h"
 #include "ValueAdaptor.h"
+#include "Grid.h"
 
 #include <vector>
 
@@ -13,6 +15,7 @@ class WXDLLIMPEXP_PLOTLIB DataNoType;
 class WXDLLIMPEXP_PLOTLIB SeriesND;
 class WXDLLIMPEXP_PLOTLIB Axis;
 class WXDLLIMPEXP_PLOTLIB Plot;
+class WXDLLIMPEXP_PLOTLIB Grid;
 
 
 class WXDLLIMPEXP_PLOTLIB SpaceND
@@ -41,6 +44,8 @@ public:
 	void EndPanAt();
 	void Fit(bool update = true);
 
+	Scale *GetYScale() { return m_yscale; };
+	Grid *GetGrid() { return m_grid; };
 protected:
 	std::vector<SeriesND *> m_serie;
 	Axis ** m_axes;
@@ -54,6 +59,9 @@ protected:
 
 	size_t m_dims_count;//count of dimensions in this space
 
+	Scale *m_yscale;
+
+	Grid *m_grid;
 private:
 
 };

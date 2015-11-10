@@ -10,7 +10,7 @@ Scale::Scale()
 	m_range_max = DBL_MAX;
 	m_range_min = 3;
 
-	m_valueadaptor = new TimeValueAdaptor<double>();
+	m_valueadaptor = new TimeAxisValueAdaptor<double>();
 }
 
 
@@ -116,7 +116,7 @@ void Scale::EndPanAt()
 
 }
 
-void Scale::SetValueAdaptor(ValueAdaptor<double>* valueadaptor)
+void Scale::SetValueAdaptor(AxisValueAdaptor<double>* valueadaptor)
 {
 	if (m_valueadaptor != NULL)
 		delete m_valueadaptor;

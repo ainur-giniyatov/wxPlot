@@ -59,11 +59,11 @@ void Renderer2DTyped<T1, T2>::Render(wxGraphicsContext * gc)
 	
 	m_owner_series->GetOwner()->GetOwner()->GetSize(&width, &height);
 
-	gc->DrawText("Renderer2DTyped", 10, m_text_pos);
+	//gc->DrawText("Renderer2DTyped", 10, m_text_pos);
 
 	gc->SetPen(*wxBLACK_PEN);
 	gc->SetBrush(*wxTRANSPARENT_BRUSH);
-
+	
 	SeriesND *series;
 	series = (SeriesND *)m_owner_series;
 

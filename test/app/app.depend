@@ -1718,18 +1718,19 @@
 	"Space.h"
 	"ChartWindow.h"
 
-1446776438 d:\git-rep\wxplot\include\plotwindow.h
+1447124906 d:\git-rep\wxplot\include\plotwindow.h
 	<wx/window.h>
 	<wx/panel.h>
 	<wx/graphics.h>
 	"Plot.h"
 
-1446785626 d:\git-rep\wxplot\include\plot.h
+1447122649 d:\git-rep\wxplot\include\plot.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
 	"Axis.h"
 	"Space.h"
+	"Scale.h"
 	<vector>
 
 1446771946 d:\git-rep\wxplot\include\plot_defs.h
@@ -2630,13 +2631,13 @@
 	"Renderer.h"
 	"Space.h"
 
-1446806184 d:\git-rep\wxplot\include\data.h
+1447129360 d:\git-rep\wxplot\include\data.h
 	"plot_defs.h"
 	"Series.h"
 	"Renderer.h"
 	"Axis.h"
 
-1446770662 d:\git-rep\wxplot\include\renderer.h
+1447129631 d:\git-rep\wxplot\include\renderer.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2654,7 +2655,7 @@
 	"Renderer.h"
 	"Scale.h"
 
-1446770601 d:\git-rep\wxplot\include\scale.h
+1447129561 d:\git-rep\wxplot\include\scale.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2664,13 +2665,15 @@
 	"ValueAdaptor.h"
 	<vector>
 
-1446811919 d:\git-rep\wxplot\include\space.h
+1447134846 d:\git-rep\wxplot\include\space.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
 	"Axis.h"
 	"Plot.h"
+	"Scale.h"
 	"ValueAdaptor.h"
+	"Grid.h"
 	<vector>
 
 1446820952 d:\git-rep\wxplot\include\chartwindow.h
@@ -2851,7 +2854,7 @@
 	"Data.h"
 	"Space.h"
 
-1447034391 d:\git-rep\wxplot\include\valueadaptor.h
+1447127860 d:\git-rep\wxplot\include\valueadaptor.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -5718,5 +5721,13 @@
 	"myframe.h"
 	"Series.h"
 	"Data.h"
+	"Space.h"
+
+1447122074 d:\git-rep\wxplot\include\grid.h
+	<wx/graphics.h>
+	"plot_defs.h"
+	"Series.h"
+	"Renderer.h"
+	"Axis.h"
 	"Space.h"
 

@@ -8,7 +8,8 @@ class WXDLLIMPEXP_PLOTLIB SeriesND;
 class WXDLLIMPEXP_PLOTLIB Renderer;
 class WXDLLIMPEXP_PLOTLIB Axis;
 class WXDLLIMPEXP_PLOTLIB Renderer2D;
-template <class T> class WXDLLIMPEXP_PLOTLIB ValueAdaptor;
+class WXDLLIMPEXP_PLOTLIB AxisAdaptor;
+template <class T> class WXDLLIMPEXP_PLOTLIB AxisValueAdaptor;
 
 class WXDLLIMPEXP_PLOTLIB DataNoType
 {
@@ -61,8 +62,8 @@ public:
 
 	T *GetDataArray() { return m_data; }
 
-	ValueAdaptor<T> *GetValueAdaptor();
-	void SetValueAdaptor(ValueAdaptor<T> *valueadaptor, bool update = false);
+	AxisValueAdaptor<T> *GetValueAdaptor();
+	void SetValueAdaptor(AxisValueAdaptor<T> *valueadaptor, bool update = false);
 
 	void SetMaxMinValues(T max, T min, bool update = true);
 	virtual double GetDataMax();
@@ -76,7 +77,7 @@ protected:
 	T m_manual_max;
 	T m_manual_min;
 
-	ValueAdaptor<T> *m_valueadaptor;
+	AxisValueAdaptor<T> *m_valueadaptor;
 
 
 };

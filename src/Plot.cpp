@@ -87,9 +87,11 @@ void Plot::FitPlot(bool update)
 	if (m_spaces.empty())
 		return;
 
-	for (auto space : m_spaces)
-	{
-		space->Fit(false);
+	//TO DO correct for fitting all spaces alltogether
+//	for (auto space : m_spaces)
+//	{
+		m_spaces[0]->Fit(false);
+		m_spaces[0]->GetAxis(AXIS_X)->AxisUpdated();
 		/*for (auto series : space->GetSerie())
 		{
 			for (auto data : series->GetDatas())
@@ -97,10 +99,13 @@ void Plot::FitPlot(bool update)
 
 			}
 		}*/
-	}
+//	}
 
 	if (update)
+	{
 		PlotUpdated();
+		
+	}
 }
 
 void Plot::StartPan(double start_rx, double start_ry)
@@ -145,3 +150,5 @@ void Plot::ZoomWheel(double rx, double ry, double xfactor, double yfactor)
 		space->ZoomAt(rx, ry, xfactor, yfactor);
 	}
 }
+
+

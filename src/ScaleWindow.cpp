@@ -72,7 +72,7 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 		tick_len = 5.; 
 		gc->StrokeLine(x, 0, x, tick_len);
 
-		m_valueadaptor->ValToStr(s_buff, 20, ticker + m_offset);
+		m_valueadaptor->ValToStr(s_buff, 20);
 		text = s_buff;
 
 		gc->DrawText(text, x + fh / 2 + 3, 7, M_PI / 2. * 3.);

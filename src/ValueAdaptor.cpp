@@ -3,84 +3,82 @@
 #include <time.h>
 //#include <math.h>
 
-template<class T> ValueAdaptor<T>::ValueAdaptor()
-{
-	DPRINTF("ValueAdaptor ctor\n");
-	m_data = NULL;
-
-}
-
-template<typename T>
-void ValueAdaptor<T>::SetData(DataTyped<T>* data)
-{
-	m_data = data;
-}
-
-
-template<class T> ValueAdaptor<T>::~ValueAdaptor()
-{
-	DPRINTF("ValueAdaptor dtor\n");
-//	m_data->SetValueAdaptor(NULL); causes loop
-}
-
-template<typename T>
-size_t ValueAdaptor<T>::ConvertToStr(char * str, size_t len, size_t indx)
-{
-	wxASSERT(indx < ValueAdaptor<T>::m_data->GetSize());
-
-	T *data;
-	data = ValueAdaptor<T>::m_data->GetDataArray();
-	T val = data[indx];
-	return ValToStr(str, len, val);
-}
-
-template<typename T>
-void ValueAdaptor<T>::InitState(T offset, T range, T wdth)
+void AxisAdaptor::InitState(double offset, double range, double wdth)
 {
 	m_offset = offset;
 	m_range = range;
 	m_step = GetStep(wdth);
 	m_ticker = -fmod(m_offset, m_step);//(int)(m_offset / m_step) * m_step - m_offset;
-	if(m_offset < 0)
-        m_ticker -= m_step;
+	if (m_offset < 0)
+		m_ticker -= m_step;
+
 }
 
-template<typename T>
-bool ValueAdaptor<T>::Step()
+bool AxisAdaptor::Step()
 {
-	if(m_ticker > m_range)
+	if (m_ticker > m_range)
 		return false;
 
 	m_ticker += m_step;
 	return true;
 }
 
-template<typename T>
-T ValueAdaptor<T>::GetTicker()
+template<class T> AxisValueAdaptor<T>::AxisValueAdaptor()
 {
-	return m_ticker;
-}
+	DPRINTF("AxisValueAdaptor ctor\n");
+	m_data = NULL;
 
-template<class T>
-TimeValueAdaptor<T>::TimeValueAdaptor()
-{
-	DPRINTF("TimeValueAdaptor ctor\n");
-
-}
-
-template<class T>
-TimeValueAdaptor<T>::~TimeValueAdaptor()
-{
-	DPRINTF("TimeValueAdaptor dtor\n");
 }
 
 template<typename T>
-size_t TimeValueAdaptor<T>::ValToStr(char * str, size_t len, T val)
+void AxisValueAdaptor<T>::SetData(DataTyped<T>* data)
+{
+	m_data = data;
+}
+
+
+template<class T> AxisValueAdaptor<T>::~AxisValueAdaptor()
+{
+	DPRINTF("AxisValueAdaptor dtor\n");
+//	m_data->SetValueAdaptor(NULL); causes loop
+}
+
+template<typename T>
+size_t AxisValueAdaptor<T>::ConvertToStr(char * str, size_t len, size_t indx)
+{
+	wxASSERT(indx < AxisValueAdaptor<T>::m_data->GetSize());
+
+	T *data;
+	data = AxisValueAdaptor<T>::m_data->GetDataArray();
+	T val = data[indx];
+	return ValToStr(str, len, val);
+}
+
+
+
+
+
+
+template<class T>
+TimeAxisValueAdaptor<T>::TimeAxisValueAdaptor()
+{
+	DPRINTF("TimeAxisValueAdaptor ctor\n");
+
+}
+
+template<class T>
+TimeAxisValueAdaptor<T>::~TimeAxisValueAdaptor()
+{
+	DPRINTF("TimeAxisValueAdaptor dtor\n");
+}
+
+template<typename T>
+size_t TimeAxisValueAdaptor<T>::ValToStr(char * str, size_t len)
 {
     int rlen;
-    if(val >=0)
+	time_t tv = time_value_integer + AxisValueAdaptor<T>::m_offset;
+    if((T)time_value_integer + AxisValueAdaptor<T>::m_offset >= 0)
 	{
-	    time_t tv = time_value_integer + ValueAdaptor<T>::m_offset;
         struct tm tmstruct;
         memset(&tmstruct, 0, sizeof(struct tm));
         memcpy(&tmstruct, gmtime(&tv), sizeof(struct tm));
@@ -94,17 +92,22 @@ size_t TimeValueAdaptor<T>::ValToStr(char * str, size_t len, T val)
 }
 
 template<typename T>
-void TimeValueAdaptor<T>::InitState(T offset, T range, T wdth)
+size_t TimeAxisValueAdaptor<T>::ValToStr(char * str, size_t len, T val)
 {
-	ValueAdaptor<T>::m_offset = offset;
-	ValueAdaptor<T>::m_range = range;
+	wxASSERT(0);
+	return size_t();
+}
+
+template<typename T>
+void TimeAxisValueAdaptor<T>::InitState(double offset, double range, double wdth)
+{
+	AxisValueAdaptor<T>::m_offset = offset;
+	AxisValueAdaptor<T>::m_range = range;
 
 	m_timetick_granularity = TIMETICK_20YEARS;
 	double r;
-	r = wdth * ValueAdaptor<T>::m_range;
-	//if (r < 0.1)
-	//	m_timetick_granularity = TIMETICK_1S;
-	//else
+	r = wdth * AxisValueAdaptor<T>::m_range;
+
 	if (r < 1)
 		m_timetick_granularity = TIMETICK_1S;
 	else
@@ -144,29 +147,30 @@ void TimeValueAdaptor<T>::InitState(T offset, T range, T wdth)
 													if (r < 60 * 60 * 24 * 365 * 20)
 														m_timetick_granularity = TIMETICK_20YEARS;
 
-	ValueAdaptor<T>::m_step = GetStep(wdth);
-	ValueAdaptor<T>::m_ticker = -fmod(ValueAdaptor<T>::m_offset, ValueAdaptor<T>::m_step);//(int)(m_offset / m_step) * m_step - m_offset;
-	time_value_integer = ValueAdaptor<T>::m_ticker;
-	time_value_fraction = fmod(ValueAdaptor<T>::m_ticker, 1);
+	AxisValueAdaptor<T>::m_step = GetStep(wdth);
+	AxisValueAdaptor<T>::m_ticker = -fmod(AxisValueAdaptor<T>::m_offset, AxisValueAdaptor<T>::m_step);
+	
+	if (AxisValueAdaptor<T>::m_offset <= 0)
+		AxisValueAdaptor<T>::m_ticker -= AxisValueAdaptor<T>::m_step ;
 
+	time_value_integer = AxisValueAdaptor<T>::m_ticker;
+	time_value_fraction = fmod(AxisValueAdaptor<T>::m_ticker, 1);
 
-	if (ValueAdaptor<T>::m_offset < 0)
-		time_value_integer -= ValueAdaptor<T>::m_step - 1;
-
+	//printf("step = %f int = %i frac = %f\n", AxisValueAdaptor<T>::m_step, (int)time_value_integer, time_value_fraction);
 }
 
 template<typename T>
-bool TimeValueAdaptor<T>::Step()
+bool TimeAxisValueAdaptor<T>::Step()
 {
-	if ((time_value_integer + time_value_fraction)> ValueAdaptor<T>::m_range)
+	if ((time_value_integer + time_value_fraction)> AxisValueAdaptor<T>::m_range)
 		return false;
 
-	time_value_integer += ValueAdaptor<T>::m_step;
+	time_value_integer += AxisValueAdaptor<T>::m_step;
 	return true;
 }
 
 template<typename T>
-double TimeValueAdaptor<T>::GetStep(double r)
+double TimeAxisValueAdaptor<T>::GetStep(double r)
 {
 	T rval;
 	switch (m_timetick_granularity) {
@@ -217,37 +221,49 @@ double TimeValueAdaptor<T>::GetStep(double r)
 }
 
 template<typename T>
-T TimeValueAdaptor<T>::GetTicker()
+double TimeAxisValueAdaptor<T>::GetTicker()
 {
-	return time_value_integer + time_value_fraction;
+	return (T)time_value_integer + (T)time_value_fraction;
 }
 
+//
+//template<typename T>
+//SecsAxisValueAdaptor<T>::SecsAxisValueAdaptor()
+//{
+//	DPRINTF("SecsAxisValueAdaptor ctor\n");
+//}
+//
+//template<typename T>
+//SecsAxisValueAdaptor<T>::~SecsAxisValueAdaptor()
+//{
+//	DPRINTF("SecsAxisValueAdaptor dtor\n");
+//}
+//
+//template<typename T>
+//size_t SecsAxisValueAdaptor<T>::ValToStr(char * str, size_t len, T val)
+//{
+//	wxASSERT(0);
+//	return size_t();
+//}
+//
+//
+//template<typename T>
+//size_t SecsAxisValueAdaptor<T>::ValToStr(char * str, size_t len)
+//{
+//	float val;
+//	val = m_offset + m_ticker;
+//	if (val >= 0)
+//		sprintf(str, "%.0f", val);
+//	else
+//		str[0] = '\0';
+//	return 0;
+//}
+//
+//template<typename T>
+//double SecsAxisValueAdaptor<T>::GetStep(double r)
+//{
+//	return 1.0;
+//}
 
-template<typename T>
-SecsValueAdaptor<T>::SecsValueAdaptor()
-{
-	DPRINTF("SecsValueAdaptor ctor\n");
-}
-
-template<typename T>
-SecsValueAdaptor<T>::~SecsValueAdaptor()
-{
-	DPRINTF("SecsValueAdaptor dtor\n");
-}
 
 
-template<typename T>
-size_t SecsValueAdaptor<T>::ValToStr(char * str, size_t len, T val)
-{
-	if (val >= 0)
-		sprintf(str, "%.0f", val);
-	else
-		str[0] = '\0'; //strcpy(str, "NEG");
-	return 0;
-}
-
-template<typename T>
-double SecsValueAdaptor<T>::GetStep(double r)
-{
-	return 1.0;
-}

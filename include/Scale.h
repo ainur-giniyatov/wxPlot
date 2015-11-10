@@ -17,7 +17,7 @@ class WXDLLIMPEXP_PLOTLIB Plot;
 class WXDLLIMPEXP_PLOTLIB Axis;
 class WXDLLIMPEXP_PLOTLIB SpaceND;
 class WXDLLIMPEXP_PLOTLIB Renderer;
-template<typename T> class WXDLLIMPEXP_PLOTLIB ValueAdaptor;
+template<typename T> class WXDLLIMPEXP_PLOTLIB AxisValueAdaptor;
 
 class WXDLLIMPEXP_PLOTLIB Scale
 {
@@ -38,8 +38,8 @@ public:
 	void ProceedPanAt(double rv);
 	void EndPanAt();
 
-	void SetValueAdaptor(ValueAdaptor<double > *valueadaptor);
-
+	void SetValueAdaptor(AxisValueAdaptor<double > *valueadaptor);
+	AxisValueAdaptor<double> *GetValueAdaptor() { return m_valueadaptor; }
 	void SetRangeLimits(double max, double min, bool update = true);
 	bool IsInRange(double new_range);
 	double inline GetRangeMax() { return m_range_max; };
@@ -56,6 +56,6 @@ protected:
 	double m_pan_start_at_rv;
 	double m_pan_start_at_vv;
 
-	ValueAdaptor<double> *m_valueadaptor;
+	AxisValueAdaptor<double> *m_valueadaptor;
 };
 

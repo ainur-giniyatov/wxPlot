@@ -1,6 +1,6 @@
 //#include "stdafx.h"
 #include "PlotWindow.h"
-//#include "ChartWindow.h"
+#include "ChartWindow.h"
 
 #include <wx/dcbuffer.h>
 
@@ -37,6 +37,7 @@ void PlotWindow::OnPaint(wxPaintEvent & event)
 	Render(gc);
 
 	delete gc;
+
 }
 
 void PlotWindow::OnResize(wxSizeEvent & event)
@@ -104,6 +105,16 @@ void PlotWindow::Render(wxGraphicsContext * gc)
 	int w, h;
 	GetClientSize(&w, &h);
 	gc->DrawText(m_plot_name, w - 30, 2);
+	gc->SetAntialiasMode(wxANTIALIAS_NONE);
+	if (m_spaces.empty())
+		return;
+//render grid
+	Grid *grid;
+	grid = m_spaces[0]->GetGrid();
+	wxASSERT(grid != NULL);
+	grid->Render(gc);
+
+	
 //render data
 	for (auto space : m_spaces)
 	{
@@ -115,6 +126,7 @@ void PlotWindow::Render(wxGraphicsContext * gc)
 			renderer->Render(gc);
 		}
 	}
+
 }
 
 void PlotWindow::PlotUpdated()
@@ -126,6 +138,11 @@ void PlotWindow::PlotUpdated()
 void PlotWindow::GetSize(int * width, int * height)
 {
 	GetClientSize(width, height);
+}
+
+Scale * PlotWindow::GetCommonScale()
+{
+	return ((ChartWindow *)(GetParent()->GetParent()))->GetScaleWindow();
 }
 
 void PlotWindow::OnMouseCaptureLost(wxMouseCaptureLostEvent &event)

@@ -267,6 +267,7 @@
     <ClInclude Include="..\include\Axis.h" />
     <ClInclude Include="..\include\ChartWindow.h" />
     <ClInclude Include="..\include\Data.h" />
+    <ClInclude Include="..\include\Grid.h" />
     <ClInclude Include="..\include\Plot.h" />
     <ClInclude Include="..\include\PlotWindow.h" />
     <ClInclude Include="..\include\plot_defs.h" />
@@ -282,6 +283,7 @@
     <ClCompile Include="..\src\Axis.cpp" />
     <ClCompile Include="..\src\ChartWindow.cpp" />
     <ClCompile Include="..\src\Data.cpp" />
+    <ClCompile Include="..\src\Grid.cpp" />
     <ClCompile Include="..\src\Plot.cpp" />
     <ClCompile Include="..\src\PlotWindow.cpp" />
     <ClCompile Include="..\src\Renderer.cpp" />

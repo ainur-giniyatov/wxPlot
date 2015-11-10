@@ -2558,13 +2558,13 @@
 	"Renderer.h"
 	"Space.h"
 
-1446806184 d:\git-rep\wxplot\include\data.h
+1447129360 d:\git-rep\wxplot\include\data.h
 	"plot_defs.h"
 	"Series.h"
 	"Renderer.h"
 	"Axis.h"
 
-1446770662 d:\git-rep\wxplot\include\renderer.h
+1447129631 d:\git-rep\wxplot\include\renderer.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2574,12 +2574,13 @@
 	"ValueAdaptor.h"
 	<wx/graphics.h>
 
-1446785626 d:\git-rep\wxplot\include\plot.h
+1447122649 d:\git-rep\wxplot\include\plot.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
 	"Axis.h"
 	"Space.h"
+	"Scale.h"
 	<vector>
 
 1446811412 d:\git-rep\wxplot\include\axis.h
@@ -2590,7 +2591,7 @@
 	"Renderer.h"
 	"Scale.h"
 
-1446770601 d:\git-rep\wxplot\include\scale.h
+1447129561 d:\git-rep\wxplot\include\scale.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2600,13 +2601,15 @@
 	"ValueAdaptor.h"
 	<vector>
 
-1446811919 d:\git-rep\wxplot\include\space.h
+1447134846 d:\git-rep\wxplot\include\space.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
 	"Axis.h"
 	"Plot.h"
+	"Scale.h"
 	"ValueAdaptor.h"
+	"Grid.h"
 	<vector>
 
 1446809785 source:d:\git-rep\wxplot\src\axis.cpp
@@ -2776,7 +2779,7 @@
 	"wx/icon.h"
 	"wx/aui/auibook.h"
 
-1446776438 d:\git-rep\wxplot\include\plotwindow.h
+1447124906 d:\git-rep\wxplot\include\plotwindow.h
 	<wx/window.h>
 	<wx/panel.h>
 	<wx/graphics.h>
@@ -2829,7 +2832,7 @@
 	"ValueAdaptor.h"
 	<time.h>
 
-1447034391 d:\git-rep\wxplot\include\valueadaptor.h
+1447127860 d:\git-rep\wxplot\include\valueadaptor.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -5818,4 +5821,12 @@
 	"ValueAdaptor.h"
 	<time.h>
 	<math.h>
+
+1447122074 d:\git-rep\wxplot\include\grid.h
+	<wx/graphics.h>
+	"plot_defs.h"
+	"Series.h"
+	"Renderer.h"
+	"Axis.h"
+	"Space.h"
 

@@ -74,7 +74,7 @@ void MyFrame::m_button1OnButtonClick(wxCommandEvent & event)
 
 	series->SetRenderer(renderer2d);
 
-	TimeValueAdaptor<int> *tvadap = new TimeValueAdaptor<int>();
+	TimeAxisValueAdaptor<int> *tvadap = new TimeAxisValueAdaptor<int>();
 	xdata->SetValueAdaptor(tvadap);
 
 	fill_series_choices();
@@ -187,14 +187,14 @@ void MyFrame::m_choice_plotsOnChoice(wxCommandEvent & event)
 
 void MyFrame::m_menuItem_timeOnMenuSelection(wxCommandEvent & event)
 {
-	ValueAdaptor<double> *tvadaptor = new TimeValueAdaptor<double>();
+	TimeAxisValueAdaptor<double> *tvadaptor = new TimeAxisValueAdaptor<double>();
 	m_chartwindow->GetScaleWindow()->SetValueAdaptor(tvadaptor);
 }
 
 void MyFrame::m_menuItem_secsOnMenuSelection(wxCommandEvent & event)
 {
-	ValueAdaptor<double> *tvadaptor = new SecsValueAdaptor<double>();
-	m_chartwindow->GetScaleWindow()->SetValueAdaptor(tvadaptor);
+	//ValueAdaptor<double> *tvadaptor = new SecsValueAdaptor<double>();
+	//m_chartwindow->GetScaleWindow()->SetValueAdaptor(tvadaptor);
 }
 
 void MyFrame::m_menuItem_nullOnMenuSelection(wxCommandEvent & event)

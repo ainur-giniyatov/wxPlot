@@ -70,6 +70,13 @@ SpaceND::SpaceND(size_t dims_count)
 		m_axes[indx] = new Axis();
 		m_axes[indx]->SetOwner(this);
 	}
+
+
+	//TO DO: redesign scales
+	m_yscale = new Scale();
+	m_axes[AXIS_Y]->SetCommonScale(m_yscale);
+
+	m_grid = new Grid(this);
 }
 
 SpaceND::~SpaceND()
@@ -89,7 +96,9 @@ SpaceND::~SpaceND()
 	if (m_owner_plot != NULL)
 		m_owner_plot->RemoveSpace(this, true);
 
-
+//delete y axis scale
+	delete m_yscale;
+	delete m_grid;
 }
 
 Axis * SpaceND::GetAxis(AXIS_DIR axis_dir)

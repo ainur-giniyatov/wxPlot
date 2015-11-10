@@ -147,13 +147,13 @@ void DataTyped<T>::SetValue(T value, size_t indx)
 }
 
 template<class T>
-ValueAdaptor<T>* DataTyped<T>::GetValueAdaptor()
+AxisValueAdaptor<T>* DataTyped<T>::GetValueAdaptor()
 {
 	return m_valueadaptor;
 }
 
 template<class T>
-void DataTyped<T>::SetValueAdaptor(ValueAdaptor<T>* valueadaptor, bool update)
+void DataTyped<T>::SetValueAdaptor(AxisValueAdaptor<T>* valueadaptor, bool update)
 {
 	if (m_valueadaptor != NULL)
 		delete m_valueadaptor;

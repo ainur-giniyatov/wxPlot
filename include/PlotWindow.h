@@ -25,6 +25,8 @@ private:
     virtual void PlotUpdated();
 
 	virtual void GetSize(int *width, int *height);
+	virtual Scale *GetCommonScale();
+
 	DECLARE_EVENT_TABLE()
 };
 

@@ -87,6 +87,7 @@
 		<Unit filename="../include/Axis.h" />
 		<Unit filename="../include/ChartWindow.h" />
 		<Unit filename="../include/Data.h" />
+		<Unit filename="../include/Grid.h" />
 		<Unit filename="../include/Plot.h" />
 		<Unit filename="../include/PlotWindow.h" />
 		<Unit filename="../include/Renderer.h" />
@@ -100,6 +101,7 @@
 		<Unit filename="../src/Axis.cpp" />
 		<Unit filename="../src/ChartWindow.cpp" />
 		<Unit filename="../src/Data.cpp" />
+		<Unit filename="../src/Grid.cpp" />
 		<Unit filename="../src/Plot.cpp" />
 		<Unit filename="../src/PlotWindow.cpp" />
 		<Unit filename="../src/Renderer.cpp" />

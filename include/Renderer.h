@@ -17,7 +17,7 @@ class WXDLLIMPEXP_PLOTLIB SeriesND;
 class WXDLLIMPEXP_PLOTLIB Plot;
 class WXDLLIMPEXP_PLOTLIB Axis;
 class WXDLLIMPEXP_PLOTLIB SpaceND;
-template <typename T> class WXDLLIMPEXP_PLOTLIB ValueAdaptor;
+template <typename T> class WXDLLIMPEXP_PLOTLIB AxisValueAdaptor;
 
 class WXDLLIMPEXP_PLOTLIB Renderer
 {
