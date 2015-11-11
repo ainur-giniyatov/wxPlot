@@ -92,6 +92,7 @@ void Plot::FitPlot(bool update)
 //	{
 		m_spaces[0]->Fit(false);
 		m_spaces[0]->GetAxis(AXIS_X)->AxisUpdated();
+		m_spaces[0]->GetAxis(AXIS_Y)->AxisUpdated();
 		/*for (auto series : space->GetSerie())
 		{
 			for (auto data : series->GetDatas())

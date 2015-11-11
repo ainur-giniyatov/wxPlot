@@ -24,12 +24,13 @@ class ScaleWindow :
 	public Scale, public wxPanel
 {
 public:
-	ScaleWindow(wxWindow *parent);
+	ScaleWindow(wxWindow *parent, wxOrientation orient = wxVERTICAL, double offset = 0, double range = 1000);
 	virtual ~ScaleWindow();
 	virtual void ScaleUpdated();
 
 private:
 	void OnPaint(wxPaintEvent &event);
+	void OnEraseBackground(wxEraseEvent &event);
 	void OnResize(wxSizeEvent &event);
 	void OnMouseWheel(wxMouseEvent &event);
 	void OnLeftDown(wxMouseEvent &event);
@@ -38,7 +39,7 @@ private:
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent &event);
 
 	bool m_ispanning;
-
+	wxOrientation m_orient;
 	DECLARE_EVENT_TABLE()
 };
 

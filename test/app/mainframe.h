@@ -26,6 +26,7 @@
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
 #include <wx/panel.h>
+#include <wx/notebook.h>
 #include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -45,6 +46,8 @@ class MainFrame : public wxFrame
 		wxMenu* m_menu1;
 		wxToolBar* m_toolBar1;
 		wxStatusBar* m_statusBar1;
+		wxNotebook* m_notebook1;
+		wxPanel* m_panel4;
 		wxPanel* m_panel1;
 		wxButton* m_button_newplot;
 		wxChoice* m_choice_plots;
@@ -59,6 +62,7 @@ class MainFrame : public wxFrame
 		wxButton* m_button_Delete;
 		wxPanel* m_panel2;
 		wxBoxSizer* bSizer3;
+		wxPanel* m_panel8;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void m_menuItem_ExitOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }

@@ -16,18 +16,18 @@ ChartWindow::ChartWindow(wxWindow *parent, int orientation) :wxPanel(parent, wxI
 
 	//wxBoxSizer *scsizer = new wxBoxSizer(wxVERTICAL);
 	//scale_container->SetSizer(scsizer);
-	m_scale = new ScaleWindow(this);
+	m_scale = new ScaleWindow(this, wxHORIZONTAL);
 //	scsizer->Add(m_scale, 0, wxEXPAND);
 	m_orientation = orientation;
 
 	if (m_orientation == wxVERTICAL)
 	{
-		m_scale->SetMinClientSize(wxSize(wxDefaultCoord, 120));
+		//m_scale->SetMinClientSize(wxSize(wxDefaultCoord, 120));
 		m_sizer->Add(m_scale, 0, wxEXPAND | wxALL, 1);
 	}
 	else
 	{
-		m_scale->SetMinClientSize(wxSize(50, wxDefaultCoord));
+	//	m_scale->SetMinClientSize(wxSize(50, wxDefaultCoord));
 		m_sizer->Insert(0, m_scale, 0, wxEXPAND | wxALL, 1);
 	}
 

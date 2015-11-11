@@ -226,6 +226,35 @@ double TimeAxisValueAdaptor<T>::GetTicker()
 	return (T)time_value_integer + (T)time_value_fraction;
 }
 
+
+template<typename T>
+SimpleAxisValueAdaptor<T>::SimpleAxisValueAdaptor()
+{
+	DPRINTF("SimpleAxisValueAdaptor ctor");
+}
+
+template<typename T>
+SimpleAxisValueAdaptor<T>::~SimpleAxisValueAdaptor()
+{
+	DPRINTF("SimpleAxisValueAdaptor dtor");
+}
+
+template<typename T>
+size_t SimpleAxisValueAdaptor<T>::ValToStr(char * str, size_t len)
+{
+	double val;
+	val = AxisValueAdaptor<T>::m_offset + AxisValueAdaptor<T>::m_ticker;
+	sprintf(str, "%.2f", val);
+	return strlen(str);
+}
+
+template<typename T>
+size_t SimpleAxisValueAdaptor<T>::ValToStr(char * str, size_t len, T val)
+{
+	wxASSERT(0);
+	return 0;
+}
+
 //
 //template<typename T>
 //SecsAxisValueAdaptor<T>::SecsAxisValueAdaptor()

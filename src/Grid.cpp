@@ -20,7 +20,7 @@ void Grid::Render(wxGraphicsContext * gc)
 	wxASSERT(xaxis != NULL && yaxis != NULL);
 
 	AxisAdaptor *xaxadaptor = m_owner_space->GetOwner()->GetCommonScale()->GetValueAdaptor();
-	AxisAdaptor *yaxadaptor = m_owner_space->GetYScale()->GetValueAdaptor();
+	AxisAdaptor *yaxadaptor = m_owner_space->GetOwner()->GetYScale()->GetValueAdaptor();
 	
 
 	wxASSERT(xaxadaptor != NULL && yaxadaptor != NULL);

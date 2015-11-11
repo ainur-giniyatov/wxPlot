@@ -14,7 +14,7 @@ MyFrame::MyFrame():MainFrame(NULL)
 {
 	m_chartwindow = new ChartWindow(m_panel2, wxVERTICAL);
 	bSizer3->Add(m_chartwindow, 1, wxEXPAND);
-
+	m_panel2->Layout();
 	//m_plotwindow = m_chartwindow->CreatePlotWindow();
 	//m_choice_plots->Append(wxString::Format("plot %i", s_plc++), m_plotwindow);
 	//m_choice_plots->SetSelection(m_choice_plots->GetCount() - 1);
@@ -169,6 +169,7 @@ void MyFrame::m_button_newplotOnButtonClick(wxCommandEvent & event)
 	plotwindow->AddSpace(space);
 
 	m_chartwindow->GetScaleWindow()->AddAxis(space->GetAxis(AXIS_X));
+	plotwindow->GetYScale()->AddAxis(space->GetAxis(AXIS_Y));
 
 	fill_plot_choices();
 	

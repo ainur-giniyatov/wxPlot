@@ -49,7 +49,12 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_panel1 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxRAISED_BORDER|wxTAB_TRAVERSAL );
+	m_notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_panel4 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer4;
+	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_panel1 = new wxPanel( m_panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxRAISED_BORDER|wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
@@ -97,16 +102,26 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_panel1->SetSizer( bSizer2 );
 	m_panel1->Layout();
 	bSizer2->Fit( m_panel1 );
-	bSizer1->Add( m_panel1, 0, wxEXPAND, 5 );
+	bSizer4->Add( m_panel1, 0, wxEXPAND | wxALL, 5 );
 	
-	m_panel2 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxRAISED_BORDER|wxTAB_TRAVERSAL );
+	m_panel2 = new wxPanel( m_panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxRAISED_BORDER|wxTAB_TRAVERSAL );
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 	
 	
 	m_panel2->SetSizer( bSizer3 );
 	m_panel2->Layout();
 	bSizer3->Fit( m_panel2 );
-	bSizer1->Add( m_panel2, 1, wxEXPAND, 5 );
+	bSizer4->Add( m_panel2, 1, wxEXPAND | wxALL, 5 );
+	
+	
+	m_panel4->SetSizer( bSizer4 );
+	m_panel4->Layout();
+	bSizer4->Fit( m_panel4 );
+	m_notebook1->AddPage( m_panel4, wxT("1st"), false );
+	m_panel8 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_notebook1->AddPage( m_panel8, wxT("2nd"), false );
+	
+	bSizer1->Add( m_notebook1, 1, wxEXPAND, 5 );
 	
 	
 	this->SetSizer( bSizer1 );

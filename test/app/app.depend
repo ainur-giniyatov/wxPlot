@@ -2,7 +2,7 @@
 1446781543 source:d:\git-rep\wxplot\test\app\mainframe.cpp
 	"mainframe.h"
 
-1446781543 d:\git-rep\wxplot\test\app\mainframe.h
+1447223774 d:\git-rep\wxplot\test\app\mainframe.h
 	<wx/artprov.h>
 	<wx/xrc/xmlres.h>
 	<wx/string.h>
@@ -21,6 +21,7 @@
 	<wx/checkbox.h>
 	<wx/sizer.h>
 	<wx/panel.h>
+	<wx/notebook.h>
 	<wx/frame.h>
 
 1387201349 d:\dev\wxpython-src-3.0.2.0\include\wx\artprov.h
@@ -1718,13 +1719,14 @@
 	"Space.h"
 	"ChartWindow.h"
 
-1447124906 d:\git-rep\wxplot\include\plotwindow.h
+1447203520 d:\git-rep\wxplot\include\plotwindow.h
 	<wx/window.h>
 	<wx/panel.h>
 	<wx/graphics.h>
 	"Plot.h"
+	"ScaleWindow.h"
 
-1447122649 d:\git-rep\wxplot\include\plot.h
+1447213505 d:\git-rep\wxplot\include\plot.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2665,7 +2667,7 @@
 	"ValueAdaptor.h"
 	<vector>
 
-1447134846 d:\git-rep\wxplot\include\space.h
+1447213116 d:\git-rep\wxplot\include\space.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2837,7 +2839,7 @@
 	"wx/icon.h"
 	"wx/aui/auibook.h"
 
-1446770601 d:\git-rep\wxplot\include\scalewindow.h
+1447222609 d:\git-rep\wxplot\include\scalewindow.h
 	<wx/panel.h>
 	"plot_defs.h"
 	"Series.h"
@@ -2854,7 +2856,7 @@
 	"Data.h"
 	"Space.h"
 
-1447127860 d:\git-rep\wxplot\include\valueadaptor.h
+1447208845 d:\git-rep\wxplot\include\valueadaptor.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"

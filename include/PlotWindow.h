@@ -4,6 +4,7 @@
 
 #include <wx/graphics.h>
 #include "Plot.h"
+#include "ScaleWindow.h"
 
 class WXDLLIMPEXP_PLOTLIB PlotWindow :
 	  public wxWindow, public Plot //let wxPanel come first!!
@@ -26,6 +27,9 @@ private:
 
 	virtual void GetSize(int *width, int *height);
 	virtual Scale *GetCommonScale();
+
+	wxSizer *m_sizer;
+	std::vector<ScaleWindow *> m_scalewindows;
 
 	DECLARE_EVENT_TABLE()
 };

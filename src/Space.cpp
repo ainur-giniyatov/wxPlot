@@ -73,8 +73,8 @@ SpaceND::SpaceND(size_t dims_count)
 
 
 	//TO DO: redesign scales
-	m_yscale = new Scale();
-	m_axes[AXIS_Y]->SetCommonScale(m_yscale);
+	//m_yscale = new Scale();
+	//m_axes[AXIS_Y]->SetCommonScale(m_yscale);
 
 	m_grid = new Grid(this);
 }
@@ -97,7 +97,8 @@ SpaceND::~SpaceND()
 		m_owner_plot->RemoveSpace(this, true);
 
 //delete y axis scale
-	delete m_yscale;
+	//delete m_yscale;
+
 	delete m_grid;
 }
 
@@ -157,6 +158,11 @@ void SpaceND::ZoomAt(double rx, double ry, double xfactor, double yfactor)
 		m_xaxis->AxisUpdated();
 	else
 		SpaceUpdated();
+
+	if (m_yaxis != NULL && yfactor != 1.)
+		m_yaxis->AxisUpdated();
+	else
+		SpaceUpdated();
 }
 
 void SpaceND::StartPanAt(double rx, double ry)
@@ -184,9 +190,10 @@ void SpaceND::ProceedPanAt(double rx, double ry)
 
 	Axis *m_xaxis;
 	Axis *m_yaxis;
-	m_xaxis = m_axes[0];//let x be 1st dimension
-	m_yaxis = m_axes[1];//let y be 2nd dimension
+	m_xaxis = m_axes[AXIS_X];//let x be 1st dimension
+	m_yaxis = m_axes[AXIS_Y];//let y be 2nd dimension
 
+//TO DO: need to review this code
 	if (m_xaxis != NULL)
 		m_xaxis->SetOffset(m_pan_start_at_vx - m_xaxis->GetRange() * (rx - m_pan_start_at_rx));
 
@@ -198,6 +205,11 @@ void SpaceND::ProceedPanAt(double rx, double ry)
 		m_xaxis->AxisUpdated();
 	else
 		SpaceUpdated();
+
+	if (m_yaxis != NULL)
+		m_yaxis->AxisUpdated();
+	else
+		SpaceUpdated();
 }
 
 void SpaceND::EndPanAt()
@@ -207,6 +219,9 @@ void SpaceND::EndPanAt()
 
 void SpaceND::Fit(bool update)
 {
+	if (m_serie.empty())
+		return;
+
 	for (size_t dir = 0; dir < m_dims_count; dir++)
 	{
 		double max, min;

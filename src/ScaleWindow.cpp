@@ -4,6 +4,7 @@
 
 BEGIN_EVENT_TABLE(ScaleWindow, wxPanel)
 EVT_PAINT(ScaleWindow::OnPaint)
+EVT_ERASE_BACKGROUND(ScaleWindow::OnEraseBackground)
 EVT_SIZE(ScaleWindow::OnResize)
 EVT_MOUSEWHEEL(ScaleWindow::OnMouseWheel)
 EVT_LEFT_DOWN(ScaleWindow::OnLeftDown)
@@ -13,11 +14,27 @@ EVT_MOUSE_CAPTURE_LOST(ScaleWindow::OnMouseCaptureLost)
 END_EVENT_TABLE()
 
 
-ScaleWindow::ScaleWindow(wxWindow *parent):wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
+ScaleWindow::ScaleWindow(wxWindow *parent, wxOrientation orient, double offset, double range):wxPanel()//(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
 {
+	SetBackgroundStyle(wxBG_STYLE_TRANSPARENT);
+	Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+
 	SetName("scalewindow");
-	SetBackgroundStyle(wxBG_STYLE_PAINT);
 	m_ispanning = false;
+
+	m_orient = orient;
+
+	if (m_orient == wxHORIZONTAL)
+	{
+		SetMinClientSize(wxSize(wxDefaultCoord, 120));
+	}
+	else
+	{
+		SetMinClientSize(wxSize(50, wxDefaultCoord));
+	}
+
+	m_offset = offset;
+	m_range = range;
 }
 
 
@@ -38,12 +55,19 @@ static char s_buff[20];
 void ScaleWindow::OnPaint(wxPaintEvent & event)
 {
 	int width, height;
-	GetClientSize(&width, &height);
+	
+	if(m_orient == wxHORIZONTAL)
+		GetClientSize(&width, &height);
+	else
+		GetClientSize(&height, &width);
+
 	wxBufferedPaintDC dc(this);
 	wxRect rect;
 	rect = GetClientRect();
-	dc.SetPen(*wxBLACK_PEN);
-	dc.SetBrush(*wxWHITE_BRUSH);
+	wxColor col(255, 212, 127, 50);
+	
+	dc.SetPen(col);
+	dc.SetBrush(col);
 	dc.DrawRectangle(rect);
 	if (m_valueadaptor == NULL)
 		return;
@@ -70,16 +94,27 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 		if (x > width)
 			break;
 		tick_len = 5.; 
-		gc->StrokeLine(x, 0, x, tick_len);
+
+		if (m_orient == wxHORIZONTAL)
+			gc->StrokeLine(x, 0, x, tick_len);
+		else
+			gc->StrokeLine(0, x, tick_len, x);
 
 		m_valueadaptor->ValToStr(s_buff, 20);
 		text = s_buff;
 
-		gc->DrawText(text, x + fh / 2 + 3, 7, M_PI / 2. * 3.);
+		if (m_orient == wxHORIZONTAL)
+			gc->DrawText(text, x + fh / 2 + 3, 7, M_PI / 2. * 3.);
+		else
+			gc->DrawText(text, 7, x - fh / 2.);
 
 	}
 
 	delete gc;
+}
+
+void ScaleWindow::OnEraseBackground(wxEraseEvent & event)
+{
 }
 
 void ScaleWindow::OnResize(wxSizeEvent & event)
@@ -96,19 +131,25 @@ void ScaleWindow::OnMouseWheel(wxMouseEvent & event)
 		factor = 1.2;
 
 	DPRINTF("ScaleWindow::OnMouseWheel\n");
-	int w;
-	GetClientSize(&w, NULL);
-	ZoomAt((double)event.GetX() / (double)w, factor);
-
+	int w, h;
+	GetClientSize(&w, &h);
+	if (m_orient == wxHORIZONTAL)
+		ZoomAt((double)event.GetX() / (double)w, factor);
+	else
+		ZoomAt((double)event.GetY() / (double)h, factor);
 }
 
 void ScaleWindow::OnLeftDown(wxMouseEvent & event)
 {
 	SetFocus();
-	int x;
-	GetClientSize(&x, NULL);
+	int x, h;
+	GetClientSize(&x, &h);
 	m_ispanning = true;
-	StartPanAt((double)event.GetX() / (double)x);
+
+	if (m_orient == wxHORIZONTAL)
+		StartPanAt((double)event.GetX() / (double)x);
+	else
+		StartPanAt((double)event.GetY() / (double)h);
 
 	if(!HasCapture())
         CaptureMouse();
@@ -124,10 +165,15 @@ void ScaleWindow::OnLeftUp(wxMouseEvent & event)
 
 void ScaleWindow::OnMouseMove(wxMouseEvent & event)
 {
-	int x;
-	GetClientSize(&x, NULL);
-	if(m_ispanning)
-		ProceedPanAt((double)event.GetX() / (double)x);
+	int x, h;
+	GetClientSize(&x, &h);
+	if (m_ispanning)
+	{
+		if (m_orient == wxHORIZONTAL)
+			ProceedPanAt((double)event.GetX() / (double)x);
+		else
+			ProceedPanAt((double)event.GetY() / (double)h);
+	}
 }
 
 void ScaleWindow::OnMouseCaptureLost(wxMouseCaptureLostEvent &event)

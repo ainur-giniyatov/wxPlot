@@ -44,7 +44,7 @@ public:
 	void EndPanAt();
 	void Fit(bool update = true);
 
-	Scale *GetYScale() { return m_yscale; };
+	//Scale *GetYScale() { return m_yscale; };
 	Grid *GetGrid() { return m_grid; };
 protected:
 	std::vector<SeriesND *> m_serie;
@@ -59,7 +59,7 @@ protected:
 
 	size_t m_dims_count;//count of dimensions in this space
 
-	Scale *m_yscale;
+	//Scale *m_yscale;
 
 	Grid *m_grid;
 private:

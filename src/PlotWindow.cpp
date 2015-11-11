@@ -19,6 +19,16 @@ PlotWindow::PlotWindow(wxWindow * parent) :wxWindow(parent, wxID_ANY, wxDefaultP
 	DPRINTF("PlotWindow: ctor\n");
 	SetName("plot");
 	SetBackgroundStyle(wxBG_STYLE_PAINT);
+
+	m_sizer = new wxBoxSizer(wxHORIZONTAL);
+
+	ScaleWindow *scalewindow = new ScaleWindow(this, wxVERTICAL, 0, 10);
+	m_yscale = scalewindow;
+
+	scalewindow->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
+	m_sizer->Add(scalewindow, 0, wxEXPAND, 0);
+	SetSizer(m_sizer);
+	Layout();
 }
 
 PlotWindow::~PlotWindow()
@@ -43,7 +53,7 @@ void PlotWindow::OnPaint(wxPaintEvent & event)
 void PlotWindow::OnResize(wxSizeEvent & event)
 {
 	Refresh();
-
+	Layout();
 }
 
 void PlotWindow::OnLeftDown(wxMouseEvent & event)

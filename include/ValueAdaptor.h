@@ -26,16 +26,18 @@ public:
 
 	virtual void InitState(double offset, double range, double wdth);
 	virtual bool Step();
-	virtual double GetTicker() = 0;
-	virtual double GetStep(double r) = 0;
+	virtual double GetTicker() { return m_ticker; };
 	//virtual int GetTickLenght() = 0;
 	//virtual int GetTickWeight() = 0;
-
+	//void SetOffset(double offset);
+	//void SetRange(double range);
 protected:
 	double m_offset;
 	double m_range;
 	double m_ticker;
 	double m_step;
+
+	virtual double GetStep(double r) { return 1.; };
 
 private:
 
@@ -68,9 +70,10 @@ public:
 
 	virtual void InitState(double offset, double range, double wdth) override;
 	virtual bool Step() override;
-	virtual double GetStep(double r) override;
 	virtual double GetTicker() override;
 protected:
+
+	virtual double GetStep(double r) override;
 
 private:
 
@@ -94,6 +97,26 @@ private:
 	time_t time_value_integer;
 	float time_value_fraction;
 };
+
+template<typename T> class WXDLLIMPEXP_PLOTLIB SimpleAxisValueAdaptor:public AxisValueAdaptor<T>
+{
+public:
+	SimpleAxisValueAdaptor();
+	virtual ~SimpleAxisValueAdaptor();
+
+	virtual size_t ValToStr(char *str, size_t len) override;
+	virtual size_t ValToStr(char *str, size_t len, T val) override;
+
+	//virtual void InitState(double offset, double range, double wdth) override;
+	//virtual bool Step() override;
+	//virtual double GetTicker() override;
+protected:
+
+	//virtual double GetStep(double r) override;
+private:
+};
+
+
 //
 //template<typename T> class WXDLLIMPEXP_PLOTLIB SecsAxisValueAdaptor :public AxisValueAdaptor<T>
 //{
@@ -121,6 +144,8 @@ template class WXDLLIMPEXP_PLOTLIB TimeAxisValueAdaptor<time_t>;
 template class WXDLLIMPEXP_PLOTLIB TimeAxisValueAdaptor<float>;
 template class WXDLLIMPEXP_PLOTLIB TimeAxisValueAdaptor<short>;
 template class WXDLLIMPEXP_PLOTLIB TimeAxisValueAdaptor<double>;
+
+template class WXDLLIMPEXP_PLOTLIB SimpleAxisValueAdaptor<double>;
 
 //template class WXDLLIMPEXP_PLOTLIB SecsAxisValueAdaptor<short>;
 //template class WXDLLIMPEXP_PLOTLIB SecsAxisValueAdaptor<time_t>;

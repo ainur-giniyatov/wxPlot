@@ -30,6 +30,9 @@ public:
 	virtual void GetSize(int *width, int *height) = 0;
 	void FitPlot(bool update = true);
 	virtual Scale *GetCommonScale() = 0;
+
+	Scale * GetYScale() { return m_yscale; };
+
 protected:
 
 	void StartPan(double start_rx, double start_ry);
@@ -44,7 +47,8 @@ protected:
 
 	char *m_plot_name;
 
-	//helpers
+	//temporary TO DO
+	Scale *m_yscale;
 	
 };
 
