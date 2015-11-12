@@ -40,6 +40,7 @@ PlotWindow::~PlotWindow()
 void PlotWindow::OnPaint(wxPaintEvent & event)
 {
 	wxBufferedPaintDC dc(this);
+	dc.SetPen(*wxTRANSPARENT_PEN);
 	dc.DrawRectangle(GetClientRect());
 
 	wxGraphicsContext *gc = wxGraphicsContext::Create(dc);
@@ -148,11 +149,6 @@ void PlotWindow::PlotUpdated()
 void PlotWindow::GetSize(int * width, int * height)
 {
 	GetClientSize(width, height);
-}
-
-Scale * PlotWindow::GetCommonScale()
-{
-	return ((ChartWindow *)(GetParent()->GetParent()))->GetScaleWindow();
 }
 
 void PlotWindow::OnMouseCaptureLost(wxMouseCaptureLostEvent &event)

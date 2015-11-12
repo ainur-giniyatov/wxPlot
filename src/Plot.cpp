@@ -8,6 +8,8 @@ Plot::Plot(const char *plotname)
 	DPRINTF("Plot ctor\n");
 	m_panning = false;
 
+	m_commonscale = NULL;
+	m_yscale = NULL;
 	if (plotname == NULL)
 		m_plot_name = s_plotname;
 	else
@@ -107,6 +109,11 @@ void Plot::FitPlot(bool update)
 		PlotUpdated();
 		
 	}
+}
+
+void Plot::SetCommonScale(Scale * scale)
+{
+	m_commonscale = scale;
 }
 
 void Plot::StartPan(double start_rx, double start_ry)

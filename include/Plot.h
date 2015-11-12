@@ -29,9 +29,11 @@ public:
 	virtual void PlotUpdated() = 0;
 	virtual void GetSize(int *width, int *height) = 0;
 	void FitPlot(bool update = true);
-	virtual Scale *GetCommonScale() = 0;
 
-	Scale * GetYScale() { return m_yscale; };
+	void SetCommonScale(Scale *scale);
+	Scale *GetCommonScale() { return m_commonscale; }
+
+	Scale * GetYScale() { return m_yscale; }
 
 protected:
 
@@ -46,6 +48,8 @@ protected:
 	bool m_panning;
 
 	char *m_plot_name;
+
+	Scale *m_commonscale;
 
 	//temporary TO DO
 	Scale *m_yscale;

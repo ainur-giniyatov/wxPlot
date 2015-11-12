@@ -118,8 +118,43 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_panel4->Layout();
 	bSizer4->Fit( m_panel4 );
 	m_notebook1->AddPage( m_panel4, wxT("1st"), false );
-	m_panel8 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_notebook1->AddPage( m_panel8, wxT("2nd"), false );
+	m_panel_page2 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer5;
+	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_panel5 = new wxPanel( m_panel_page2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxRAISED_BORDER|wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer6;
+	bSizer6 = new wxBoxSizer( wxVERTICAL );
+	
+	m_button_dataupdated = new wxButton( m_panel5, wxID_ANY, wxT("DataUpdated()"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer6->Add( m_button_dataupdated, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button_seriesupdate = new wxButton( m_panel5, wxID_ANY, wxT("SeriesUpdate()"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer6->Add( m_button_seriesupdate, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button_spaceupdate = new wxButton( m_panel5, wxID_ANY, wxT("SpaceUpdate()"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer6->Add( m_button_spaceupdate, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	m_panel5->SetSizer( bSizer6 );
+	m_panel5->Layout();
+	bSizer6->Fit( m_panel5 );
+	bSizer5->Add( m_panel5, 0, wxEXPAND | wxALL, 5 );
+	
+	m_panel6 = new wxPanel( m_panel_page2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxRAISED_BORDER|wxTAB_TRAVERSAL );
+	bSizer7 = new wxBoxSizer( wxVERTICAL );
+	
+	
+	m_panel6->SetSizer( bSizer7 );
+	m_panel6->Layout();
+	bSizer7->Fit( m_panel6 );
+	bSizer5->Add( m_panel6, 1, wxEXPAND | wxALL, 5 );
+	
+	
+	m_panel_page2->SetSizer( bSizer5 );
+	m_panel_page2->Layout();
+	bSizer5->Fit( m_panel_page2 );
+	m_notebook1->AddPage( m_panel_page2, wxT("2nd"), false );
 	
 	bSizer1->Add( m_notebook1, 1, wxEXPAND, 5 );
 	
@@ -145,6 +180,9 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_button_Fit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_FitOnButtonClick ), NULL, this );
 	m_button_Rename->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_RenameOnButtonClick ), NULL, this );
 	m_button_Delete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_DeleteOnButtonClick ), NULL, this );
+	m_button_dataupdated->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_dataupdatedOnButtonClick ), NULL, this );
+	m_button_seriesupdate->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_seriesupdateOnButtonClick ), NULL, this );
+	m_button_spaceupdate->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_spaceupdateOnButtonClick ), NULL, this );
 }
 
 MainFrame::~MainFrame()
@@ -165,5 +203,8 @@ MainFrame::~MainFrame()
 	m_button_Fit->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_FitOnButtonClick ), NULL, this );
 	m_button_Rename->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_RenameOnButtonClick ), NULL, this );
 	m_button_Delete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_DeleteOnButtonClick ), NULL, this );
+	m_button_dataupdated->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_dataupdatedOnButtonClick ), NULL, this );
+	m_button_seriesupdate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_seriesupdateOnButtonClick ), NULL, this );
+	m_button_spaceupdate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_spaceupdateOnButtonClick ), NULL, this );
 	
 }

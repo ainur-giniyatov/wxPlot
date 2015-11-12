@@ -76,6 +76,7 @@ PlotWindow * ChartWindow::CreatePlotWindow()
 	PlotWindow *plotwindow = new PlotWindow(m_plotscontainer);
 	
 	addplot(plotwindow);
+	plotwindow->SetCommonScale(m_scale);
 
 	return plotwindow;
 }

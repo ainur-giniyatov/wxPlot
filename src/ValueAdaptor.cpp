@@ -1,6 +1,8 @@
 //#include "stdafx.h"
 #include "ValueAdaptor.h"
 #include <time.h>
+#include <algorithm>
+
 //#include <math.h>
 
 void AxisAdaptor::InitState(double offset, double range, double wdth)
@@ -8,7 +10,7 @@ void AxisAdaptor::InitState(double offset, double range, double wdth)
 	m_offset = offset;
 	m_range = range;
 	m_step = GetStep(wdth);
-	m_ticker = -fmod(m_offset, m_step);//(int)(m_offset / m_step) * m_step - m_offset;
+	m_ticker = -(float)fmod((float)m_offset, (float)m_step);  //-fmod(m_offset, m_step);//(int)(m_offset / m_step) * m_step - m_offset;
 	if (m_offset < 0)
 		m_ticker -= m_step;
 
@@ -21,6 +23,22 @@ bool AxisAdaptor::Step()
 
 	m_ticker += m_step;
 	return true;
+}
+
+double AxisAdaptor::GetStep(double r)
+{
+	double rval = 1.0;
+
+	float pow_ind = floor(log10(m_range * r)) + 1;
+	float dts = pow(10, pow_ind);
+
+	//wxString text_format = wxString::Format(wxString("%%.%if"), (pow_ind > 0) ? ((int)0) : ((int)-pow_ind));
+	
+	//printf("df=%f\n", round(df));
+
+
+	return dts;
+
 }
 
 template<class T> AxisValueAdaptor<T>::AxisValueAdaptor()
@@ -245,6 +263,10 @@ size_t SimpleAxisValueAdaptor<T>::ValToStr(char * str, size_t len)
 	double val;
 	val = AxisValueAdaptor<T>::m_offset + AxisValueAdaptor<T>::m_ticker;
 	sprintf(str, "%.2f", val);
+	if (!strcmp(str, "-0.00") || !strcmp(str, "0.00"))
+	{
+		strcpy(str, "0");
+	}
 	return strlen(str);
 }
 

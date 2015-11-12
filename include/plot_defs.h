@@ -40,5 +40,7 @@
 enum AXIS_DIR {
 	AXIS_X = 0,
 	AXIS_Y = 1,
-	AXIS_Z = 2
+	AXIS_Z = 2,
+
+	AXIS_NONE = 999
 };

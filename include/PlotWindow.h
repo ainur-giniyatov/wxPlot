@@ -26,8 +26,7 @@ private:
     virtual void PlotUpdated();
 
 	virtual void GetSize(int *width, int *height);
-	virtual Scale *GetCommonScale();
-
+	
 	wxSizer *m_sizer;
 	std::vector<ScaleWindow *> m_scalewindows;
 

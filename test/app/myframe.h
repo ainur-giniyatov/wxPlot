@@ -27,6 +27,9 @@ private:
 	virtual void m_button_FitOnButtonClick(wxCommandEvent& event) override;
 	virtual void m_button_RenameOnButtonClick(wxCommandEvent& event) override;
 	virtual void m_button_DeleteOnButtonClick(wxCommandEvent& event) override;
+	virtual void m_button_dataupdatedOnButtonClick(wxCommandEvent& event) override;<<todo
+	virtual void m_button_seriesupdateOnButtonClick(wxCommandEvent& event) override;
+	virtual void m_button_spaceupdateOnButtonClick(wxCommandEvent& event) override;
 	void OnMouseWheel(wxMouseEvent &event);
 
 

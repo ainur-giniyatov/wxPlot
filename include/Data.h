@@ -14,9 +14,10 @@ template <class T> class WXDLLIMPEXP_PLOTLIB AxisValueAdaptor;
 class WXDLLIMPEXP_PLOTLIB DataNoType
 {
 public:
-	DataNoType(AXIS_DIR axis_dir, size_t size = 0, const char *data_name = NULL);
+	DataNoType(size_t size = 0, const char *data_name = NULL);
 	virtual ~DataNoType();
 
+	void SetAxisDir(AXIS_DIR axis_dir) { m_axis_dir = axis_dir; }
 	AXIS_DIR GetAxisDir() { return m_axis_dir; }
 
 	void SetDataName(const char *name, bool update = true);
@@ -52,7 +53,7 @@ protected:
 template<class T> class WXDLLIMPEXP_PLOTLIB DataTyped: public DataNoType
 {
 public:
-	DataTyped(AXIS_DIR axis_dir, size_t size = 0, const char *data_name = NULL);
+	DataTyped(size_t size = 0, const char *data_name = NULL);
 	virtual ~DataTyped();
 
 	void ZeroFill(bool update = true);

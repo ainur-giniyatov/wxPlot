@@ -55,7 +55,7 @@ static char s_buff[20];
 void ScaleWindow::OnPaint(wxPaintEvent & event)
 {
 	int width, height;
-	
+
 	if(m_orient == wxHORIZONTAL)
 		GetClientSize(&width, &height);
 	else

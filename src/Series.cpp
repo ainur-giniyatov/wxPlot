@@ -88,9 +88,9 @@ void SeriesND::SetNData(DataNoType * data, AXIS_DIR axis_dir, bool update)
 {
 	wxASSERT(axis_dir < m_dims_count);
 
-	if(data != NULL)
-		wxASSERT(axis_dir == data->GetAxisDir());
+	data->SetAxisDir(axis_dir);
 
+	
 	if (m_datas[axis_dir] != NULL && m_datas[axis_dir]->GetOwner() != NULL)
 	{
 		delete m_datas[axis_dir];

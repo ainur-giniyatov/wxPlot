@@ -62,7 +62,13 @@ class MainFrame : public wxFrame
 		wxButton* m_button_Delete;
 		wxPanel* m_panel2;
 		wxBoxSizer* bSizer3;
-		wxPanel* m_panel8;
+		wxPanel* m_panel_page2;
+		wxPanel* m_panel5;
+		wxButton* m_button_dataupdated;
+		wxButton* m_button_seriesupdate;
+		wxButton* m_button_spaceupdate;
+		wxPanel* m_panel6;
+		wxBoxSizer* bSizer7;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void m_menuItem_ExitOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
@@ -80,6 +86,9 @@ class MainFrame : public wxFrame
 		virtual void m_button_FitOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_RenameOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_DeleteOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_dataupdatedOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_seriesupdateOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_spaceupdateOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

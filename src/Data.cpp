@@ -3,7 +3,7 @@
 
 const char *s_data_name_null = "null";
 
-DataNoType::DataNoType(AXIS_DIR axis_dir, size_t size, const char *data_name)
+DataNoType::DataNoType(size_t size, const char *data_name)
 {
 	DPRINTF("DataNoType ctor\n")
 	m_data_name = NULL;
@@ -13,7 +13,7 @@ DataNoType::DataNoType(AXIS_DIR axis_dir, size_t size, const char *data_name)
 
 	m_maxmin_manual = false;
 
-	m_axis_dir = axis_dir;
+	m_axis_dir = AXIS_NONE;
 }
 
 
@@ -70,7 +70,7 @@ Axis * DataNoType::get_adj_axis()
 }
 
 template<class T>
-DataTyped<T>::DataTyped(AXIS_DIR axis_dir, size_t size, const char *data_name):DataNoType(axis_dir, size, data_name)
+DataTyped<T>::DataTyped( size_t size, const char *data_name):DataNoType( size, data_name)
 {
 	DPRINTF("DataTyped ctor\n")
 	m_data = NULL;

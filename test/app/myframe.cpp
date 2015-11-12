@@ -12,6 +12,8 @@ END_EVENT_TABLE()
 static int s_plc = 1;
 MyFrame::MyFrame():MainFrame(NULL)
 {
+
+	//1st page
 	m_chartwindow = new ChartWindow(m_panel2, wxVERTICAL);
 	bSizer3->Add(m_chartwindow, 1, wxEXPAND);
 	m_panel2->Layout();
@@ -27,6 +29,36 @@ MyFrame::MyFrame():MainFrame(NULL)
 	m_plotwindow = NULL;
 	m_series = NULL;
 	m_data = NULL;
+
+
+	//2nd page
+	PlotWindow *plotwindow = new PlotWindow(m_panel6);
+	bSizer7->Add(plotwindow, 1, wxEXPAND);
+	m_panel_page2->Layout();
+
+	SpaceND *space2d = new SpaceND(2);
+
+	plotwindow->AddSpace(space2d);
+	plotwindow->GetYScale()->AddAxis(space2d->GetAxis(AXIS_Y));
+	plotwindow->GetYScale()->SetRangeLimits(DBL_MAX, DBL_MIN);
+
+	int datasize = 100;
+	DataTyped<float> *xdata = new DataTyped<float>(datasize);
+	DataTyped<float> *ydata = new DataTyped<float>(datasize);
+
+	for (int indx = 0; indx < datasize; indx++)
+	{
+		xdata->SetValue(indx, indx);
+		ydata->SetValue(indx, indx);
+	}
+
+	SeriesND *series = new SeriesND(2);
+	series->SetNData(xdata, AXIS_X, false);
+	series->SetNData(ydata, AXIS_Y, false);
+
+	series->SetRenderer(new Renderer2DTyped<float, float>());
+
+	space2d->AddSeries(series);
 }
 
 
@@ -47,8 +79,8 @@ void MyFrame::m_button1OnButtonClick(wxCommandEvent & event)
 		wxBell();
 		return;
 	}
-	DataTyped<int> *xdata = new DataTyped<int>(AXIS_X, datasize, "TIME");
-	DataTyped<int> *ydata = new DataTyped<int>(AXIS_Y, datasize, "DATA");
+	DataTyped<int> *xdata = new DataTyped<int>(datasize, "TIME");
+	DataTyped<int> *ydata = new DataTyped<int>(datasize, "DATA");
 
 	for (int i = 0; i < datasize; i++)
 	{
@@ -89,8 +121,8 @@ void MyFrame::m_button2OnButtonClick(wxCommandEvent & event)
 	}
 
 	int datasize = 500;
-	DataTyped<float> *xdata = new DataTyped<float>(AXIS_X, datasize, "FTIME");
-	DataTyped<float> *ydata = new DataTyped<float>(AXIS_Y, datasize, "FDATA");
+	DataTyped<float> *xdata = new DataTyped<float>(datasize, "FTIME");
+	DataTyped<float> *ydata = new DataTyped<float>(datasize, "FDATA");
 
 	for (int i = 0; i < datasize; i++)
 	{
@@ -284,6 +316,18 @@ void MyFrame::m_button_DeleteOnButtonClick(wxCommandEvent & event)
 		m_choice_plots->Clear();
 		return;
 	}
+}
+
+void MyFrame::m_button_dataupdatedOnButtonClick(wxCommandEvent & event)
+{
+}
+
+void MyFrame::m_button_seriesupdateOnButtonClick(wxCommandEvent & event)
+{
+}
+
+void MyFrame::m_button_spaceupdateOnButtonClick(wxCommandEvent & event)
+{
 }
 
 void MyFrame::OnMouseWheel(wxMouseEvent & event)

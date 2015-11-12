@@ -37,7 +37,7 @@ protected:
 	double m_ticker;
 	double m_step;
 
-	virtual double GetStep(double r) { return 1.; };
+	virtual double GetStep(double r);
 
 private:
 
