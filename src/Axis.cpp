@@ -23,42 +23,44 @@ Axis::~Axis()
 void Axis::AxisUpdated()
 {
 	wxASSERT(m_owner_space != NULL);
-	if (m_commonscale != NULL)
-	{
-		m_commonscale->SetRange(m_range);
-		m_commonscale->SetOffset(m_offset);
-		m_commonscale->ScaleUpdated();
-	}else
-		if (m_owner_space != NULL)
-			m_owner_space->SpaceUpdated();
+	DPRINTF("AxisUpdated\n");
+	//if (m_commonscale != NULL)
+	//{
+	//	m_commonscale->SetRange(m_range);
+	//	m_commonscale->SetOffset(m_offset);
+	//	m_commonscale->ScaleUpdated(this);
+	//}/*else
+	//	if (m_owner_space != NULL)
+	
+	m_owner_space->SpaceUpdated();
 
 }
 
-void Axis::SetOffset(double offset, bool update)
+void Axis::SetOffset(double offset)
 {
 	m_offset = offset;
-	if (update)
-		AxisUpdated();
 }
 
-void Axis::SetRange(double range, bool update)
+void Axis::SetRange(double range)
 {
 	if (m_commonscale != NULL)
 	{
 		if (range < m_commonscale->GetRangeMax())
 			if (range > m_commonscale->GetRangeMin())
-			{
 				m_range = range;
-				if (update)
-					AxisUpdated();
-			}
 		return;
 	}
 	else
-	{
 		m_range = range;
-		if (update)
-			AxisUpdated();
+}
+
+void Axis::PropagateToCommonScale()
+{
+	if (m_commonscale != NULL)
+	{
+		m_commonscale->SetOffset(m_offset);
+		m_commonscale->SetRange(m_range);
+
 	}
 }
 
@@ -71,7 +73,15 @@ void Axis::SetVisibleRange(double offs, double range, bool update)
 	SetOffset(offs - range / 10.);
 	SetRange(range + range / 5.);
 
-	if (update)
-		AxisUpdated();
+	PropagateToCommonScale();
+
+	if(update)
+		if (m_commonscale != NULL)
+		{
+			m_commonscale->RedrawDependantPlots();
+			m_commonscale->ScaleRedraw();
+		}
+		else
+			GetOwner()->GetOwner()->RedrawPlot();
 }
 

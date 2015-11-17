@@ -26,7 +26,8 @@ class ScaleWindow :
 public:
 	ScaleWindow(wxWindow *parent, wxOrientation orient = wxVERTICAL, double offset = 0, double range = 1000);
 	virtual ~ScaleWindow();
-	virtual void ScaleUpdated();
+	
+	virtual void ScaleRedraw() override;
 
 private:
 	void OnPaint(wxPaintEvent &event);

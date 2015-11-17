@@ -45,9 +45,9 @@ void Area::Clear(bool update)
 
 void Area::AreaUpdated()
 {
-	DPRINTF("Area updated\n");
-	if (m_owner_plot != NULL)
-		m_owner_plot->PlotUpdated();
+	//DPRINTF("Area updated\n");
+	//if (m_owner_plot != NULL)
+	//	m_owner_plot->PlotUpdated();
 }
 
 

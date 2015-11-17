@@ -1,5 +1,7 @@
 //#include "stdafx.h"
 #include "Plot.h"
+#include "ScaleWidget.h"
+#include <algorithm>
 
 static char *s_plotname = "plot";
 
@@ -9,7 +11,6 @@ Plot::Plot(const char *plotname)
 	m_panning = false;
 
 	m_commonscale = NULL;
-	m_yscale = NULL;
 	if (plotname == NULL)
 		m_plot_name = s_plotname;
 	else
@@ -17,6 +18,10 @@ Plot::Plot(const char *plotname)
 		m_plot_name = (char *)malloc(strlen(plotname) + 1);
 		strcpy(m_plot_name, plotname);
 	}
+
+	m_yscale = new ScaleWidget(this);
+	m_yscale->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
+
 }
 
 void Plot::SetPlotName(const char * plotname)
@@ -39,8 +44,8 @@ void Plot::AddSpace(SpaceND * space, bool update)
 	space->SetOwner(this);
 	m_spaces.push_back(space);
 
-	if (update)
-		PlotUpdated();
+	//if (update)
+	//	PlotUpdated();
 }
 
 SpaceND * Plot::GetSpace(size_t indx)
@@ -64,8 +69,8 @@ void Plot::RemoveSpace(SpaceND * space, bool update)
 		spaces.push_back(space_);
 	}
 	m_spaces = spaces;
-	if (update)
-		PlotUpdated();
+	//if (update)
+	//	PlotUpdated();
 }
 
 
@@ -82,6 +87,9 @@ Plot::~Plot()
 
 	if (m_plot_name != NULL && m_plot_name != s_plotname)
 		free(m_plot_name);
+
+	for (auto widget : m_widgets)
+		delete widget;
 }
 
 void Plot::FitPlot(bool update)
@@ -104,16 +112,27 @@ void Plot::FitPlot(bool update)
 		}*/
 //	}
 
-	if (update)
-	{
-		PlotUpdated();
-		
-	}
+	//if (update)
+	//{
+	//	PlotUpdated();
+	//	
+	//}
 }
 
 void Plot::SetCommonScale(Scale * scale)
 {
 	m_commonscale = scale;
+}
+
+/*for internal use. called from widget ctor*/
+void Plot::AddWidget(Widget * widget)
+{
+	if (std::any_of(m_widgets.begin(), m_widgets.end(), [widget](Widget *w) { return w == widget; }))
+	{
+		return;
+	}
+
+	m_widgets.push_back(widget);
 }
 
 void Plot::StartPan(double start_rx, double start_ry)
@@ -133,10 +152,16 @@ void Plot::ProceedPan(double rx, double ry)
 		return;
 
 	DPRINTF("ProceedPan\n");
+	
+	//in this method new range & offsets are calculated and propagated to common scale
 	for (auto space : m_spaces)
 	{
 		space->ProceedPanAt(rx, ry);
 	}
+
+	iterate_axes_redraw_uniq_commonscales_uniq_plots();
+	//RedrawPlot();//redraw for this plot shall be invoked in iterate_axes_redraw_uniq_commonscales_uniq_plots
+
 }
 
 void Plot::EndPan()
@@ -157,6 +182,46 @@ void Plot::ZoomWheel(double rx, double ry, double xfactor, double yfactor)
 	{
 		space->ZoomAt(rx, ry, xfactor, yfactor);
 	}
+
+	
+	iterate_axes_redraw_uniq_commonscales_uniq_plots();
+	//RedrawPlot();//redraw for this plot shall be invoked in iterate_axes_redraw_uniq_commonscales_uniq_plots
+}
+
+void Plot::iterate_axes_redraw_uniq_commonscales_uniq_plots()
+{
+	//here all axises are iterated in each space and common scale is redrawn. common scales must be updated once
+	std::vector<Scale *> vcommscales;
+	std::vector<Plot *> vuniqplots;
+	bool this_updated = false;
+	for (auto space : m_spaces)
+	{
+		for (size_t indx = 0; indx < space->GetDimsCount(); indx++)
+		{
+			Axis *axis = space->GetAxis((AXIS_DIR)indx);
+			wxASSERT(axis != NULL);
+			Scale *commonscale = axis->GetCommonScale();
+			if (commonscale != NULL && std::count(vcommscales.begin(), vcommscales.end(), commonscale) == 0)
+			{
+				commonscale->ScaleRedraw();
+				vcommscales.push_back(commonscale);
+				
+				for (auto axisi : commonscale->GetAxes())
+				{
+					Plot *plot = axisi->GetOwner()->GetOwner();
+					if (std::count(vuniqplots.begin(), vuniqplots.end(), plot) == 0)
+					{
+						if (this == plot)
+							this_updated = true;
+						plot->RedrawPlot();
+						vuniqplots.push_back(plot);
+					}
+				}
+			}
+		}
+	}
+	if(!this_updated)
+		RedrawPlot();//redraw directly if not bound to any common scale
 }
 
 

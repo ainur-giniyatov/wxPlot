@@ -15,6 +15,7 @@ public:
 
 private:
 	void OnPaint(wxPaintEvent &event);
+	void OnEraseBackground(wxEraseEvent &event);
 	void OnResize(wxSizeEvent &event);
 	void OnLeftDown(wxMouseEvent &event);
 	void OnLeftUp(wxMouseEvent &event);
@@ -23,7 +24,7 @@ private:
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent &event);
 
 	void Render(wxGraphicsContext *gc);
-    virtual void PlotUpdated();
+	virtual void RedrawPlot();
 
 	virtual void GetSize(int *width, int *height);
 	

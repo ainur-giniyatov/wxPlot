@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1446770654 source:d:\git-rep\wxplot\src\area.cpp
+1447504472 source:d:\git-rep\wxplot\src\area.cpp
 	"Area.h"
 
 1446770654 d:\git-rep\wxplot\include\area.h
@@ -10,7 +10,7 @@
 	"Plot.h"
 	<vector>
 
-1446771946 d:\git-rep\wxplot\include\plot_defs.h
+1447294864 d:\git-rep\wxplot\include\plot_defs.h
 	<wx/wxprec.h>
 	<wx/debug.h>
 	<stdio.h>
@@ -2558,7 +2558,7 @@
 	"Renderer.h"
 	"Space.h"
 
-1447129360 d:\git-rep\wxplot\include\data.h
+1447294864 d:\git-rep\wxplot\include\data.h
 	"plot_defs.h"
 	"Series.h"
 	"Renderer.h"
@@ -2574,16 +2574,17 @@
 	"ValueAdaptor.h"
 	<wx/graphics.h>
 
-1447213505 d:\git-rep\wxplot\include\plot.h
+1447635729 d:\git-rep\wxplot\include\plot.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
 	"Axis.h"
 	"Space.h"
 	"Scale.h"
+	"Widget.h"
 	<vector>
 
-1446811412 d:\git-rep\wxplot\include\axis.h
+1447515455 d:\git-rep\wxplot\include\axis.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2591,7 +2592,7 @@
 	"Renderer.h"
 	"Scale.h"
 
-1447129561 d:\git-rep\wxplot\include\scale.h
+1447514986 d:\git-rep\wxplot\include\scale.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2612,10 +2613,10 @@
 	"Grid.h"
 	<vector>
 
-1446809785 source:d:\git-rep\wxplot\src\axis.cpp
+1447516989 source:d:\git-rep\wxplot\src\axis.cpp
 	"Axis.h"
 
-1447048771 source:d:\git-rep\wxplot\src\chartwindow.cpp
+1447291147 source:d:\git-rep\wxplot\src\chartwindow.cpp
 	"ChartWindow.h"
 
 1446820952 d:\git-rep\wxplot\include\chartwindow.h
@@ -2779,13 +2780,14 @@
 	"wx/icon.h"
 	"wx/aui/auibook.h"
 
-1447124906 d:\git-rep\wxplot\include\plotwindow.h
+1447504349 d:\git-rep\wxplot\include\plotwindow.h
 	<wx/window.h>
 	<wx/panel.h>
 	<wx/graphics.h>
 	"Plot.h"
+	"ScaleWindow.h"
 
-1446770601 d:\git-rep\wxplot\include\scalewindow.h
+1447393209 d:\git-rep\wxplot\include\scalewindow.h
 	<wx/panel.h>
 	"plot_defs.h"
 	"Series.h"
@@ -2796,14 +2798,16 @@
 	"Scale.h"
 	<vector>
 
-1447129360 source:d:\git-rep\wxplot\src\data.cpp
+1447294808 source:d:\git-rep\wxplot\src\data.cpp
 	"Data.h"
 
-1446815979 source:d:\git-rep\wxplot\src\plot.cpp
+1447635398 source:d:\git-rep\wxplot\src\plot.cpp
 	"Plot.h"
+	<algorithm>
 
-1446820793 source:d:\git-rep\wxplot\src\plotwindow.cpp
+1447636713 source:d:\git-rep\wxplot\src\plotwindow.cpp
 	"PlotWindow.h"
+	"ChartWindow.h"
 	<wx/dcbuffer.h>
 
 1387201349 d:\dev\wxpython-src-3.0.2.0\include\wx\dcbuffer.h
@@ -2811,28 +2815,31 @@
 	"wx/dcclient.h"
 	"wx/window.h"
 
-1447136418 source:d:\git-rep\wxplot\src\renderer.cpp
+1447519070 source:d:\git-rep\wxplot\src\renderer.cpp
 	"Renderer.h"
 
-1447129494 source:d:\git-rep\wxplot\src\scale.cpp
+1447713591 source:d:\git-rep\wxplot\src\scale.cpp
 	"Scale.h"
 	<float.h>
+	<algorithm>
 
-1447046561 source:d:\git-rep\wxplot\src\scalewindow.cpp
+1447632427 source:d:\git-rep\wxplot\src\scalewindow.cpp
 	<wx/dcbuffer.h>
 	"ScaleWindow.h"
 
-1446819200 source:d:\git-rep\wxplot\src\series.cpp
+1447713613 source:d:\git-rep\wxplot\src\series.cpp
 	"Series.h"
+	<algorithm>
 
-1446816887 source:d:\git-rep\wxplot\src\space.cpp
+1447519256 source:d:\git-rep\wxplot\src\space.cpp
 	"Space.h"
 
-1446559018 source:d:\git-rep\wxplot\src\valueadaptor.cpp
+1447307401 source:d:\git-rep\wxplot\src\valueadaptor.cpp
 	"ValueAdaptor.h"
 	<time.h>
+	<algorithm>
 
-1447208845 d:\git-rep\wxplot\include\valueadaptor.h
+1447300993 d:\git-rep\wxplot\include\valueadaptor.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -5829,4 +5836,17 @@
 	"Renderer.h"
 	"Axis.h"
 	"Space.h"
+
+1447720319 d:\git-rep\wxplot\include\widget.h
+	"plot_defs.h"
+	"Series.h"
+	"Data.h"
+	"Plot.h"
+	"Renderer.h"
+	"Scale.h"
+	<wx/graphics.h>
+
+1447519412 source:d:\git-rep\wxplot\src\grid.cpp
+	"Grid.h"
+	"ChartWindow.h"
 

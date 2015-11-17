@@ -16,7 +16,7 @@ END_EVENT_TABLE()
 
 ScaleWindow::ScaleWindow(wxWindow *parent, wxOrientation orient, double offset, double range):wxPanel()//(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
 {
-	SetBackgroundStyle(wxBG_STYLE_TRANSPARENT);
+	SetBackgroundStyle(wxBG_STYLE_PAINT);
 	Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 
 	SetName("scalewindow");
@@ -42,20 +42,20 @@ ScaleWindow::~ScaleWindow()
 {
 }
 
-void ScaleWindow::ScaleUpdated()
-{
-	Scale::ScaleUpdated();
-	GetParent()->Refresh();
-	GetParent()->Update();
 
+void ScaleWindow::ScaleRedraw()
+{
+	Refresh();
+	Update();
 }
 
 static char s_buff[20];
 
 void ScaleWindow::OnPaint(wxPaintEvent & event)
 {
+	DPRINTF("ScaleWindow::OnPaint\n");
 	int width, height;
-
+	
 	if(m_orient == wxHORIZONTAL)
 		GetClientSize(&width, &height);
 	else
@@ -64,11 +64,13 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 	wxBufferedPaintDC dc(this);
 	wxRect rect;
 	rect = GetClientRect();
-	wxColor col(255, 212, 127, 50);
-	
-	dc.SetPen(col);
-	dc.SetBrush(col);
-	dc.DrawRectangle(rect);
+	//wxColor col(255, 212, 127, 50);
+	//
+	//dc.SetPen(col);
+	//dc.SetBrush(col);
+	//dc.DrawRectangle(rect);
+	dc.Clear();
+
 	if (m_valueadaptor == NULL)
 		return;
 
@@ -89,6 +91,8 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 		double ticker = m_valueadaptor->GetTicker();
 		int tick_len;
 		x = (ticker) / m_range * width;
+		if (m_orient == wxVERTICAL)
+			x = width - x;
 		if (x < 0)
 			continue;
 		if (x > width)
@@ -136,7 +140,7 @@ void ScaleWindow::OnMouseWheel(wxMouseEvent & event)
 	if (m_orient == wxHORIZONTAL)
 		ZoomAt((double)event.GetX() / (double)w, factor);
 	else
-		ZoomAt((double)event.GetY() / (double)h, factor);
+		ZoomAt(1 - (double)event.GetY() / (double)h, factor);
 }
 
 void ScaleWindow::OnLeftDown(wxMouseEvent & event)
@@ -149,7 +153,7 @@ void ScaleWindow::OnLeftDown(wxMouseEvent & event)
 	if (m_orient == wxHORIZONTAL)
 		StartPanAt((double)event.GetX() / (double)x);
 	else
-		StartPanAt((double)event.GetY() / (double)h);
+		StartPanAt(1 - (double)event.GetY() / (double)h);
 
 	if(!HasCapture())
         CaptureMouse();
@@ -172,7 +176,7 @@ void ScaleWindow::OnMouseMove(wxMouseEvent & event)
 		if (m_orient == wxHORIZONTAL)
 			ProceedPanAt((double)event.GetX() / (double)x);
 		else
-			ProceedPanAt((double)event.GetY() / (double)h);
+			ProceedPanAt(1 - (double)event.GetY() / (double)h);
 	}
 }
 

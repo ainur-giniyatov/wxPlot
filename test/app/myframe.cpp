@@ -3,7 +3,11 @@
 #include "Series.h"
 #include "Data.h"
 #include "Space.h"
+#include "Widget.h"
+#include "ScaleWidget.h"
+
 #include <wx/textdlg.h>
+#include <float.h>
 
 BEGIN_EVENT_TABLE(MyFrame, MainFrame)
 EVT_MOUSEWHEEL(MyFrame::OnMouseWheel)
@@ -32,17 +36,17 @@ MyFrame::MyFrame():MainFrame(NULL)
 
 
 	//2nd page
-	PlotWindow *plotwindow = new PlotWindow(m_panel6);
-	bSizer7->Add(plotwindow, 1, wxEXPAND);
+	m_2ndpageplotwindow = new PlotWindow(m_panel6);
+	bSizer7->Add(m_2ndpageplotwindow, 1, wxEXPAND);
 	m_panel_page2->Layout();
 
-	SpaceND *space2d = new SpaceND(2);
+	m_2ndpagespace = new SpaceND(2);
 
-	plotwindow->AddSpace(space2d);
-	plotwindow->GetYScale()->AddAxis(space2d->GetAxis(AXIS_Y));
-	plotwindow->GetYScale()->SetRangeLimits(DBL_MAX, DBL_MIN);
+	m_2ndpageplotwindow->AddSpace(m_2ndpagespace);
+	m_2ndpageplotwindow->GetYScale()->AddAxis(m_2ndpagespace->GetAxis(AXIS_Y));
+	m_2ndpageplotwindow->GetYScale()->SetRangeLimits(DBL_MAX, DBL_MIN);
 
-	int datasize = 100;
+	int datasize = 10;
 	DataTyped<float> *xdata = new DataTyped<float>(datasize);
 	DataTyped<float> *ydata = new DataTyped<float>(datasize);
 
@@ -52,13 +56,19 @@ MyFrame::MyFrame():MainFrame(NULL)
 		ydata->SetValue(indx, indx);
 	}
 
-	SeriesND *series = new SeriesND(2);
-	series->SetNData(xdata, AXIS_X, false);
-	series->SetNData(ydata, AXIS_Y, false);
+	m_2ndpageydata = ydata;
+	m_2ndpagexdata = xdata;
 
-	series->SetRenderer(new Renderer2DTyped<float, float>());
+	m_2ndpageseries = new SeriesND(2);
+	m_2ndpageseries->SetNData(xdata, AXIS_X, false);
+	m_2ndpageseries->SetNData(ydata, AXIS_Y, false);
 
-	space2d->AddSeries(series);
+	m_2ndpageseries->SetRenderer(new Renderer2DTyped<float, float>());
+
+	m_2ndpagespace->AddSeries(m_2ndpageseries);
+
+	Widget *widget;
+	widget = new Widget(m_2ndpageplotwindow);
 }
 
 
@@ -73,7 +83,7 @@ void MyFrame::m_menuItem_ExitOnMenuSelection(wxCommandEvent & event)
 
 void MyFrame::m_button1OnButtonClick(wxCommandEvent & event)
 {
-	int datasize = 500;
+	int datasize = 5000;
 	if (m_plotwindow == NULL)
 	{
 		wxBell();
@@ -94,7 +104,6 @@ void MyFrame::m_button1OnButtonClick(wxCommandEvent & event)
 	SpaceND *space = m_plotwindow->GetSpace(0);
 
 
-	space->AddSeries(series);
 
 	series->SetNData(xdata, AXIS_X, false);
 	series->SetNData(ydata, AXIS_Y, false);
@@ -108,6 +117,7 @@ void MyFrame::m_button1OnButtonClick(wxCommandEvent & event)
 
 	TimeAxisValueAdaptor<int> *tvadap = new TimeAxisValueAdaptor<int>();
 	xdata->SetValueAdaptor(tvadap);
+	space->AddSeries(series);
 
 	fill_series_choices();
 }
@@ -120,7 +130,7 @@ void MyFrame::m_button2OnButtonClick(wxCommandEvent & event)
 		return;
 	}
 
-	int datasize = 500;
+	int datasize = 50000;
 	DataTyped<float> *xdata = new DataTyped<float>(datasize, "FTIME");
 	DataTyped<float> *ydata = new DataTyped<float>(datasize, "FDATA");
 
@@ -139,7 +149,7 @@ void MyFrame::m_button2OnButtonClick(wxCommandEvent & event)
 	series->SetNData(xdata, AXIS_X);
 	series->SetNData(ydata, AXIS_Y);
 
-	
+
 
 	Renderer2D *renderer2d;
 	renderer2d = new Renderer2DTyped<float, float>();
@@ -190,7 +200,7 @@ void MyFrame::m_button_newplotOnButtonClick(wxCommandEvent & event)
 	PlotWindow *plotwindow;
 	plotwindow = m_chartwindow->CreatePlotWindow();
 	wxTextEntryDialog dlg(this, "Plot name");
-	
+
 	if (dlg.ShowModal() == wxID_OK)
 	{
 		plotwindow->SetPlotName(static_cast<const char *>(dlg.GetValue()));
@@ -204,7 +214,7 @@ void MyFrame::m_button_newplotOnButtonClick(wxCommandEvent & event)
 	plotwindow->GetYScale()->AddAxis(space->GetAxis(AXIS_Y));
 
 	fill_plot_choices();
-	
+
 
 }
 
@@ -254,7 +264,7 @@ void MyFrame::m_checkBox_connecttoscaleOnCheckBox(wxCommandEvent & event)
 	{
 		scalewindow->RemoveAxis(axis);
 	}
-	
+
 }
 
 void MyFrame::m_choice_seriesOnChoice(wxCommandEvent & event)
@@ -320,14 +330,17 @@ void MyFrame::m_button_DeleteOnButtonClick(wxCommandEvent & event)
 
 void MyFrame::m_button_dataupdatedOnButtonClick(wxCommandEvent & event)
 {
+	m_2ndpageydata->DataUpdated();
 }
 
 void MyFrame::m_button_seriesupdateOnButtonClick(wxCommandEvent & event)
 {
+	m_2ndpageseries->SeriesUpdated();
 }
 
 void MyFrame::m_button_spaceupdateOnButtonClick(wxCommandEvent & event)
 {
+	m_2ndpagespace->SpaceUpdated();
 }
 
 void MyFrame::OnMouseWheel(wxMouseEvent & event)
@@ -365,7 +378,7 @@ void MyFrame::fill_plot_choices()
 
 void MyFrame::fill_series_choices()
 {
-	
+
 	m_choice_series->Clear();
 	m_choice_data->Clear();
 	m_data = NULL;
@@ -374,7 +387,7 @@ void MyFrame::fill_series_choices()
 		return;
 
 	SpaceND *space = (SpaceND *)m_plotwindow->GetSpace(0);
-	
+
 	for (auto series : space->GetSerie())
 	{
 		m_choice_series->Append(wxString(series->GetSeriesName()), series);

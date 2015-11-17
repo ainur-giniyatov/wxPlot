@@ -13,7 +13,7 @@ Grid::~Grid()
 void Grid::Render(wxGraphicsContext * gc)
 {
 	wxASSERT(m_owner_space != NULL);
-	
+	//return;
 	Axis *xaxis = m_owner_space->GetAxis(AXIS_X);
 	Axis *yaxis = m_owner_space->GetAxis(AXIS_Y);
 
@@ -58,7 +58,7 @@ void Grid::Render(wxGraphicsContext * gc)
 	{
 		double ticker = yaxadaptor->GetTicker();
 		int y;
-		y = (ticker) / yaxis->GetRange() * height;
+		y = (1 - (ticker) / yaxis->GetRange()) * height;
 		if (y < 0)
 			continue;
 		if (y > height)

@@ -1,5 +1,6 @@
 //#include "stdafx.h"
 #include "Series.h"
+#include <algorithm>
 
 const char *s_series_name_null = "null";
 
@@ -79,7 +80,7 @@ void SeriesND::SeriesUpdated()
 
 Renderer * SeriesND::GetRenderer()
 {
-	wxASSERT(m_renderer != NULL);
+//	wxASSERT(m_renderer != NULL);
 	return m_renderer;
 }
 
@@ -90,7 +91,7 @@ void SeriesND::SetNData(DataNoType * data, AXIS_DIR axis_dir, bool update)
 
 	data->SetAxisDir(axis_dir);
 
-	
+
 	if (m_datas[axis_dir] != NULL && m_datas[axis_dir]->GetOwner() != NULL)
 	{
 		delete m_datas[axis_dir];
@@ -120,9 +121,25 @@ void SeriesND::Fit(bool update)
 
 	if (update)
 	{
+		std::vector<Plot *> vuniqplot;
 		for (size_t indx = 0; indx < m_owner_space->GetDimsCount(); indx++) //auto axis : m_owner_space->GetAxes())
 		{
-			m_owner_space->GetAxis((AXIS_DIR)indx)->AxisUpdated();
+			Scale *scale;
+			scale = m_owner_space->GetAxis((AXIS_DIR)indx)->GetCommonScale();
+			if (scale != NULL)
+			{
+				scale->ScaleRedraw();
+				for (auto axis : scale->GetAxes())
+				{
+					Plot *plot;
+					plot = axis->GetOwner()->GetOwner();
+					if (plot != NULL && std::count(vuniqplot.begin(), vuniqplot.end(), plot) == 0)
+					{
+						plot->RedrawPlot();
+						vuniqplot.push_back(plot);
+					}
+				}
+			}
 		}
 	}
 }

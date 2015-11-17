@@ -24,14 +24,16 @@ public:
 	void SetOwner(SpaceND *space) { m_owner_space = space; };
 	SpaceND *GetOwner() { return m_owner_space; }
 	
-	void SetOffset(double offset, bool update = false);
-	void SetRange(double range, bool update = false);
+	void SetOffset(double offset);
+	void SetRange(double range);
 	double inline GetOffset() { return m_offset; }
 	double inline GetRange() { return m_range; }
 	
 	void SetCommonScale(Scale *scale) { m_commonscale = scale; };
 	Scale *GetCommonScale() { return m_commonscale; }
-	
+	void PropagateToCommonScale();
+
+	/*adjust visible range for the axis and redraw dependant plots*/
 	void SetVisibleRange(double offs, double range, bool update = true);
 protected:
 

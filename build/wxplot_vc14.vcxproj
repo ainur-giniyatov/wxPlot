@@ -273,10 +273,12 @@
     <ClInclude Include="..\include\plot_defs.h" />
     <ClInclude Include="..\include\Renderer.h" />
     <ClInclude Include="..\include\Scale.h" />
+    <ClInclude Include="..\include\ScaleWidget.h" />
     <ClInclude Include="..\include\ScaleWindow.h" />
     <ClInclude Include="..\include\Series.h" />
     <ClInclude Include="..\include\Space.h" />
     <ClInclude Include="..\include\ValueAdaptor.h" />
+    <ClInclude Include="..\include\Widget.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Area.cpp" />
@@ -288,10 +290,12 @@
     <ClCompile Include="..\src\PlotWindow.cpp" />
     <ClCompile Include="..\src\Renderer.cpp" />
     <ClCompile Include="..\src\Scale.cpp" />
+    <ClCompile Include="..\src\ScaleWidget.cpp" />
     <ClCompile Include="..\src\ScaleWindow.cpp" />
     <ClCompile Include="..\src\Series.cpp" />
     <ClCompile Include="..\src\Space.cpp" />
     <ClCompile Include="..\src\ValueAdaptor.cpp" />
+    <ClCompile Include="..\src\Widget.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -96,6 +96,7 @@
 		<Unit filename="../include/Series.h" />
 		<Unit filename="../include/Space.h" />
 		<Unit filename="../include/ValueAdaptor.h" />
+		<Unit filename="../include/Widget.h" />
 		<Unit filename="../include/plot_defs.h" />
 		<Unit filename="../src/Area.cpp" />
 		<Unit filename="../src/Axis.cpp" />
@@ -110,6 +111,7 @@
 		<Unit filename="../src/Series.cpp" />
 		<Unit filename="../src/Space.cpp" />
 		<Unit filename="../src/ValueAdaptor.cpp" />
+		<Unit filename="../src/Widget.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

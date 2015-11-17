@@ -9,8 +9,8 @@ void SpaceND::AddSeries(SeriesND * series, bool update)
 #endif
 	series->SetOwner(this);
 	m_serie.push_back(series);
-	if (update)
-		SpaceUpdated();
+	if (update && m_owner_plot != NULL)
+		m_owner_plot->RedrawPlot();
 }
 
 void SpaceND::RemoveSeries(SeriesND * series, bool update)
@@ -26,8 +26,8 @@ void SpaceND::RemoveSeries(SeriesND * series, bool update)
 	}
 	m_serie = serie;
 
-	if (update)
-		SpaceUpdated();
+	if (update && m_owner_plot != NULL)
+		m_owner_plot->RedrawPlot();
 }
 
 void SpaceND::Clear(bool update)
@@ -50,8 +50,8 @@ void SpaceND::Clear(bool update)
 void SpaceND::SpaceUpdated()
 {
 	DPRINTF("Space updated\n");
-	if (m_owner_plot != NULL)
-		m_owner_plot->PlotUpdated();
+	//if (m_owner_plot != NULL)
+	//	m_owner_plot->PlotUpdated();
 }
 
 SpaceND::SpaceND(size_t dims_count)
@@ -112,57 +112,50 @@ Axis * SpaceND::GetAxis(AXIS_DIR axis_dir)
 void SpaceND::ZoomAt(double rx, double ry, double xfactor, double yfactor)
 {
 	DPRINTF("ZoomAt\n");
-	Axis *m_xaxis;
-	Axis *m_yaxis;
-	m_xaxis = m_axes[0];//let x be 1st dimension
-	m_yaxis = m_axes[1];//let y be 2nd dimension
+	Axis *xaxis;
+	Axis *yaxis;
+	xaxis = m_axes[0];//let x be 1st dimension
+	yaxis = m_axes[1];//let y be 2nd dimension
 
 	double offs, range, x, y;
-	range = m_xaxis->GetRange();
-	offs = m_xaxis->GetOffset();
+	range = xaxis->GetRange();
+	offs = xaxis->GetOffset();
 	x = offs + range * rx;
-	if (m_xaxis->GetCommonScale() != NULL)
+	if (xaxis->GetCommonScale() != NULL)
 	{
-		if (m_xaxis->GetCommonScale()->IsInRange(range * xfactor))
+		if (xaxis->GetCommonScale()->IsInRange(range * xfactor))
 		{
-			m_xaxis->SetOffset(x - (x - offs) * xfactor);
-			m_xaxis->SetRange(range * xfactor);
+			xaxis->SetOffset(x - (x - offs) * xfactor);
+			xaxis->SetRange(range * xfactor);
+			xaxis->PropagateToCommonScale();
 		}
 	}
 	else
 	{
-		m_xaxis->SetOffset(x - (x - offs) * xfactor);
-		m_xaxis->SetRange(range * xfactor);
+		xaxis->SetOffset(x - (x - offs) * xfactor);
+		xaxis->SetRange(range * xfactor);
+		xaxis->PropagateToCommonScale();
 	}
 
-	
-	range = m_yaxis->GetRange();
-	offs = m_yaxis->GetOffset();
+	range = yaxis->GetRange();
+	offs = yaxis->GetOffset();
 	y = offs + range * ry;
-	if (m_yaxis->GetCommonScale() != NULL)
+	if (yaxis->GetCommonScale() != NULL)
 	{
-		if (m_yaxis->GetCommonScale()->IsInRange(range * yfactor))
+		if (yaxis->GetCommonScale()->IsInRange(range * yfactor))
 		{
-			m_yaxis->SetOffset(y - (y - offs) * yfactor);
-			m_yaxis->SetRange(range * yfactor);
+			yaxis->SetOffset(y - (y - offs) * yfactor);
+			yaxis->SetRange(range * yfactor);
+			yaxis->PropagateToCommonScale();
 		}
 	}
 	else
 	{
-		m_yaxis->SetOffset(y - (y - offs) * yfactor);
-		m_yaxis->SetRange(range * yfactor);
+		yaxis->SetOffset(y - (y - offs) * yfactor);
+		yaxis->SetRange(range * yfactor);
+		yaxis->PropagateToCommonScale();
 	}
 
-
-	if (m_xaxis != NULL && xfactor != 1.)
-		m_xaxis->AxisUpdated();
-	else
-		SpaceUpdated();
-
-	if (m_yaxis != NULL && yfactor != 1.)
-		m_yaxis->AxisUpdated();
-	else
-		SpaceUpdated();
 }
 
 void SpaceND::StartPanAt(double rx, double ry)
@@ -171,8 +164,8 @@ void SpaceND::StartPanAt(double rx, double ry)
 
 	Axis *m_xaxis;
 	Axis *m_yaxis;
-	m_xaxis = m_axes[0];//let x be 1st dimension
-	m_yaxis = m_axes[1];//let y be 2nd dimension
+	m_xaxis = m_axes[AXIS_X];//let x be 1st dimension
+	m_yaxis = m_axes[AXIS_Y];//let y be 2nd dimension
 
 	m_pan_start_at_rx = rx;
 	m_pan_start_at_ry = ry;
@@ -188,28 +181,26 @@ void SpaceND::ProceedPanAt(double rx, double ry)
 {
 	DPRINTF("SpaceND::ProceedPanAt\n");
 
-	Axis *m_xaxis;
-	Axis *m_yaxis;
-	m_xaxis = m_axes[AXIS_X];//let x be 1st dimension
-	m_yaxis = m_axes[AXIS_Y];//let y be 2nd dimension
+	Axis *xaxis;
+	Axis *yaxis;
+	xaxis = m_axes[AXIS_X];//let x be 1st dimension
+	yaxis = m_axes[AXIS_Y];//let y be 2nd dimension
+
 
 //TO DO: need to review this code
-	if (m_xaxis != NULL)
-		m_xaxis->SetOffset(m_pan_start_at_vx - m_xaxis->GetRange() * (rx - m_pan_start_at_rx));
+	if (xaxis != NULL)
+	{
+		xaxis->SetOffset(m_pan_start_at_vx - xaxis->GetRange() * (rx - m_pan_start_at_rx));
+		xaxis->PropagateToCommonScale();
+	}
 
 
-	if (m_yaxis != NULL)
-		m_yaxis->SetOffset(m_pan_start_at_vy - m_yaxis->GetRange() * (ry - m_pan_start_at_ry));
+	if (yaxis != NULL)
+	{
+		yaxis->SetOffset(m_pan_start_at_vy - yaxis->GetRange() * (ry - m_pan_start_at_ry));
+		yaxis->PropagateToCommonScale();
+	}
 
-	if (m_xaxis != NULL)
-		m_xaxis->AxisUpdated();
-	else
-		SpaceUpdated();
-
-	if (m_yaxis != NULL)
-		m_yaxis->AxisUpdated();
-	else
-		SpaceUpdated();
 }
 
 void SpaceND::EndPanAt()

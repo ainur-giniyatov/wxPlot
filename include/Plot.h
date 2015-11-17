@@ -5,6 +5,8 @@
 #include "Axis.h"
 #include "Space.h"
 #include "Scale.h"
+#include "Widget.h"
+
 
 #include <vector>
 
@@ -13,6 +15,8 @@ class WXDLLIMPEXP_PLOTLIB SeriesND;
 class WXDLLIMPEXP_PLOTLIB Axis;
 class WXDLLIMPEXP_PLOTLIB SpaceND;
 class WXDLLIMPEXP_PLOTLIB Scale;
+class WXDLLIMPEXP_PLOTLIB Widget;
+
 
 class WXDLLIMPEXP_PLOTLIB Plot
 {
@@ -26,7 +30,7 @@ public:
 	void Clear(bool update = true);
 	void RemoveSpace(SpaceND *space, bool update = true);
 	virtual ~Plot();
-	virtual void PlotUpdated() = 0;
+	virtual void RedrawPlot	() = 0;
 	virtual void GetSize(int *width, int *height) = 0;
 	void FitPlot(bool update = true);
 
@@ -35,6 +39,7 @@ public:
 
 	Scale * GetYScale() { return m_yscale; }
 
+	void AddWidget(Widget *widget);
 protected:
 
 	void StartPan(double start_rx, double start_ry);
@@ -54,5 +59,8 @@ protected:
 	//temporary TO DO
 	Scale *m_yscale;
 	
+	std::vector<Widget *> m_widgets;
+	//helpers
+	void iterate_axes_redraw_uniq_commonscales_uniq_plots();
 };
 

@@ -8,6 +8,7 @@
 #include "Axis.h"
 #include "Renderer.h"
 #include "ValueAdaptor.h"
+#include "Widget.h"
 
 #include <vector>
 
@@ -17,6 +18,8 @@ class WXDLLIMPEXP_PLOTLIB Plot;
 class WXDLLIMPEXP_PLOTLIB Axis;
 class WXDLLIMPEXP_PLOTLIB SpaceND;
 class WXDLLIMPEXP_PLOTLIB Renderer;
+class WXDLLIMPEXP_PLOTLIB Widget;
+
 template<typename T> class WXDLLIMPEXP_PLOTLIB AxisValueAdaptor;
 
 class WXDLLIMPEXP_PLOTLIB Scale
@@ -26,12 +29,23 @@ public:
 	virtual ~Scale();
 
 	void AddAxis(Axis *axis);
+	
 	void RemoveAxis(Axis *axis);
 
-	void SetOffset(double offset, bool update = false);
-	void SetRange(double range, bool update = false);
+	std::vector<Axis *> &GetAxes() { return m_axes; };
 
-	virtual void ScaleUpdated();
+	/*sets offset for the scale and propagates to bound axes*/
+	void SetOffset(double offset); 
+	
+	/*sets range for the scale and propagates to bound axes*/
+	void SetRange(double range);
+
+	/*iterate plots and redraw them uniqly*/
+	void RedrawDependantPlots();
+
+	
+	/*redraw scale gui component*/
+	virtual void ScaleRedraw() = 0;
 
 	void ZoomAt(double rv, double factor);
 	void StartPanAt(double rv);

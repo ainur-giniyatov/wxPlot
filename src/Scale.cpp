@@ -1,6 +1,7 @@
 //#include "stdafx.h"
 #include "Scale.h"
 #include <float.h>
+#include <algorithm>
 
 Scale::Scale()
 {
@@ -52,26 +53,36 @@ void Scale::RemoveAxis(Axis * axis)
 	m_axes = axes;
 }
 
-void Scale::SetOffset(double offset, bool update)
+void Scale::SetOffset(double offset)
 {
 	m_offset = offset;
-	if (update)
-		ScaleUpdated();
+
+	for (auto axis : m_axes)
+		axis->SetOffset(m_offset);
+
 }
 
-void Scale::SetRange(double range, bool update)
+void Scale::SetRange(double range)
 {
 	m_range = range;
-	if (update)
-		ScaleUpdated();
+
+	for (auto axis : m_axes)
+		axis->SetRange(m_range);
+
 }
 
-void Scale::ScaleUpdated()
+void Scale::RedrawDependantPlots()
 {
+	//redraw dependant plots uniqly
+	std::vector<Plot *> vuniqplots;
 	for (auto axis : m_axes)
 	{
-		axis->SetRange(m_range);
-		axis->SetOffset(m_offset);
+		Plot *plot = axis->GetOwner()->GetOwner();
+		if (plot != NULL && std::count(vuniqplots.begin(), vuniqplots.end(), plot) == 0)
+		{
+			plot->RedrawPlot();
+			vuniqplots.push_back(plot);
+		}
 	}
 }
 
@@ -85,10 +96,11 @@ void Scale::ZoomAt(double rv, double factor)
 
 	if (IsInRange(range * factor))
 	{
-		m_offset = (x - (x - offs) * factor);
-		m_range = (range * factor);
+		SetOffset(x - (x - offs) * factor);
+		SetRange(range * factor);
 
-		ScaleUpdated();
+		ScaleRedraw();
+		RedrawDependantPlots();
 	}
 }
 
@@ -103,10 +115,10 @@ void Scale::ProceedPanAt(double rv)
 {
 	DPRINTF("Scale::ProceedPanAt\n");
 
-	m_offset = (m_pan_start_at_vv - m_range * (rv - m_pan_start_at_rv));
+	SetOffset(m_pan_start_at_vv - m_range * (rv - m_pan_start_at_rv));
 
-	ScaleUpdated();
-
+	ScaleRedraw();
+	RedrawDependantPlots();
 }
 
 void Scale::EndPanAt()
@@ -123,7 +135,6 @@ void Scale::SetValueAdaptor(AxisValueAdaptor<double>* valueadaptor)
 
 	m_valueadaptor = valueadaptor;
 
-	ScaleUpdated();
 }
 
 void Scale::SetRangeLimits(double max, double min, bool update)
@@ -131,8 +142,6 @@ void Scale::SetRangeLimits(double max, double min, bool update)
 	m_range_max = max;
 	m_range_min = min;
 
-	if (update)
-		ScaleUpdated();
 }
 
 bool Scale::IsInRange(double new_range)

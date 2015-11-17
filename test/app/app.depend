@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1446781543 source:d:\git-rep\wxplot\test\app\mainframe.cpp
+1447310238 source:d:\git-rep\wxplot\test\app\mainframe.cpp
 	"mainframe.h"
 
-1447223774 d:\git-rep\wxplot\test\app\mainframe.h
+1447310238 d:\git-rep\wxplot\test\app\mainframe.h
 	<wx/artprov.h>
 	<wx/xrc/xmlres.h>
 	<wx/string.h>
@@ -1713,29 +1713,30 @@
 1387201349 d:\dev\wxpython-src-3.0.2.0\include\wx\cocoa\app.h
 	"wx/osx/core/cfref.h"
 
-1446781694 d:\git-rep\wxplot\test\app\myframe.h
+1447365678 d:\git-rep\wxplot\test\app\myframe.h
 	"mainframe.h"
 	"PlotWindow.h"
 	"Space.h"
 	"ChartWindow.h"
 
-1447203520 d:\git-rep\wxplot\include\plotwindow.h
+1447504349 d:\git-rep\wxplot\include\plotwindow.h
 	<wx/window.h>
 	<wx/panel.h>
 	<wx/graphics.h>
 	"Plot.h"
 	"ScaleWindow.h"
 
-1447213505 d:\git-rep\wxplot\include\plot.h
+1447635729 d:\git-rep\wxplot\include\plot.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
 	"Axis.h"
 	"Space.h"
 	"Scale.h"
+	"Widget.h"
 	<vector>
 
-1446771946 d:\git-rep\wxplot\include\plot_defs.h
+1447294864 d:\git-rep\wxplot\include\plot_defs.h
 	<wx/wxprec.h>
 	<wx/debug.h>
 	<stdio.h>
@@ -2633,7 +2634,7 @@
 	"Renderer.h"
 	"Space.h"
 
-1447129360 d:\git-rep\wxplot\include\data.h
+1447294864 d:\git-rep\wxplot\include\data.h
 	"plot_defs.h"
 	"Series.h"
 	"Renderer.h"
@@ -2649,7 +2650,7 @@
 	"ValueAdaptor.h"
 	<wx/graphics.h>
 
-1446811412 d:\git-rep\wxplot\include\axis.h
+1447515455 d:\git-rep\wxplot\include\axis.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2657,7 +2658,7 @@
 	"Renderer.h"
 	"Scale.h"
 
-1447129561 d:\git-rep\wxplot\include\scale.h
+1447514986 d:\git-rep\wxplot\include\scale.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2839,7 +2840,7 @@
 	"wx/icon.h"
 	"wx/aui/auibook.h"
 
-1447222609 d:\git-rep\wxplot\include\scalewindow.h
+1447393209 d:\git-rep\wxplot\include\scalewindow.h
 	<wx/panel.h>
 	"plot_defs.h"
 	"Series.h"
@@ -2856,7 +2857,7 @@
 	"Data.h"
 	"Space.h"
 
-1447208845 d:\git-rep\wxplot\include\valueadaptor.h
+1447300993 d:\git-rep\wxplot\include\valueadaptor.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -5732,4 +5733,13 @@
 	"Renderer.h"
 	"Axis.h"
 	"Space.h"
+
+1447720319 d:\git-rep\wxplot\include\widget.h
+	"plot_defs.h"
+	"Series.h"
+	"Data.h"
+	"Plot.h"
+	"Renderer.h"
+	"Scale.h"
+	<wx/graphics.h>
 
