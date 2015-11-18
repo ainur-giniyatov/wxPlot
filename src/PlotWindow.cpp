@@ -4,6 +4,8 @@
 
 #include <wx/dcbuffer.h>
 
+
+
 BEGIN_EVENT_TABLE(PlotWindow, wxWindow)
 EVT_PAINT(PlotWindow::OnPaint)
 EVT_ERASE_BACKGROUND(PlotWindow::OnEraseBackground)
@@ -12,6 +14,8 @@ EVT_MOUSEWHEEL(PlotWindow::OnMouseWheel)
 EVT_LEFT_DOWN(PlotWindow::OnLeftDown)
 EVT_LEFT_UP(PlotWindow::OnLeftUp)
 EVT_MOTION(PlotWindow::OnMouseMove)
+EVT_RIGHT_DOWN(PlotWindow::OnRightDown)
+EVT_RIGHT_UP(PlotWindow::OnRightUp)
 END_EVENT_TABLE()
 
 
@@ -26,11 +30,18 @@ PlotWindow::PlotWindow(wxWindow * parent) :wxWindow(parent, wxID_ANY, wxDefaultP
 
 	SetSizer(m_sizer);
 	Layout();
+
+	//m_menu = new wxMenu();
+	
+
+	
 }
 
 PlotWindow::~PlotWindow()
 {
 	DPRINTF("PlotWindow: dtor\n");
+	
+	
 	
 }
 
@@ -111,6 +122,16 @@ void PlotWindow::OnLeftUp(wxMouseEvent & event)
 
 }
 
+void PlotWindow::OnRightDown(wxMouseEvent & event)
+{
+	if(m_menu.GetMenuItemCount() != 0)
+		PopupMenu(&m_menu);
+}
+
+void PlotWindow::OnRightUp(wxMouseEvent & event)
+{
+}
+
 void PlotWindow::OnMouseMove(wxMouseEvent & event)
 {
 	int w, h, x, y;
@@ -162,12 +183,12 @@ void PlotWindow::OnMouseWheel(wxMouseEvent & event)
 	int w, h;
 	GetClientSize(&w, &h);
 	if(event.GetModifiers() == wxMOD_CONTROL)
-		ZoomWheel((double)x / (double)w, (double)y / (double)h, factor, factor);
+		ZoomWheel((double)x / (double)w, 1 - (double)y / (double)h, factor, factor);
 	else
 		if (event.GetModifiers() == wxMOD_SHIFT)
-			ZoomWheel((double)x / (double)w, (double)y / (double)h, 1., factor);
+			ZoomWheel((double)x / (double)w, 1 - (double)y / (double)h, 1., factor);
 		else
-			ZoomWheel((double)x / (double)w, (double)y / (double)h, factor, 1.);
+			ZoomWheel((double)x / (double)w, 1 - (double)y / (double)h, factor, 1.);
 }
 
 void PlotWindow::Render(wxGraphicsContext * gc)
@@ -183,8 +204,8 @@ void PlotWindow::Render(wxGraphicsContext * gc)
 //render grid
 	Grid *grid;
 	grid = m_spaces[0]->GetGrid();
-	wxASSERT(grid != NULL);
-	grid->Render(gc);
+	if(grid != NULL)
+		grid->Render(gc);
 
 	
 //render data
@@ -218,6 +239,7 @@ void PlotWindow::GetSize(int * width, int * height)
 {
 	GetClientSize(width, height);
 }
+
 
 void PlotWindow::OnMouseCaptureLost(wxMouseCaptureLostEvent &event)
 {

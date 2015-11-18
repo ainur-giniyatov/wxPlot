@@ -18,6 +18,8 @@ class WXDLLIMPEXP_PLOTLIB SpaceND;
 class WXDLLIMPEXP_PLOTLIB PlotWindow;
 class WXDLLIMPEXP_PLOTLIB ScaleWindow;
 
+wxDEFINE_EVENT(wxCommandEventQueued, wxCommandEvent);
+
 class WXDLLIMPEXP_PLOTLIB ChartWindow :
 	public wxPanel
 {
@@ -37,8 +39,13 @@ private:
 
 	wxAuiManager m_mgr;
 
+	void OnPlotMenuItem_close(wxCommandEvent &event);
+	void OnPlotMenuItem_close_queued(wxCommandEvent &event);//for invoking plot deleteion in the next loop iteration to avoid crash of wxMenu
+	static const int ID_PLOTMENUITEM_CLOSE;
 
 	int m_orientation;
 	void addplot(PlotWindow *plot);
+
+	DECLARE_EVENT_TABLE()
 };
 

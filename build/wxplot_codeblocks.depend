@@ -2574,7 +2574,7 @@
 	"ValueAdaptor.h"
 	<wx/graphics.h>
 
-1447635729 d:\git-rep\wxplot\include\plot.h
+1447796730 d:\git-rep\wxplot\include\plot.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2592,7 +2592,7 @@
 	"Renderer.h"
 	"Scale.h"
 
-1447514986 d:\git-rep\wxplot\include\scale.h
+1447738507 d:\git-rep\wxplot\include\scale.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2600,9 +2600,10 @@
 	"Axis.h"
 	"Renderer.h"
 	"ValueAdaptor.h"
+	"Widget.h"
 	<vector>
 
-1447213116 d:\git-rep\wxplot\include\space.h
+1447797342 d:\git-rep\wxplot\include\space.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -5829,7 +5830,7 @@
 	<time.h>
 	<math.h>
 
-1447122074 d:\git-rep\wxplot\include\grid.h
+1447797750 d:\git-rep\wxplot\include\grid.h
 	<wx/graphics.h>
 	"plot_defs.h"
 	"Series.h"
@@ -5837,13 +5838,12 @@
 	"Axis.h"
 	"Space.h"
 
-1447720319 d:\git-rep\wxplot\include\widget.h
+1447828254 d:\git-rep\wxplot\include\widget.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
 	"Plot.h"
 	"Renderer.h"
-	"Scale.h"
 	<wx/graphics.h>
 
 1447519412 source:d:\git-rep\wxplot\src\grid.cpp

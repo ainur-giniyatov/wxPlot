@@ -4,19 +4,20 @@ Widget::Widget(Plot *owner, SpaceND *bound_to_space)
 {
 	DPRINTF("Widget ctor\n");
 
-	m_x_anchor = 1.;
-	m_y_anchor = 0.0;
+	m_x_anchor = 0.5;
+	m_y_anchor = 0.5;
 
 	m_dx = m_dy = 0;
 	m_owner = owner;
 	m_owner->AddWidget(this);
 
-	m_pos_rel = POS_TOPRIGHT;
+	m_pos_rel = POS_BOTTOMRIGHT;
 
 	m_bound_to_space = bound_to_space;
 
 	m_dragging = false;
-
+	m_movable = false;
+	m_snap_to_border = WIDGET_SNAP_ALL;
 	Fit();
 }
 
@@ -139,6 +140,8 @@ void Widget::Fit()
 
 void Widget::start_dragging(int drag_x, int drag_y)
 {
+	if (!m_movable)
+		return;
 	DPRINTF("Widget::start_dragging\n");
 	m_dragging = true;
 	m_drag_x = drag_x;
@@ -157,6 +160,58 @@ void Widget::proceed_dragging(int x, int y)
 	new_wx = x - m_drag_dx;
 	new_wy = y - m_drag_dy;
 
+
+	if (m_snap_to_border & WIDGET_SNAP_LEFT)
+		if (abs(new_wx) < WIDGET_SNAP_DISTANCE)
+		{
+			new_wx = 0;
+
+			if (m_pos_rel == POS_BOTTOMRIGHT)
+				m_pos_rel = POS_BOTTOMLEFT;
+
+			if (m_pos_rel == POS_TOPRIGHT)
+				m_pos_rel = POS_TOPLEFT;
+		}
+
+	if (m_snap_to_border & WIDGET_SNAP_RIGHT)
+		if (abs(w_plot - (new_wx + m_width)) < WIDGET_SNAP_DISTANCE)
+		{
+			new_wx = w_plot - m_width - 1;
+
+			if (m_pos_rel == POS_BOTTOMLEFT)
+				m_pos_rel = POS_BOTTOMRIGHT;
+
+			if (m_pos_rel == POS_TOPLEFT)
+				m_pos_rel = POS_TOPRIGHT;
+
+		}
+
+	if (m_snap_to_border & WIDGET_SNAP_TOP)
+		if (abs(new_wy) < WIDGET_SNAP_DISTANCE)
+		{
+			new_wy = 0;
+
+			if (m_pos_rel == POS_BOTTOMRIGHT)
+				m_pos_rel = POS_TOPRIGHT;
+
+			if (m_pos_rel == POS_BOTTOMLEFT)
+				m_pos_rel = POS_TOPLEFT;
+
+		}
+
+	if (m_snap_to_border & WIDGET_SNAP_BOTTOM)
+		if (abs(h_plot - (new_wy + m_height)) < WIDGET_SNAP_DISTANCE)
+		{
+			new_wy = h_plot - m_height - 1;
+
+			if (m_pos_rel == POS_TOPRIGHT)
+				m_pos_rel = POS_BOTTOMRIGHT;
+
+			if (m_pos_rel == POS_TOPLEFT)
+				m_pos_rel = POS_BOTTOMLEFT;
+
+		}
+
 	int new_ax = 0, new_ay = 0;//new dc coords for the anchor point
 
 	switch (m_pos_rel) {
@@ -173,7 +228,7 @@ void Widget::proceed_dragging(int x, int y)
 		new_ay = new_wy + m_height + m_dy + 1;
 		break;
 	case POS_BOTTOMRIGHT:
-		new_ax = new_wx + m_widget_x + m_dx + 1;
+		new_ax = new_wx + m_width + m_dx + 1;
 		new_ay = new_wy + m_height + m_dy + 1;
 		break;
 	case POS_AUTO:

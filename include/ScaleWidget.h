@@ -23,7 +23,7 @@ class WXDLLIMPEXP_PLOTLIB Widget;
 class WXDLLIMPEXP_PLOTLIB ScaleWidget :public Widget, public Scale
 {
 public:
-	ScaleWidget(Plot *owner);
+	ScaleWidget(Plot *owner, wxOrientation orient);
 	virtual ~ScaleWidget();
 
 	/*calculate size*/

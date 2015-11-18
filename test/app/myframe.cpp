@@ -43,17 +43,16 @@ MyFrame::MyFrame():MainFrame(NULL)
 	m_2ndpagespace = new SpaceND(2);
 
 	m_2ndpageplotwindow->AddSpace(m_2ndpagespace);
-	m_2ndpageplotwindow->GetYScale()->AddAxis(m_2ndpagespace->GetAxis(AXIS_Y));
-	m_2ndpageplotwindow->GetYScale()->SetRangeLimits(DBL_MAX, DBL_MIN);
+	
 
-	int datasize = 10;
+	int datasize = 10000;
 	DataTyped<float> *xdata = new DataTyped<float>(datasize);
 	DataTyped<float> *ydata = new DataTyped<float>(datasize);
 
 	for (int indx = 0; indx < datasize; indx++)
 	{
 		xdata->SetValue(indx, indx);
-		ydata->SetValue(indx, indx);
+		ydata->SetValue(pow(indx / 2., 2), indx);
 	}
 
 	m_2ndpageydata = ydata;
@@ -63,12 +62,27 @@ MyFrame::MyFrame():MainFrame(NULL)
 	m_2ndpageseries->SetNData(xdata, AXIS_X, false);
 	m_2ndpageseries->SetNData(ydata, AXIS_Y, false);
 
+
 	m_2ndpageseries->SetRenderer(new Renderer2DTyped<float, float>());
 
 	m_2ndpagespace->AddSeries(m_2ndpageseries);
 
 	Widget *widget;
-	widget = new Widget(m_2ndpageplotwindow);
+	widget = new Widget(m_2ndpageplotwindow, m_2ndpagespace);
+	widget->SetAnchorPosition(xdata->GetDataArray()[0], ydata->GetDataArray()[0]);
+	ScaleWidget *scalewidget;
+	scalewidget = new ScaleWidget(m_2ndpageplotwindow, wxVERTICAL);
+	scalewidget->AddAxis(m_2ndpagespace->GetAxis(AXIS_Y));
+	scalewidget->SetRangeLimits(DBL_MAX, DBL_MIN);
+	scalewidget->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
+
+	scalewidget = new ScaleWidget(m_2ndpageplotwindow, wxHORIZONTAL);
+	scalewidget->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
+	scalewidget->AddAxis(m_2ndpagespace->GetAxis(AXIS_X));
+	Grid *grid;
+	grid = new Grid(m_2ndpagespace);
+
+	m_2ndpageseries->Fit();
 }
 
 
@@ -119,6 +133,9 @@ void MyFrame::m_button1OnButtonClick(wxCommandEvent & event)
 	xdata->SetValueAdaptor(tvadap);
 	space->AddSeries(series);
 
+
+	
+	
 	fill_series_choices();
 }
 
@@ -211,7 +228,16 @@ void MyFrame::m_button_newplotOnButtonClick(wxCommandEvent & event)
 	plotwindow->AddSpace(space);
 
 	m_chartwindow->GetScaleWindow()->AddAxis(space->GetAxis(AXIS_X));
-	plotwindow->GetYScale()->AddAxis(space->GetAxis(AXIS_Y));
+//	plotwindow->GetYScale()->AddAxis(space->GetAxis(AXIS_Y));
+
+	ScaleWidget *scalewidget;
+	scalewidget = new ScaleWidget(plotwindow, wxVERTICAL);
+
+	Grid *grid;
+	grid = new Grid(space);
+
+	scalewidget->AddAxis(space->GetAxis(AXIS_Y));
+	scalewidget->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
 
 	fill_plot_choices();
 

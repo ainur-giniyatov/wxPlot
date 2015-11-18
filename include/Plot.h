@@ -37,8 +37,6 @@ public:
 	void SetCommonScale(Scale *scale);
 	Scale *GetCommonScale() { return m_commonscale; }
 
-	Scale * GetYScale() { return m_yscale; }
-
 	void AddWidget(Widget *widget);
 protected:
 
@@ -56,9 +54,6 @@ protected:
 
 	Scale *m_commonscale;
 
-	//temporary TO DO
-	Scale *m_yscale;
-	
 	std::vector<Widget *> m_widgets;
 	//helpers
 	void iterate_axes_redraw_uniq_commonscales_uniq_plots();

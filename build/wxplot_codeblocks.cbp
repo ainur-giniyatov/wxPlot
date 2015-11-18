@@ -92,6 +92,7 @@
 		<Unit filename="../include/PlotWindow.h" />
 		<Unit filename="../include/Renderer.h" />
 		<Unit filename="../include/Scale.h" />
+		<Unit filename="../include/ScaleWidget.h" />
 		<Unit filename="../include/ScaleWindow.h" />
 		<Unit filename="../include/Series.h" />
 		<Unit filename="../include/Space.h" />
@@ -107,6 +108,7 @@
 		<Unit filename="../src/PlotWindow.cpp" />
 		<Unit filename="../src/Renderer.cpp" />
 		<Unit filename="../src/Scale.cpp" />
+		<Unit filename="../src/ScaleWidget.cpp" />
 		<Unit filename="../src/ScaleWindow.cpp" />
 		<Unit filename="../src/Series.cpp" />
 		<Unit filename="../src/Space.cpp" />

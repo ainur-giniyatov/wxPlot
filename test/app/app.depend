@@ -1719,14 +1719,15 @@
 	"Space.h"
 	"ChartWindow.h"
 
-1447504349 d:\git-rep\wxplot\include\plotwindow.h
+1447807882 d:\git-rep\wxplot\include\plotwindow.h
 	<wx/window.h>
 	<wx/panel.h>
 	<wx/graphics.h>
+	<wx/menu.h>
 	"Plot.h"
 	"ScaleWindow.h"
 
-1447635729 d:\git-rep\wxplot\include\plot.h
+1447796730 d:\git-rep\wxplot\include\plot.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2658,7 +2659,7 @@
 	"Renderer.h"
 	"Scale.h"
 
-1447514986 d:\git-rep\wxplot\include\scale.h
+1447738507 d:\git-rep\wxplot\include\scale.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2666,9 +2667,10 @@
 	"Axis.h"
 	"Renderer.h"
 	"ValueAdaptor.h"
+	"Widget.h"
 	<vector>
 
-1447213116 d:\git-rep\wxplot\include\space.h
+1447797342 d:\git-rep\wxplot\include\space.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2679,7 +2681,7 @@
 	"Grid.h"
 	<vector>
 
-1446820952 d:\git-rep\wxplot\include\chartwindow.h
+1447811826 d:\git-rep\wxplot\include\chartwindow.h
 	<wx/panel.h>
 	<wx/sizer.h>
 	<wx/aui/aui.h>
@@ -2851,11 +2853,15 @@
 	"Scale.h"
 	<vector>
 
-1446559985 source:d:\git-rep\wxplot\test\app\myframe.cpp
+1447740872 source:d:\git-rep\wxplot\test\app\myframe.cpp
 	"myframe.h"
 	"Series.h"
 	"Data.h"
 	"Space.h"
+	"Widget.h"
+	"ScaleWidget.h"
+	<wx/textdlg.h>
+	<float.h>
 
 1447300993 d:\git-rep\wxplot\include\valueadaptor.h
 	"plot_defs.h"
@@ -5726,7 +5732,7 @@
 	"Data.h"
 	"Space.h"
 
-1447122074 d:\git-rep\wxplot\include\grid.h
+1447797750 d:\git-rep\wxplot\include\grid.h
 	<wx/graphics.h>
 	"plot_defs.h"
 	"Series.h"
@@ -5734,12 +5740,21 @@
 	"Axis.h"
 	"Space.h"
 
-1447720319 d:\git-rep\wxplot\include\widget.h
+1447828254 d:\git-rep\wxplot\include\widget.h
+	"plot_defs.h"
+	"Series.h"
+	"Data.h"
+	"Plot.h"
+	"Renderer.h"
+	<wx/graphics.h>
+
+1447740757 d:\git-rep\wxplot\include\scalewidget.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
 	"Plot.h"
 	"Renderer.h"
 	"Scale.h"
+	"Widget.h"
 	<wx/graphics.h>
 

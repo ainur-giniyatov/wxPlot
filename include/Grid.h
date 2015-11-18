@@ -18,12 +18,14 @@ template <class T> class WXDLLIMPEXP_PLOTLIB ValueAdaptor;
 class WXDLLIMPEXP_PLOTLIB Grid
 {
 public:
+	/*constructor invokes owner_space->SetGrid(this)*/
 	Grid(SpaceND *owner_space);
 	virtual ~Grid();
 
 	void Render(wxGraphicsContext *gc);
 	void GridUpdated();
 
+	
 protected:
 	SpaceND *m_owner_space;
 private:

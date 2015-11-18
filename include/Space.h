@@ -44,8 +44,9 @@ public:
 	void EndPanAt();
 	void Fit(bool update = true);
 
-	//Scale *GetYScale() { return m_yscale; };
+
 	Grid *GetGrid() { return m_grid; };
+	void SetGrid(Grid *grid);
 protected:
 	std::vector<SeriesND *> m_serie;
 	Axis ** m_axes;

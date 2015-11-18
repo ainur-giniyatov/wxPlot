@@ -4,6 +4,7 @@
 Grid::Grid(SpaceND *owner_space)
 {
 	m_owner_space = owner_space;
+	m_owner_space->SetGrid(this);
 }
 
 Grid::~Grid()
@@ -21,13 +22,16 @@ void Grid::Render(wxGraphicsContext * gc)
 
 	AxisAdaptor *xaxadaptor = NULL;
 	
-	if(m_owner_space->GetOwner()->GetCommonScale() != NULL)
-		xaxadaptor = m_owner_space->GetOwner()->GetCommonScale()->GetValueAdaptor();
+	if(xaxis->GetCommonScale() != NULL)
+		xaxadaptor = xaxis->GetCommonScale()->GetValueAdaptor();//m_owner_space->GetOwner()->GetCommonScale()
 
-	AxisAdaptor *yaxadaptor = m_owner_space->GetOwner()->GetYScale()->GetValueAdaptor();
+	AxisAdaptor *yaxadaptor = NULL;
+
+	if(yaxis->GetCommonScale() != NULL)
+		yaxadaptor = yaxis->GetCommonScale()->GetValueAdaptor();
 	
 
-	wxASSERT(yaxadaptor != NULL);
+	//wxASSERT(yaxadaptor != NULL);
 
 	int width, height;
 	m_owner_space->GetOwner()->GetSize(&width, &height);
@@ -53,18 +57,21 @@ void Grid::Render(wxGraphicsContext * gc)
 		}
 	}
 
-	yaxadaptor->InitState(yaxis->GetOffset(), yaxis->GetRange(), 15. / (double)height);
-	while (yaxadaptor->Step())
+	if (yaxadaptor != NULL)
 	{
-		double ticker = yaxadaptor->GetTicker();
-		int y;
-		y = (1 - (ticker) / yaxis->GetRange()) * height;
-		if (y < 0)
-			continue;
-		if (y > height)
-			break;
+		yaxadaptor->InitState(yaxis->GetOffset(), yaxis->GetRange(), 15. / (double)height);
+		while (yaxadaptor->Step())
+		{
+			double ticker = yaxadaptor->GetTicker();
+			int y;
+			y = (1 - (ticker) / yaxis->GetRange()) * height;
+			if (y < 0)
+				continue;
+			if (y > height)
+				break;
 
-		gc->StrokeLine(0, y, width, y);
+			gc->StrokeLine(0, y, width, y);
+		}
 	}
 }
 

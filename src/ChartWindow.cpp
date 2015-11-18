@@ -2,6 +2,13 @@
 #include "ChartWindow.h"
 
 
+const int ChartWindow::ID_PLOTMENUITEM_CLOSE = wxNewId();
+
+BEGIN_EVENT_TABLE(ChartWindow, wxPanel)
+EVT_MENU(ID_PLOTMENUITEM_CLOSE, ChartWindow::OnPlotMenuItem_close)
+EVT_COMMAND(wxID_ANY, wxCommandEventQueued, ChartWindow::OnPlotMenuItem_close_queued)
+END_EVENT_TABLE()
+
 ChartWindow::ChartWindow(wxWindow *parent, int orientation) :wxPanel(parent, wxID_ANY)
 {
 	SetName("chart");
@@ -55,11 +62,34 @@ ChartWindow::~ChartWindow()
 	m_mgr.UnInit();
 }
 
+void ChartWindow::OnPlotMenuItem_close(wxCommandEvent & event)
+{
+	DPRINTF("ChartWindow::OnPlotMenuItem_close\n");
+	PlotWindow *plotwindow;
+	wxMenu *menu;
+	menu = (wxMenu *)event.GetEventObject();
+	plotwindow = (PlotWindow *)menu->GetInvokingWindow();
+
+	wxCommandEvent *evt = new wxCommandEvent(wxCommandEventQueued);
+	evt->SetEventObject(plotwindow);
+	QueueEvent(evt);
+}
+
+void ChartWindow::OnPlotMenuItem_close_queued(wxCommandEvent & event)
+{
+	DPRINTF("ChartWindow::OnPlotMenuItem_close_queued\n");
+	PlotWindow *plotwindow;
+	plotwindow = (PlotWindow *)event.GetEventObject();
+	DeletePlot(plotwindow);
+}
+
 void ChartWindow::addplot(PlotWindow * plot)
 {
 	wxWindow *wnd;
 	wnd = (wxWindow *)plot; //((long)plot + sizeof(Plot));//some hack
 	
+	plot->GetMenu().Append(ID_PLOTMENUITEM_CLOSE, "Close");
+
 	if(m_orientation == wxVERTICAL)
 		m_mgr.AddPane(wnd, wxAuiPaneInfo().Center().CaptionVisible(false).MaximizeButton(true).MinimizeButton(true).Dock().Resizable().FloatingSize(wxDefaultSize).DockFixed(false).BottomDockable(false).TopDockable(true).LeftDockable(false).RightDockable(false).MinSize(-1, 0).DestroyOnClose().Position(-1));
 	else

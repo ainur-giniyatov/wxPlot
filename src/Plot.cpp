@@ -19,9 +19,6 @@ Plot::Plot(const char *plotname)
 		strcpy(m_plot_name, plotname);
 	}
 
-	m_yscale = new ScaleWidget(this);
-	m_yscale->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
-
 }
 
 void Plot::SetPlotName(const char * plotname)

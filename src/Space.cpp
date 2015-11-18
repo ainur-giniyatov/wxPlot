@@ -72,11 +72,7 @@ SpaceND::SpaceND(size_t dims_count)
 	}
 
 
-	//TO DO: redesign scales
-	//m_yscale = new Scale();
-	//m_axes[AXIS_Y]->SetCommonScale(m_yscale);
-
-	m_grid = new Grid(this);
+	m_grid = NULL;
 }
 
 SpaceND::~SpaceND()
@@ -99,7 +95,8 @@ SpaceND::~SpaceND()
 //delete y axis scale
 	//delete m_yscale;
 
-	delete m_grid;
+	if(m_grid != NULL)
+		delete m_grid;
 }
 
 Axis * SpaceND::GetAxis(AXIS_DIR axis_dir)
@@ -231,4 +228,14 @@ void SpaceND::Fit(bool update)
 	}
 	if (update)
 		SpaceUpdated();
+}
+
+void SpaceND::SetGrid(Grid * grid)
+{
+	DPRINTF("SpaceND::SetGrid\n");
+	
+	if (m_grid != NULL)
+		delete m_grid;
+
+	m_grid = grid;
 }
