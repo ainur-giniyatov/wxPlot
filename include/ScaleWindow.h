@@ -41,6 +41,7 @@ private:
 
 	bool m_ispanning;
 	wxOrientation m_orient;
+	wxFont m_font;
 	DECLARE_EVENT_TABLE()
 };
 

@@ -75,6 +75,7 @@ void PlotWindow::OnResize(wxSizeEvent & event)
 
 void PlotWindow::OnLeftDown(wxMouseEvent & event)
 {
+	event.Skip();
 	int x, y;
 	x = event.GetX();
 	y = event.GetY();
@@ -93,7 +94,6 @@ void PlotWindow::OnLeftDown(wxMouseEvent & event)
 	int w, h;
 	GetClientSize(&w, &h);
 	StartPan((double)x / (double)w, 1- (double)y / (double)h);
-	event.Skip();
 
 
 	if(!HasCapture())
@@ -202,7 +202,7 @@ void PlotWindow::Render(wxGraphicsContext * gc)
 	if (m_spaces.empty())
 		return;
 //render grid
-	Grid *grid;
+	Grid *grid = NULL;
 	grid = m_spaces[0]->GetGrid();
 	if(grid != NULL)
 		grid->Render(gc);

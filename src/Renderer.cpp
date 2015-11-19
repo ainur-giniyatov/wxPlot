@@ -100,28 +100,38 @@ void Renderer2DTyped<T1, T2>::Render(wxGraphicsContext * gc)
 
 	size_t indx = 0;
 	int x1, y1, x2, y2;
+
 	x1 = ((double)xda[indx] - xoffset) / xrange * (double)width;
 	y1 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
-	x2 = ((double)xda[indx + 1] - xoffset) / xrange * (double)width;
-	y2 = height - ((double)yda[indx + 1] - yoffset) / yrange * (double)height;
-	gc->StrokeLine(x1, y1, x2, y2);
+
+	indx++;
+
 	for (; indx < data_size - 1; indx++)
 	{
-		x1 = ((double)xda[indx] - xoffset) / xrange * (double)width;
+
 		if (x1 > width)
 			break;
 
-		x2 = ((double)xda[indx + 1] - xoffset) / xrange * (double)width;
+		indx++;
+		y2 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+		x2 = ((double)xda[indx] - xoffset) / xrange * (double)width;
 		if (x2 < 0)
 			continue;
 
-		y1 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
-		y2 = height - ((double)yda[indx + 1] - yoffset) / yrange * (double)height;
+
 		
-		if (x1 == x2)
-			continue;
+		while (abs(x2 - x1) < 4 && abs(y2 - y1) < 4)
+		{
+			indx++;
+			if (indx == data_size)
+				break;
+			x2 = ((double)xda[indx] - xoffset) / xrange * (double)width;
+			y2 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+		}
 
 		gc->StrokeLine(x1, y1, x2, y2);
+		x1 = x2;
+		y1 = y2;
 	}
 
 }

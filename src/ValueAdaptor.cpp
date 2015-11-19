@@ -100,7 +100,16 @@ size_t TimeAxisValueAdaptor<T>::ValToStr(char * str, size_t len)
         struct tm tmstruct;
         memset(&tmstruct, 0, sizeof(struct tm));
         memcpy(&tmstruct, gmtime(&tv), sizeof(struct tm));
-        rlen = strftime(str, len, "%H:%M:%S %d-%b-%y", &tmstruct);
+		if (tv % (60 * 60 * 24) == 0)
+		{
+			rlen = strftime(str, len, "%d-%b-%y", &tmstruct);
+			m_makebold = true;
+		}
+		else
+		{
+			rlen = strftime(str, len, "%H:%M:%S", &tmstruct);
+			m_makebold = false;
+		}
 	}else
 	{
         str[0] = '\0';
@@ -114,6 +123,26 @@ size_t TimeAxisValueAdaptor<T>::ValToStr(char * str, size_t len, T val)
 {
 	wxASSERT(0);
 	return size_t();
+}
+
+template<typename T>
+bool TimeAxisValueAdaptor<T>::ValBiggerPart(char * str, size_t len)
+{
+	time_t tv1 =  AxisValueAdaptor<T>::m_offset;
+	time_t tv2 =  AxisValueAdaptor<T>::m_offset + AxisValueAdaptor<T>::m_range;
+	bool crosses_day;
+	
+	crosses_day = (tv2 / (60 * 60 * 24)) > (tv1 / (60 * 60 * 24));
+
+	if (!crosses_day)
+	{
+		struct tm tmstruct;
+		memset(&tmstruct, 0, sizeof(struct tm));
+		memcpy(&tmstruct, gmtime(&tv1), sizeof(struct tm));
+		strftime(str, len, "%d-%b-%y", &tmstruct);
+		return true;
+	}
+	return false;
 }
 
 template<typename T>
@@ -275,6 +304,12 @@ size_t SimpleAxisValueAdaptor<T>::ValToStr(char * str, size_t len, T val)
 {
 	wxASSERT(0);
 	return 0;
+}
+
+template<typename T>
+bool SimpleAxisValueAdaptor<T>::ValBiggerPart(char * str, size_t len)
+{
+	return false;
 }
 
 //

@@ -26,7 +26,7 @@ ScaleWindow::ScaleWindow(wxWindow *parent, wxOrientation orient, double offset, 
 
 	if (m_orient == wxHORIZONTAL)
 	{
-		SetMinClientSize(wxSize(wxDefaultCoord, 120));
+		SetMinClientSize(wxSize(wxDefaultCoord, 70));
 	}
 	else
 	{
@@ -35,6 +35,8 @@ ScaleWindow::ScaleWindow(wxWindow *parent, wxOrientation orient, double offset, 
 
 	m_offset = offset;
 	m_range = range;
+
+	m_font = *wxNORMAL_FONT;
 }
 
 
@@ -75,10 +77,10 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 		return;
 
 	wxGraphicsContext *gc = wxGraphicsContext::Create(dc);
-	gc->SetFont(*wxNORMAL_FONT, *wxBLACK);
+	gc->SetFont(m_font, *wxBLACK);
 	wxString text("text");
-	wxDouble fh;
-	gc->GetTextExtent("A", NULL, &fh);
+	wxDouble fw, fh;
+	gc->GetTextExtent("A", &fw, &fh);
 
 	int x;
 	bool isbold;
@@ -106,7 +108,15 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 
 		m_valueadaptor->ValToStr(s_buff, 20);
 		text = s_buff;
-
+		if(m_valueadaptor->IsBold())
+		{ 
+			m_font.MakeBold();
+		}
+		else
+		{ 
+			m_font = *wxNORMAL_FONT;
+		}
+		gc->SetFont(m_font, *wxBLACK);
 		if (m_orient == wxHORIZONTAL)
 			gc->DrawText(text, x + fh / 2 + 3, 7, M_PI / 2. * 3.);
 		else
@@ -114,6 +124,13 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 
 	}
 
+	if (m_valueadaptor->ValBiggerPart(s_buff, 20))
+	{
+		m_font.MakeBold();
+		gc->SetFont(m_font, *wxBLACK);
+		gc->GetTextExtent(s_buff, &fw, &fh);
+		gc->DrawText(s_buff, (width - fw) / 2., height - fh - 1);
+	}
 	delete gc;
 }
 

@@ -38,6 +38,7 @@ protected:
 	double m_step;
 
 	virtual double GetStep(double r);
+	
 
 private:
 
@@ -52,11 +53,12 @@ public:
 	size_t ConvertToStr(char *str, size_t len, size_t indx);
 	virtual size_t ValToStr(char *str, size_t len, T val) = 0;
 	virtual size_t ValToStr(char *str, size_t len) = 0;
-	
+	virtual bool ValBiggerPart(char *str, size_t len) = 0;
+	bool IsBold() { return m_makebold; }
 	
 protected:
 	DataTyped<T> *m_data;
-
+	bool m_makebold;
 };
 
 
@@ -65,8 +67,9 @@ template<typename T> class WXDLLIMPEXP_PLOTLIB TimeAxisValueAdaptor:public AxisV
 public:
 	TimeAxisValueAdaptor();
 	virtual ~TimeAxisValueAdaptor();
-	virtual size_t ValToStr(char *str, size_t len);
-	virtual size_t ValToStr(char *str, size_t len, T val);
+	virtual size_t ValToStr(char *str, size_t len) override;
+	virtual size_t ValToStr(char *str, size_t len, T val) override;
+	virtual bool ValBiggerPart(char *str, size_t len) override;
 
 	virtual void InitState(double offset, double range, double wdth) override;
 	virtual bool Step() override;
@@ -106,6 +109,7 @@ public:
 
 	virtual size_t ValToStr(char *str, size_t len) override;
 	virtual size_t ValToStr(char *str, size_t len, T val) override;
+	virtual bool ValBiggerPart(char *str, size_t len) override;
 
 	//virtual void InitState(double offset, double range, double wdth) override;
 	//virtual bool Step() override;
