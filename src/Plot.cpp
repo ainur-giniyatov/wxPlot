@@ -132,6 +132,22 @@ void Plot::AddWidget(Widget * widget)
 	m_widgets.push_back(widget);
 }
 
+void Plot::DeleteWidget(Widget * widget)
+{
+	std::vector<Widget *> widgets;
+	for (auto widgeti : m_widgets)
+	{
+		if (widgeti != widget)
+			widgets.push_back(widgeti);
+		else
+			 delete widget;
+	}
+	
+	m_widgets = widgets;
+
+	RedrawPlot();
+}
+
 void Plot::StartPan(double start_rx, double start_ry)
 {
 	DPRINTF("StartPan\n");

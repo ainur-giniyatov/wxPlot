@@ -5,6 +5,7 @@
 #include "Space.h"
 #include "Widget.h"
 #include "ScaleWidget.h"
+#include "LegendsWidget.h"
 
 #include <wx/textdlg.h>
 #include <float.h>
@@ -239,6 +240,9 @@ void MyFrame::m_button_newplotOnButtonClick(wxCommandEvent & event)
 	scalewidget->AddAxis(space->GetAxis(AXIS_Y));
 	scalewidget->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
 
+	LegendsWidget *legendswidget;
+
+	legendswidget = new LegendsWidget(plotwindow);
 	fill_plot_choices();
 
 

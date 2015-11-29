@@ -1,4 +1,11 @@
 #include "Widget.h"
+#include "PlotWindow.h"
+
+const int Widget::ID_MENU_CLOSE = wxNewId();
+
+BEGIN_EVENT_TABLE(Widget, wxEvtHandler)
+EVT_MENU(Widget::ID_MENU_CLOSE, Widget::OnMenuCloseWidget)
+END_EVENT_TABLE();
 
 Widget::Widget(Plot *owner, SpaceND *bound_to_space)
 {
@@ -16,9 +23,12 @@ Widget::Widget(Plot *owner, SpaceND *bound_to_space)
 	m_bound_to_space = bound_to_space;
 
 	m_dragging = false;
-	m_movable = false;
+	m_movable = true;
 	m_snap_to_border = WIDGET_SNAP_ALL;
 	Fit();
+
+	m_menu.Append(ID_MENU_CLOSE, "Delete this widget");
+	m_menu.SetEventHandler(this);
 }
 
 Widget::~Widget()
@@ -39,27 +49,23 @@ void Widget::MouseMoving(int x, int y)
 		proceed_dragging(x, y);
 }
 
-void Widget::MouseButton(WIDGET_MOUSE_EVENT wme, int x, int y)
+void Widget::OnMouseLeftDown(int x, int y)
 {
-	switch (wme)
-	{
-	case WME_RDOWN:
-		break;
-	case WME_LDOWN:
-		start_dragging(x, y);
-		break;
-	case WME_MDOWN:
-		break;
-	case WME_RUP:
-		break;
-	case WME_LUP:
-		end_dragging();
-		break;
-	case WME_MUP:
-		break;
-	default:
-		break;
-	}
+	start_dragging(x, y);
+}
+
+void Widget::OnMouseLeftUp(int x, int y)
+{
+	end_dragging();
+}
+
+void Widget::OnMouseRightDown(int x, int y)
+{
+}
+
+void Widget::OnMouseRightUp(int x, int y)
+{
+	((PlotWindow *)m_owner)->PopupMenu(&m_menu);
 }
 
 void Widget::MouseWheel(double factor, int x, int y)
@@ -136,6 +142,19 @@ void Widget::Fit()
 	//default size for Widget
 	m_width = 20;
 	m_height = 20;
+}
+
+void Widget::OnMenuCloseWidget(wxCommandEvent & event)
+{
+	DPRINTF("Widget::OnMenuCloseWidget\n");
+	
+	CallAfter(&Widget::delete_widget);
+}
+
+void Widget::delete_widget()
+{
+	m_owner->DeleteWidget(this);
+
 }
 
 void Widget::start_dragging(int drag_x, int drag_y)

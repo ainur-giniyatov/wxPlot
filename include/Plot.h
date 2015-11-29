@@ -38,6 +38,7 @@ public:
 	Scale *GetCommonScale() { return m_commonscale; }
 
 	void AddWidget(Widget *widget);
+	void DeleteWidget(Widget *widget);
 protected:
 
 	void StartPan(double start_rx, double start_ry);

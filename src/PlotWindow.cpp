@@ -84,7 +84,7 @@ void PlotWindow::OnLeftDown(wxMouseEvent & event)
 	{
 		if(widget->MouseIsInside(x, y))
 		{ 
-			widget->MouseButton(WME_LDOWN, x, y);
+			widget->OnMouseLeftDown(x, y);
 			return;
 		}
 	}
@@ -112,7 +112,7 @@ void PlotWindow::OnLeftUp(wxMouseEvent & event)
 	{
 		if (widget->MouseIsInside(x, y))
 		{
-			widget->MouseButton(WME_LUP, x, y);
+			widget->OnMouseLeftUp(x, y);
 			//return;
 		}
 	}
@@ -124,12 +124,39 @@ void PlotWindow::OnLeftUp(wxMouseEvent & event)
 
 void PlotWindow::OnRightDown(wxMouseEvent & event)
 {
+	event.Skip();
+	int x, y;
+	x = event.GetX();
+	y = event.GetY();
+
+	for (auto widget : m_widgets)
+	{
+		if (widget->MouseIsInside(x, y))
+		{
+			widget->OnMouseRightUp(x, y);
+			return;
+		}
+	}
+
 	if(m_menu.GetMenuItemCount() != 0)
 		PopupMenu(&m_menu);
 }
 
 void PlotWindow::OnRightUp(wxMouseEvent & event)
 {
+	event.Skip();
+	int x, y;
+	x = event.GetX();
+	y = event.GetY();
+
+	for (auto widget : m_widgets)
+	{
+		if (widget->MouseIsInside(x, y))
+		{
+			widget->OnMouseRightUp(x, y);
+			return;
+		}
+	}
 }
 
 void PlotWindow::OnMouseMove(wxMouseEvent & event)

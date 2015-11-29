@@ -10,6 +10,8 @@ Widget class is an ancestor for on-plot drawn widgets such as scales, legends, e
 #include "Renderer.h"
 
 #include <wx/graphics.h>
+#include <wx/menu.h>
+#include <wx/event.h>
 
 class WXDLLIMPEXP_PLOTLIB DataNoType;
 class WXDLLIMPEXP_PLOTLIB SeriesND;
@@ -26,15 +28,6 @@ enum POS_RELATIVE {
 	POS_AUTO
 };
 
-enum WIDGET_MOUSE_EVENT {
-	WME_RDOWN,
-	WME_LDOWN,
-	WME_MDOWN,
-	WME_RUP,
-	WME_LUP,
-	WME_MUP
-};
-
 
 #define	WIDGET_SNAP_NONE 0
 #define	WIDGET_SNAP_LEFT  (1 << 0)
@@ -44,7 +37,7 @@ enum WIDGET_MOUSE_EVENT {
 #define	WIDGET_SNAP_ALL (WIDGET_SNAP_LEFT | WIDGET_SNAP_RIGHT | WIDGET_SNAP_BOTTOM | WIDGET_SNAP_TOP)
 #define WIDGET_SNAP_DISTANCE 10
 
-class WXDLLIMPEXP_PLOTLIB Widget
+class WXDLLIMPEXP_PLOTLIB Widget:public wxEvtHandler
 {
 public:
 	Widget(Plot *owner, SpaceND *bound_to_space = NULL);
@@ -58,8 +51,10 @@ public:
 	/*handle mouse movements*/
 	void MouseMoving(int x, int y);
 
-	/*mouse click events*/
-	virtual void MouseButton(WIDGET_MOUSE_EVENT wme, int x, int y);
+	virtual void OnMouseLeftDown(int x, int y);
+	virtual void OnMouseLeftUp(int x, int y);
+	virtual void OnMouseRightDown(int x, int y);
+	virtual void OnMouseRightUp(int x, int y);
 
 	virtual void MouseWheel(double factor, int x, int y);
 
@@ -71,7 +66,9 @@ public:
 	/*calculate size*/
 	void virtual Fit();
 
+
 protected:
+
 
 	double m_x_anchor;//position of the widget in the space or 0..1 coordinate
 	double m_y_anchor;
@@ -97,9 +94,20 @@ protected:
 
 	bool m_movable;//allowed to drag by mouse
 
+	wxMenu m_menu;
 //helper funcs
 	void start_dragging(int drag_x, int drag_y);
 	virtual void proceed_dragging(int x, int y);
 	void end_dragging();
+
 private:
+
+	/*context menu handlers*/
+	void OnMenuCloseWidget(wxCommandEvent &event);
+	static const int ID_MENU_CLOSE;
+
+	//some helpers
+	/*remove from plot's widgets and delete*/
+	void delete_widget();
+	DECLARE_EVENT_TABLE();
 };

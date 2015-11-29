@@ -17,6 +17,10 @@ Scale::Scale()
 
 Scale::~Scale()
 {
+	for (auto axis : m_axes)
+	{
+		axis->SetCommonScale(NULL);
+	}
 	if(m_valueadaptor != NULL)
 		delete m_valueadaptor;
 }

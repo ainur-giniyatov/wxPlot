@@ -6,7 +6,7 @@ const int ChartWindow::ID_PLOTMENUITEM_CLOSE = wxNewId();
 
 BEGIN_EVENT_TABLE(ChartWindow, wxPanel)
 EVT_MENU(ID_PLOTMENUITEM_CLOSE, ChartWindow::OnPlotMenuItem_close)
-EVT_COMMAND(wxID_ANY, wxCommandEventQueued, ChartWindow::OnPlotMenuItem_close_queued)
+//EVT_COMMAND(wxID_ANY, wxCommandEventQueued, ChartWindow::OnPlotMenuItem_close_queued)
 END_EVENT_TABLE()
 
 ChartWindow::ChartWindow(wxWindow *parent, int orientation) :wxPanel(parent, wxID_ANY)
@@ -70,18 +70,19 @@ void ChartWindow::OnPlotMenuItem_close(wxCommandEvent & event)
 	menu = (wxMenu *)event.GetEventObject();
 	plotwindow = (PlotWindow *)menu->GetInvokingWindow();
 
-	wxCommandEvent *evt = new wxCommandEvent(wxCommandEventQueued);
-	evt->SetEventObject(plotwindow);
-	QueueEvent(evt);
+	CallAfter(&ChartWindow::close_plot_delayed, plotwindow);
+	//wxCommandEvent *evt = new wxCommandEvent(wxCommandEventQueued);
+	//evt->SetEventObject(plotwindow);
+	//QueueEvent(evt);
 }
 
-void ChartWindow::OnPlotMenuItem_close_queued(wxCommandEvent & event)
-{
-	DPRINTF("ChartWindow::OnPlotMenuItem_close_queued\n");
-	PlotWindow *plotwindow;
-	plotwindow = (PlotWindow *)event.GetEventObject();
-	DeletePlot(plotwindow);
-}
+//void ChartWindow::OnPlotMenuItem_close_queued(wxCommandEvent & event)
+//{
+//	DPRINTF("ChartWindow::OnPlotMenuItem_close_queued\n");
+//	PlotWindow *plotwindow;
+//	plotwindow = (PlotWindow *)event.GetEventObject();
+//	DeletePlot(plotwindow);
+//}
 
 void ChartWindow::addplot(PlotWindow * plot)
 {
@@ -99,6 +100,11 @@ void ChartWindow::addplot(PlotWindow * plot)
 	}
 	
 	m_mgr.Update();
+}
+
+void ChartWindow::close_plot_delayed(PlotWindow * plot)
+{
+	DeletePlot(plot);
 }
 
 PlotWindow * ChartWindow::CreatePlotWindow()

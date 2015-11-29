@@ -40,12 +40,15 @@ private:
 	wxAuiManager m_mgr;
 
 	void OnPlotMenuItem_close(wxCommandEvent &event);
-	void OnPlotMenuItem_close_queued(wxCommandEvent &event);//for invoking plot deleteion in the next loop iteration to avoid crash of wxMenu
+	//void OnPlotMenuItem_close_queued(wxCommandEvent &event);//for invoking plot deleteion in the next loop iteration to avoid crash of wxMenu
 	static const int ID_PLOTMENUITEM_CLOSE;
 
 	int m_orientation;
 	void addplot(PlotWindow *plot);
 
 	DECLARE_EVENT_TABLE()
+
+	//some helpers
+	void close_plot_delayed(PlotWindow *plot);
 };
 
