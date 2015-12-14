@@ -44,6 +44,7 @@ public:
 	virtual ~Widget();
 
 	void SetAnchorPosition(double ax, double ay) { m_x_anchor = ax; m_y_anchor = ay; }
+	void SetAnchorDelta(int dax, int day) { m_dx = dax; m_dy = day; }
 
 	/*true if mouse cursor is in the widget area. all other mouse-related methods must be preceeded by it*/
 	bool MouseIsInside(int x, int y);

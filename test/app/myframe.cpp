@@ -243,6 +243,9 @@ void MyFrame::m_button_newplotOnButtonClick(wxCommandEvent & event)
 	LegendsWidget *legendswidget;
 
 	legendswidget = new LegendsWidget(plotwindow);
+	legendswidget->SetAnchorPosition(1., 0.5);
+	legendswidget->SetAnchorDelta(15, 0);
+
 	fill_plot_choices();
 
 

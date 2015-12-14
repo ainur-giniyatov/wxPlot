@@ -28,4 +28,12 @@ public:
 	virtual void Render(wxGraphicsContext *gc) override;
 protected:
 private:
+	virtual void OnMouseRightUp(int x, int y) override;
+
+	void OnMenuDeleteSeries(wxCommandEvent &event);
+	static const int ID_MENU_DELETE_SERIES;
+	wxMenuItem *m_menuitem_delete_widget;
+
+	SeriesND *m_pointed_series;
+	DECLARE_EVENT_TABLE();
 };
