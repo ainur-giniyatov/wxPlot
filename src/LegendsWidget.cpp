@@ -1,3 +1,4 @@
+#include <wx/dcclient.h>
 #include "LegendsWidget.h"
 #include "PlotWindow.h"
 
@@ -74,7 +75,7 @@ void LegendsWidget::OnMouseRightUp(int x, int y)
 	int y_c = m_widget_y;
 
 	wxClientDC dc((PlotWindow *)m_owner);
-	
+
 	for (auto space : m_owner->GetSpaces())
 	{
 		for (auto series : space->GetSerie())

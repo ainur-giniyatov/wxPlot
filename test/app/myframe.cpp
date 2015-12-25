@@ -3,15 +3,21 @@
 #include "Series.h"
 #include "Data.h"
 #include "Space.h"
-#include "Widget.h"
-#include "ScaleWidget.h"
-#include "LegendsWidget.h"
+//#include "Widget.h"
+//#include "ScaleWidget.h"
+//#include "LegendsWidget.h"
+#include "Box.h"
 
 #include <wx/textdlg.h>
 #include <float.h>
 
+const int MyFrame::ID_MENUPLOT_ADDLEGEND = wxNewId();
+const int MyFrame::ID_MENUPLOT_ADDVERTICALSCALE = wxNewId();
+
 BEGIN_EVENT_TABLE(MyFrame, MainFrame)
 EVT_MOUSEWHEEL(MyFrame::OnMouseWheel)
+EVT_MENU(MyFrame::ID_MENUPLOT_ADDLEGEND, MyFrame::OnMenu_AddLegend)
+EVT_MENU(MyFrame::ID_MENUPLOT_ADDVERTICALSCALE, MyFrame::OnMenu_AddVerticalScale)
 END_EVENT_TABLE()
 
 static int s_plc = 1;
@@ -38,6 +44,7 @@ MyFrame::MyFrame():MainFrame(NULL)
 
 	//2nd page
 	m_2ndpageplotwindow = new PlotWindow(m_panel6);
+	m_2ndpageplotwindow->SetLeftButtonAction(LBA_PAN);
 	bSizer7->Add(m_2ndpageplotwindow, 1, wxEXPAND);
 	m_panel_page2->Layout();
 
@@ -68,18 +75,20 @@ MyFrame::MyFrame():MainFrame(NULL)
 
 	m_2ndpagespace->AddSeries(m_2ndpageseries);
 
-	Widget *widget;
-	widget = new Widget(m_2ndpageplotwindow, m_2ndpagespace);
-	widget->SetAnchorPosition(xdata->GetDataArray()[0], ydata->GetDataArray()[0]);
-	ScaleWidget *scalewidget;
-	scalewidget = new ScaleWidget(m_2ndpageplotwindow, wxVERTICAL);
-	scalewidget->AddAxis(m_2ndpagespace->GetAxis(AXIS_Y));
-	scalewidget->SetRangeLimits(DBL_MAX, DBL_MIN);
-	scalewidget->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
+	Box *box;
+	box = new Box(m_2ndpageplotwindow);
+	//Widget *widget;
+	//widget = new Widget(m_2ndpageplotwindow, m_2ndpagespace);
+	//widget->SetAnchorPosition(xdata->GetDataArray()[0], ydata->GetDataArray()[0]);
+	//ScaleWidget *scalewidget;
+	//scalewidget = new ScaleWidget(m_2ndpageplotwindow, wxVERTICAL);
+	//scalewidget->AddAxis(m_2ndpagespace->GetAxis(AXIS_Y));
+	//scalewidget->SetRangeLimits(DBL_MAX, DBL_MIN);
+	//scalewidget->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
 
-	scalewidget = new ScaleWidget(m_2ndpageplotwindow, wxHORIZONTAL);
-	scalewidget->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
-	scalewidget->AddAxis(m_2ndpagespace->GetAxis(AXIS_X));
+	//scalewidget = new ScaleWidget(m_2ndpageplotwindow, wxHORIZONTAL);
+	//scalewidget->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
+	//scalewidget->AddAxis(m_2ndpagespace->GetAxis(AXIS_X));
 	Grid *grid;
 	grid = new Grid(m_2ndpagespace);
 
@@ -231,24 +240,30 @@ void MyFrame::m_button_newplotOnButtonClick(wxCommandEvent & event)
 	m_chartwindow->GetScaleWindow()->AddAxis(space->GetAxis(AXIS_X));
 //	plotwindow->GetYScale()->AddAxis(space->GetAxis(AXIS_Y));
 
-	ScaleWidget *scalewidget;
-	scalewidget = new ScaleWidget(plotwindow, wxVERTICAL);
+	//ScaleWidget *scalewidget;
+	//scalewidget = new ScaleWidget(plotwindow, wxVERTICAL);
 
 	Grid *grid;
 	grid = new Grid(space);
 
-	scalewidget->AddAxis(space->GetAxis(AXIS_Y));
-	scalewidget->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
+	//scalewidget->AddAxis(space->GetAxis(AXIS_Y));
+	//scalewidget->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
 
-	LegendsWidget *legendswidget;
+	//LegendsWidget *legendswidget;
 
-	legendswidget = new LegendsWidget(plotwindow);
-	legendswidget->SetAnchorPosition(1., 0.5);
-	legendswidget->SetAnchorDelta(15, 0);
+	//legendswidget = new LegendsWidget(plotwindow);
+	//legendswidget->SetAnchorPosition(1., 0.5);
+	//legendswidget->SetAnchorDelta(15, 0);
 
 	fill_plot_choices();
 
+	wxMenu *plotsubmenu;
+	plotsubmenu = new wxMenu();
 
+	plotwindow->GetMenu().AppendSubMenu(plotsubmenu, "More");
+
+	plotsubmenu->Append(ID_MENUPLOT_ADDLEGEND, "Add legends");
+	plotsubmenu->Append(ID_MENUPLOT_ADDVERTICALSCALE, "Add vertical scale");
 }
 
 void MyFrame::m_choice_plotsOnChoice(wxCommandEvent & event)
@@ -376,6 +391,22 @@ void MyFrame::m_button_spaceupdateOnButtonClick(wxCommandEvent & event)
 	m_2ndpagespace->SpaceUpdated();
 }
 
+void MyFrame::m_menuItem_panOnMenuSelection(wxCommandEvent & event)
+{
+	m_chartwindow->SetLeftButtonAction(LBA_PAN);
+}
+
+void MyFrame::m_menuItem_zoomOnMenuSelection(wxCommandEvent & event)
+{
+	m_chartwindow->SetLeftButtonAction(LBA_ZOOMSELECT);
+}
+
+void MyFrame::m_button_add_boxOnButtonClick(wxCommandEvent & event)
+{
+	Box *box;
+	box = new Box(m_2ndpageplotwindow);
+}
+
 void MyFrame::OnMouseWheel(wxMouseEvent & event)
 {
 	DPRINTF("MyFrame OnMouseWheel\n");
@@ -390,6 +421,34 @@ void MyFrame::OnMouseWheel(wxMouseEvent & event)
 			wnd->ProcessWindowEvent(event);
 		}
 	}
+}
+
+void MyFrame::OnMenu_AddLegend(wxCommandEvent & event)
+{
+	DPRINTF("MyFrame::OnMenu_AddLegend\n");
+	PlotWindow *plotwindow;
+	wxMenu *menu;
+	menu = (wxMenu *)event.GetEventObject();
+	plotwindow = (PlotWindow *)menu->GetInvokingWindow();
+
+	//LegendsWidget *legendswidget;
+	//legendswidget = new LegendsWidget(plotwindow);
+	//legendswidget->SetAnchorPosition(1, 0.5);
+	//legendswidget->SetAnchorDelta(15, 0);
+}
+
+void MyFrame::OnMenu_AddVerticalScale(wxCommandEvent & event)
+{
+	DPRINTF("MyFrame::OnMenu_AddVerticalScale\n");
+	PlotWindow *plotwindow;
+	wxMenu *menu;
+	menu = (wxMenu *)event.GetEventObject();
+	plotwindow = (PlotWindow *)menu->GetInvokingWindow();
+
+	//ScaleWidget *scalewidget;
+	//scalewidget = new ScaleWidget(plotwindow, wxVERTICAL);
+	//scalewidget->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
+	//scalewidget->AddAxis(plotwindow->GetSpace(0)->GetAxis(AXIS_Y));
 }
 
 void MyFrame::fill_plot_choices()

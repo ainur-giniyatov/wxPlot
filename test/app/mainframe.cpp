@@ -40,6 +40,17 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	m_menubar1->Append( m_menu_options, wxT("Options") ); 
 	
+	m_menu3 = new wxMenu();
+	wxMenuItem* m_menuItem_pan;
+	m_menuItem_pan = new wxMenuItem( m_menu3, wxID_ANY, wxString( wxT("Pan") ) , wxEmptyString, wxITEM_RADIO );
+	m_menu3->Append( m_menuItem_pan );
+	
+	wxMenuItem* m_menuItem_zoom;
+	m_menuItem_zoom = new wxMenuItem( m_menu3, wxID_ANY, wxString( wxT("Zoom") ) , wxEmptyString, wxITEM_RADIO );
+	m_menu3->Append( m_menuItem_zoom );
+	
+	m_menubar1->Append( m_menu3, wxT("Action") ); 
+	
 	this->SetMenuBar( m_menubar1 );
 	
 	m_toolBar1 = this->CreateToolBar( wxTB_HORIZONTAL, wxID_ANY ); 
@@ -135,6 +146,9 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_button_spaceupdate = new wxButton( m_panel5, wxID_ANY, wxT("SpaceUpdate()"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer6->Add( m_button_spaceupdate, 0, wxALL|wxEXPAND, 5 );
 	
+	m_button_add_box = new wxButton( m_panel5, wxID_ANY, wxT("Add box"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer6->Add( m_button_add_box, 0, wxALL|wxEXPAND, 5 );
+	
 	
 	m_panel5->SetSizer( bSizer6 );
 	m_panel5->Layout();
@@ -169,6 +183,8 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( m_menuItem_time->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_timeOnMenuSelection ) );
 	this->Connect( m_menuItem_secs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_secsOnMenuSelection ) );
 	this->Connect( m_menuItem_null->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_nullOnMenuSelection ) );
+	this->Connect( m_menuItem_pan->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_panOnMenuSelection ) );
+	this->Connect( m_menuItem_zoom->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_zoomOnMenuSelection ) );
 	m_button_newplot->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_newplotOnButtonClick ), NULL, this );
 	m_choice_plots->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::m_choice_plotsOnChoice ), NULL, this );
 	m_choice_series->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::m_choice_seriesOnChoice ), NULL, this );
@@ -183,6 +199,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_button_dataupdated->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_dataupdatedOnButtonClick ), NULL, this );
 	m_button_seriesupdate->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_seriesupdateOnButtonClick ), NULL, this );
 	m_button_spaceupdate->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_spaceupdateOnButtonClick ), NULL, this );
+	m_button_add_box->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_add_boxOnButtonClick ), NULL, this );
 }
 
 MainFrame::~MainFrame()
@@ -192,6 +209,8 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_timeOnMenuSelection ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_secsOnMenuSelection ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_nullOnMenuSelection ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_panOnMenuSelection ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_zoomOnMenuSelection ) );
 	m_button_newplot->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_newplotOnButtonClick ), NULL, this );
 	m_choice_plots->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::m_choice_plotsOnChoice ), NULL, this );
 	m_choice_series->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::m_choice_seriesOnChoice ), NULL, this );
@@ -206,5 +225,6 @@ MainFrame::~MainFrame()
 	m_button_dataupdated->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_dataupdatedOnButtonClick ), NULL, this );
 	m_button_seriesupdate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_seriesupdateOnButtonClick ), NULL, this );
 	m_button_spaceupdate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_spaceupdateOnButtonClick ), NULL, this );
+	m_button_add_box->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_add_boxOnButtonClick ), NULL, this );
 	
 }

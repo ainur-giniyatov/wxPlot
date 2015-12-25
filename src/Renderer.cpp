@@ -11,6 +11,14 @@ Renderer::Renderer()
 
 	m_text_pos = s_text_pos;
 	s_text_pos += s_text_height;
+
+	m_marker_style = MARKER_CIRCLE;
+	m_marker_size = 2;
+	m_marker_color_index = 0;
+
+	m_line_style = LINE_SOLID;
+	m_line_thickness = 1;
+	m_line_color_index = 0;
 }
 
 
@@ -99,40 +107,119 @@ void Renderer2DTyped<T1, T2>::Render(wxGraphicsContext * gc)
 	yrange = yaxis->GetRange();
 
 	size_t indx = 0;
-	int x1, y1, x2, y2;
-
-	x1 = ((double)xda[indx] - xoffset) / xrange * (double)width;
-	y1 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
-
-	indx++;
-
-	for (; indx < data_size - 1; indx++)
+	
+	//drawing lines
+	if (m_line_style != LINE_NONE)
 	{
 
-		if (x1 > width)
-			break;
+		int x1, y1, x2, y2;
+
+		x1 = ((double)xda[indx] - xoffset) / xrange * (double)width;
+		y1 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
 
 		indx++;
-		y2 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
-		x2 = ((double)xda[indx] - xoffset) / xrange * (double)width;
-		if (x2 < 0)
-			continue;
 
+		wxPen pen(*wxBLACK_PEN);
+		gc->SetPen(pen);
 
-		
-		while (abs(x2 - x1) < 4 && abs(y2 - y1) < 4)
+		for (; indx < data_size - 1; indx++)
 		{
-			indx++;
-			if (indx == data_size)
-				break;
-			x2 = ((double)xda[indx] - xoffset) / xrange * (double)width;
-			y2 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
-		}
 
-		gc->StrokeLine(x1, y1, x2, y2);
-		x1 = x2;
-		y1 = y2;
+			if (x1 > width)
+				break;
+
+//			indx++;
+			y2 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+			x2 = ((double)xda[indx] - xoffset) / xrange * (double)width;
+			if (x2 < 0)
+				continue;
+
+
+
+			while (abs(x2 - x1) < 4 && abs(y2 - y1) < 4)
+			{
+				indx++;
+				if (indx == data_size)
+					break;
+				x2 = ((double)xda[indx] - xoffset) / xrange * (double)width;
+				y2 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+			}
+
+			gc->StrokeLine(x1, y1, x2, y2);
+			x1 = x2;
+			y1 = y2;
+		}
 	}
+
+	//draw marks
+	if (m_marker_style != MARKER_NONE)
+	{
+		//wxBitmap marker(10, 10);
+		//wxMemoryDC mdc;
+		//mdc.SelectObject(marker);
+		//mdc.SetBackground(*wxRED);
+		//
+		//mdc.Clear();
+		//mdc.DrawCircle(4, 4, 3);
+		//mdc.SelectObject(wxNullBitmap);
+		//marker.SetMask(new wxMask(wxBitmap(marker), *wxRED));
+		indx = 0;
+		int x1, y1, x2, y2;
+
+		x1 = ((double)xda[indx] - xoffset) / xrange * (double)width;
+		y1 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+
+		indx++;
+
+		wxPen pen(*wxBLACK_PEN);
+		wxBrush brush(*wxWHITE_BRUSH);
+
+		gc->SetPen(pen);
+		gc->SetBrush(brush);
+
+		for (; indx < data_size ; indx++)
+		{
+
+			if (x1 > width)
+				break;
+
+//			indx++;
+			y2 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+			x2 = ((double)xda[indx] - xoffset) / xrange * (double)width;
+
+			if (x2 < 0)
+				continue;
+
+			while (abs(x2 - x1) < 4 && abs(y2 - y1) < 4)
+			{
+				indx++;
+				if (indx == data_size)
+					break;
+				x2 = ((double)xda[indx] - xoffset) / xrange * (double)width;
+				y2 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+			}
+
+			if (m_marker_style == MARKER_CIRCLE)
+			{
+				int r;
+				r = m_marker_size / 2 + 1;
+				gc->DrawEllipse(x1 - r, y1 - r, r + r, r + r);
+				//gc->DrawBitmap(marker, x1 - 5, y1 - 5, 10, 10);
+			}
+			x1 = x2;
+			y1 = y2;
+		}
+	}
+
+	//max/min lines
+	double maxy, miny;
+	maxy = ydata->GetDataMax();
+	miny = ydata->GetDataMin();
+	int y;
+	y = height - (maxy - yoffset) / yrange * (double)height;
+	gc->StrokeLine(0, y, width, y);
+	y = height - (miny - yoffset) / yrange * (double)height;
+	gc->StrokeLine(0, y, width, y);
 
 }
 //

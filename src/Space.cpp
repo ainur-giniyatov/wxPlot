@@ -205,6 +205,49 @@ void SpaceND::EndPanAt()
 	DPRINTF("SpaceND::EndPanAt\n");
 }
 
+void SpaceND::ZoomSelection(double start_rx, double start_ry, double end_rx, double end_ry)
+{
+	DPRINTF("SpaceND::ZoomSelection\n");
+
+	Axis *xaxis;
+	Axis *yaxis;
+	xaxis = m_axes[AXIS_X]; //let x be 1st dimension
+	yaxis = m_axes[AXIS_Y]; //let y be 2nd dimension
+	
+	double temp;
+	temp = start_rx;
+	if (start_rx > end_rx)
+	{
+		start_rx = end_rx;
+		end_rx = temp;
+	}
+	
+	temp = start_ry;
+	if (start_ry > end_ry)
+	{
+		start_ry = end_ry;
+		end_ry = temp;
+	}
+	
+	//TO DO: need to review this code
+	if (xaxis != NULL)
+	{
+		//xaxis->SetOffset(m_pan_start_at_vx - xaxis->GetRange() * (rx - m_pan_start_at_rx));
+		xaxis->SetOffset(xaxis->GetOffset() + xaxis->GetRange() * start_rx);
+		xaxis->SetRange(xaxis->GetRange() * (end_rx - start_rx));
+		xaxis->PropagateToCommonScale();
+	}
+
+
+	if (yaxis != NULL)
+	{
+		//yaxis->SetOffset(m_pan_start_at_vy - yaxis->GetRange() * (ry - m_pan_start_at_ry));
+		yaxis->SetOffset(yaxis->GetOffset() + yaxis->GetRange() * start_ry);
+		yaxis->SetRange(yaxis->GetRange() * (end_ry - start_ry));
+		yaxis->PropagateToCommonScale();
+	}
+}
+
 void SpaceND::Fit(bool update)
 {
 	if (m_serie.empty())

@@ -33,6 +33,15 @@ protected:
 	SeriesND *m_owner_series;
 
 	int m_text_pos;
+
+	MARKER_STYLES m_marker_style;
+	int m_marker_size;
+	size_t m_marker_color_index;
+
+	LINE_STYLE m_line_style;
+	int m_line_thickness;
+	size_t m_line_color_index;
+
 };
 //
 //class WXDLLIMPEXP_PLOTLIB Renderer1D : public Renderer

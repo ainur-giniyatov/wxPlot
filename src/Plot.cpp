@@ -1,7 +1,8 @@
 //#include "stdafx.h"
 #include "Plot.h"
-#include "ScaleWidget.h"
+//#include "ScaleWidget.h"
 #include <algorithm>
+#include <math.h>
 
 static char *s_plotname = "plot";
 
@@ -9,7 +10,8 @@ Plot::Plot(const char *plotname)
 {
 	DPRINTF("Plot ctor\n");
 	m_panning = false;
-
+	m_zoomselecting = false;
+	m_zoomsel_switch = false;
 	m_commonscale = NULL;
 	if (plotname == NULL)
 		m_plot_name = s_plotname;
@@ -18,6 +20,8 @@ Plot::Plot(const char *plotname)
 		m_plot_name = (char *)malloc(strlen(plotname) + 1);
 		strcpy(m_plot_name, plotname);
 	}
+
+	m_lbaction = LBA_ZOOMSELECT;
 
 }
 
@@ -85,8 +89,8 @@ Plot::~Plot()
 	if (m_plot_name != NULL && m_plot_name != s_plotname)
 		free(m_plot_name);
 
-	for (auto widget : m_widgets)
-		delete widget;
+	for (auto box : m_boxes)
+		delete box;
 }
 
 void Plot::FitPlot(bool update)
@@ -112,7 +116,7 @@ void Plot::FitPlot(bool update)
 	//if (update)
 	//{
 	//	PlotUpdated();
-	//	
+	//
 	//}
 }
 
@@ -121,29 +125,32 @@ void Plot::SetCommonScale(Scale * scale)
 	m_commonscale = scale;
 }
 
-/*for internal use. called from widget ctor*/
-void Plot::AddWidget(Widget * widget)
+/*for internal use. called from box ctor*/
+void Plot::AddBox(Box *box)
 {
-	if (std::any_of(m_widgets.begin(), m_widgets.end(), [widget](Widget *w) { return w == widget; }))
+	if (std::any_of(m_boxes.begin(), m_boxes.end(), [box](Box *b) { return b == box; }))
 	{
 		return;
 	}
 
-	m_widgets.push_back(widget);
+	m_boxes.push_back(box);
+
+	RedrawPlot();
 }
 
-void Plot::DeleteWidget(Widget * widget)
+void Plot::DeleteBox(Box *box)
 {
-	std::vector<Widget *> widgets;
-	for (auto widgeti : m_widgets)
+	TODO
+	std::vector<Box *> boxes;
+	for (auto boxi : m_boxes)
 	{
-		if (widgeti != widget)
-			widgets.push_back(widgeti);
+		if (boxi != box)
+			boxes.push_back(boxi);
 		else
-			 delete widget;
+			 delete box;
 	}
-	
-	m_widgets = widgets;
+
+	m_boxes = boxes;
 
 	RedrawPlot();
 }
@@ -151,6 +158,7 @@ void Plot::DeleteWidget(Widget * widget)
 void Plot::StartPan(double start_rx, double start_ry)
 {
 	DPRINTF("StartPan\n");
+	wxASSERT(!m_panning);
 	for (auto space : m_spaces)
 	{
 		space->StartPanAt(start_rx, start_ry);
@@ -165,7 +173,7 @@ void Plot::ProceedPan(double rx, double ry)
 		return;
 
 	DPRINTF("ProceedPan\n");
-	
+
 	//in this method new range & offsets are calculated and propagated to common scale
 	for (auto space : m_spaces)
 	{
@@ -180,12 +188,82 @@ void Plot::ProceedPan(double rx, double ry)
 void Plot::EndPan()
 {
 	DPRINTF("EndPan\n");
+
+	if (!m_panning)
+		return;
+
 	for (auto space : m_spaces)
 	{
 		space->EndPanAt();
 	}
 
 	m_panning = false;
+}
+
+void Plot::StartZoomSelect(double start_rx, double start_ry)
+{
+	DPRINTF("Plot::StartZoomSelect\n");
+	//wxASSERT(!m_zoomselecting);
+
+	m_start_rx_zsel = start_rx;
+	m_start_ry_zsel = start_ry;
+
+	m_zoomsel_switch = true;
+	m_zoomselecting = false;
+}
+
+void Plot::ProceedZoomSelect(double rx, double ry)
+{
+	DPRINTF("Plot::ProceedZoomSelect\n");
+
+	m_end_rx_zsel = rx;
+	m_end_ry_zsel = ry;
+
+	int width, height, xd, yd;
+	GetSize(&width, &height);
+
+	xd = abs((rx - m_start_rx_zsel) * width);
+	yd = abs((ry - m_start_ry_zsel) * height);
+
+	if (m_zoomselecting)
+	{
+		DrawZoomSelection(rx, ry);
+		if (xd < 10 || yd < 10)
+		{
+			iterate_axes_redraw_uniq_commonscales_uniq_plots();
+			m_zoomselecting = false;
+			m_zoomsel_switch = false;
+		}
+	}
+	else
+	{
+		if (m_zoomsel_switch && (xd > 10 && yd > 10))
+		{
+			m_zoomselecting = true;
+			m_zoomsel_switch = false;
+		}
+	}
+
+}
+
+void Plot::EndZoomSelect()
+{
+	DPRINTF("Plot::EndZoomSelect\n");
+	if (!m_zoomselecting && !m_zoomsel_switch)
+		return;
+
+	if (m_zoomselecting)
+	{
+		for (auto space : m_spaces)
+		{
+			space->ZoomSelection(m_start_rx_zsel, m_start_ry_zsel, m_end_rx_zsel, m_end_ry_zsel);
+		}
+	}
+
+	//RedrawPlot();
+	iterate_axes_redraw_uniq_commonscales_uniq_plots();
+	m_zoomselecting = false;
+	m_zoomsel_switch = false;
 }
 
 void Plot::ZoomWheel(double rx, double ry, double xfactor, double yfactor)
@@ -196,7 +274,7 @@ void Plot::ZoomWheel(double rx, double ry, double xfactor, double yfactor)
 		space->ZoomAt(rx, ry, xfactor, yfactor);
 	}
 
-	
+
 	iterate_axes_redraw_uniq_commonscales_uniq_plots();
 	//RedrawPlot();//redraw for this plot shall be invoked in iterate_axes_redraw_uniq_commonscales_uniq_plots
 }
@@ -218,7 +296,7 @@ void Plot::iterate_axes_redraw_uniq_commonscales_uniq_plots()
 			{
 				commonscale->ScaleRedraw();
 				vcommscales.push_back(commonscale);
-				
+
 				for (auto axisi : commonscale->GetAxes())
 				{
 					Plot *plot = axisi->GetOwner()->GetOwner();

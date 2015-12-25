@@ -31,6 +31,8 @@ public:
 	PlotWindow *CreatePlotWindow();
 	ScaleWindow* GetScaleWindow() { return m_scale; }
 	void DeletePlot(PlotWindow *plot);
+
+	void SetLeftButtonAction(LEFTBUTTON_ACTION lba);
 private:
 
 	wxSizer *m_sizer;
@@ -45,6 +47,8 @@ private:
 
 	int m_orientation;
 	void addplot(PlotWindow *plot);
+
+	LEFTBUTTON_ACTION m_lbaction;
 
 	DECLARE_EVENT_TABLE()
 

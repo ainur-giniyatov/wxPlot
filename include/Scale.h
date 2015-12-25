@@ -8,7 +8,7 @@
 #include "Axis.h"
 #include "Renderer.h"
 #include "ValueAdaptor.h"
-#include "Widget.h"
+//#include "Widget.h"
 
 #include <vector>
 
@@ -18,7 +18,7 @@ class WXDLLIMPEXP_PLOTLIB Plot;
 class WXDLLIMPEXP_PLOTLIB Axis;
 class WXDLLIMPEXP_PLOTLIB SpaceND;
 class WXDLLIMPEXP_PLOTLIB Renderer;
-class WXDLLIMPEXP_PLOTLIB Widget;
+//class WXDLLIMPEXP_PLOTLIB Widget;
 
 template<typename T> class WXDLLIMPEXP_PLOTLIB AxisValueAdaptor;
 

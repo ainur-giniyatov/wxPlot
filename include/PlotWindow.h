@@ -5,6 +5,8 @@
 #include <wx/graphics.h>
 #include <wx/menu.h>
 
+#include <wx/bitmap.h>
+
 #include "Plot.h"
 #include "ScaleWindow.h"
 
@@ -31,14 +33,20 @@ private:
 
 	void Render(wxGraphicsContext *gc);
 	virtual void RedrawPlot();
-
+	virtual void DrawZoomSelection(double rx, double ry) override;
 	virtual void GetSize(int *width, int *height);
 	
 	wxSizer *m_sizer;
 	std::vector<ScaleWindow *> m_scalewindows;
 
 	wxMenu m_menu;
+	//wxMenu *m_menu_addwidget;
 	
+	//static const int ID_MENUITEM_ADDLEGENDS;
+	//void OnMenuItem_AddLegends(wxCommandEvent &event);
+
+	wxBitmap *m_bitmap_buffer;
+	bool m_refresh_bitmap;
 	DECLARE_EVENT_TABLE()
 };
 

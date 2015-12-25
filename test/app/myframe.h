@@ -30,8 +30,17 @@ private:
 	virtual void m_button_dataupdatedOnButtonClick(wxCommandEvent& event) override;
 	virtual void m_button_seriesupdateOnButtonClick(wxCommandEvent& event) override;
 	virtual void m_button_spaceupdateOnButtonClick(wxCommandEvent& event) override;
-	void OnMouseWheel(wxMouseEvent &event);
+	virtual void m_menuItem_panOnMenuSelection(wxCommandEvent& event) override;
+	virtual void m_menuItem_zoomOnMenuSelection(wxCommandEvent& event) override;
+	virtual void m_button_add_boxOnButtonClick(wxCommandEvent& event) override;
 
+	void OnMouseWheel(wxMouseEvent &event);
+	
+	void OnMenu_AddLegend(wxCommandEvent &event);
+	static const int ID_MENUPLOT_ADDLEGEND;
+
+	void OnMenu_AddVerticalScale(wxCommandEvent &event);
+	static const int ID_MENUPLOT_ADDVERTICALSCALE;
 
 	ChartWindow *m_chartwindow;
 	PlotWindow *m_plotwindow;
@@ -44,6 +53,7 @@ private:
 	DataNoType *m_2ndpagexdata, *m_2ndpageydata;
 	SpaceND *m_2ndpagespace;
 
+	
 	//help functions
 	void fill_plot_choices();
 	void fill_series_choices();

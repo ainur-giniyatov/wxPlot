@@ -44,6 +44,7 @@ class MainFrame : public wxFrame
 		wxMenu* m_menu_File;
 		wxMenu* m_menu_options;
 		wxMenu* m_menu1;
+		wxMenu* m_menu3;
 		wxToolBar* m_toolBar1;
 		wxStatusBar* m_statusBar1;
 		wxNotebook* m_notebook1;
@@ -67,6 +68,7 @@ class MainFrame : public wxFrame
 		wxButton* m_button_dataupdated;
 		wxButton* m_button_seriesupdate;
 		wxButton* m_button_spaceupdate;
+		wxButton* m_button_add_box;
 		wxPanel* m_panel6;
 		wxBoxSizer* bSizer7;
 		
@@ -75,6 +77,8 @@ class MainFrame : public wxFrame
 		virtual void m_menuItem_timeOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItem_secsOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItem_nullOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_menuItem_panOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_menuItem_zoomOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_newplotOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choice_plotsOnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choice_seriesOnChoice( wxCommandEvent& event ) { event.Skip(); }
@@ -89,6 +93,7 @@ class MainFrame : public wxFrame
 		virtual void m_button_dataupdatedOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_seriesupdateOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_spaceupdateOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_add_boxOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

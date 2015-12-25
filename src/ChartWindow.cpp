@@ -52,6 +52,7 @@ ChartWindow::ChartWindow(wxWindow *parent, int orientation) :wxPanel(parent, wxI
 	//m_mgr.Connect(wxEVT_AUI_PANE_MAXIMIZE, (wxObjectEventFunction)&Figure::OnAuiManagerEvent, NULL, this);
 	//m_mgr.Connect(wxEVT_AUI_PANE_RESTORE, (wxObjectEventFunction)&Figure::OnAuiManagerEvent, NULL, this);
 
+	m_lbaction = LBA_PAN;
 }
 
 
@@ -110,7 +111,7 @@ void ChartWindow::close_plot_delayed(PlotWindow * plot)
 PlotWindow * ChartWindow::CreatePlotWindow()
 {
 	PlotWindow *plotwindow = new PlotWindow(m_plotscontainer);
-	
+	plotwindow->SetLeftButtonAction(m_lbaction);
 	addplot(plotwindow);
 	plotwindow->SetCommonScale(m_scale);
 
@@ -123,4 +124,18 @@ void ChartWindow::DeletePlot(PlotWindow * plot)
 	m_mgr.DetachPane(plot);
 	m_mgr.Update();
 	plot->Destroy();
+}
+
+void ChartWindow::SetLeftButtonAction(LEFTBUTTON_ACTION lba)
+{
+	m_lbaction = lba;
+	wxWindowList wlist;
+	wlist = m_plotscontainer->GetChildren();
+	for (auto wlist_iter = wlist.begin(); wlist_iter != wlist.end(); ++wlist_iter)
+	{
+		if (!(*wlist_iter)->GetName().Cmp("plot"))
+		{
+			((PlotWindow *)*wlist_iter)->SetLeftButtonAction(lba);
+		}
+	}
 }

@@ -33,7 +33,7 @@ double AxisAdaptor::GetStep(double r)
 	float dts = pow(10, pow_ind);
 
 	//wxString text_format = wxString::Format(wxString("%%.%if"), (pow_ind > 0) ? ((int)0) : ((int)-pow_ind));
-	
+
 	//printf("df=%f\n", round(df));
 
 
@@ -103,12 +103,12 @@ size_t TimeAxisValueAdaptor<T>::ValToStr(char * str, size_t len)
 		if (tv % (60 * 60 * 24) == 0)
 		{
 			rlen = strftime(str, len, "%d-%b-%y", &tmstruct);
-			m_makebold = true;
+			AxisValueAdaptor<T>::m_makebold = true;
 		}
 		else
 		{
 			rlen = strftime(str, len, "%H:%M:%S", &tmstruct);
-			m_makebold = false;
+			AxisValueAdaptor<T>::m_makebold = false;
 		}
 	}else
 	{
@@ -131,7 +131,7 @@ bool TimeAxisValueAdaptor<T>::ValBiggerPart(char * str, size_t len)
 	time_t tv1 =  AxisValueAdaptor<T>::m_offset;
 	time_t tv2 =  AxisValueAdaptor<T>::m_offset + AxisValueAdaptor<T>::m_range;
 	bool crosses_day;
-	
+
 	crosses_day = (tv2 / (60 * 60 * 24)) > (tv1 / (60 * 60 * 24));
 
 	if (!crosses_day)
@@ -196,7 +196,7 @@ void TimeAxisValueAdaptor<T>::InitState(double offset, double range, double wdth
 
 	AxisValueAdaptor<T>::m_step = GetStep(wdth);
 	AxisValueAdaptor<T>::m_ticker = -fmod(AxisValueAdaptor<T>::m_offset, AxisValueAdaptor<T>::m_step);
-	
+
 	if (AxisValueAdaptor<T>::m_offset <= 0)
 		AxisValueAdaptor<T>::m_ticker -= AxisValueAdaptor<T>::m_step ;
 

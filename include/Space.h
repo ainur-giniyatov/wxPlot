@@ -42,6 +42,8 @@ public:
 	void StartPanAt(double rx, double ry);
 	void ProceedPanAt(double rx, double ry);
 	void EndPanAt();
+
+	void ZoomSelection(double start_rx, double start_ry, double end_rx, double end_ry);
 	void Fit(bool update = true);
 
 

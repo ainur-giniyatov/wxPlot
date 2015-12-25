@@ -4,7 +4,9 @@
 
 #include <wx/dcbuffer.h>
 
+//#include "LegendsWidget.h"
 
+//const int PlotWindow::ID_MENUITEM_ADDLEGENDS = wxNewId();
 
 BEGIN_EVENT_TABLE(PlotWindow, wxWindow)
 EVT_PAINT(PlotWindow::OnPaint)
@@ -16,6 +18,7 @@ EVT_LEFT_UP(PlotWindow::OnLeftUp)
 EVT_MOTION(PlotWindow::OnMouseMove)
 EVT_RIGHT_DOWN(PlotWindow::OnRightDown)
 EVT_RIGHT_UP(PlotWindow::OnRightUp)
+//EVT_MENU(PlotWindow::ID_MENUITEM_ADDLEGENDS, PlotWindow::OnMenuItem_AddLegends)
 END_EVENT_TABLE()
 
 
@@ -32,31 +35,46 @@ PlotWindow::PlotWindow(wxWindow * parent) :wxWindow(parent, wxID_ANY, wxDefaultP
 	Layout();
 
 	//m_menu = new wxMenu();
-	
+	//m_menu_addwidget = new wxMenu();
+	//m_menu.AppendSubMenu(m_menu_addwidget, "Add widget");
 
-	
+	//m_menu_addwidget->Append(ID_MENUITEM_ADDLEGENDS, "Legends");
+	m_bitmap_buffer = new wxBitmap();
+	m_refresh_bitmap = true;
 }
 
 PlotWindow::~PlotWindow()
 {
 	DPRINTF("PlotWindow: dtor\n");
 	
-	
+	delete m_bitmap_buffer;
 	
 }
 
 void PlotWindow::OnPaint(wxPaintEvent & event)
 {
 	wxBufferedPaintDC dc(this);
-	dc.SetPen(*wxTRANSPARENT_PEN);
+	//dc.SetPen(*wxTRANSPARENT_PEN);
 	//dc.DrawRectangle(GetClientRect());
-	dc.Clear();
-	wxGraphicsContext *gc = wxGraphicsContext::Create(dc);
+	//dc.Clear();
+	m_refresh_bitmap = true;
+	if (m_refresh_bitmap)
+	{
+		wxMemoryDC memdc;
+		memdc.SelectObject(*m_bitmap_buffer);
+		memdc.SetBackground(dc.GetBackground());
+		memdc.Clear();
+		wxGraphicsContext *gc = wxGraphicsContext::Create(memdc);
 	
-	Render(gc);
+		Render(gc);
+		delete gc;
 
-	delete gc;
+		memdc.SelectObject(wxNullBitmap);
 
+		m_refresh_bitmap = false;
+	}
+
+	dc.DrawBitmap(*m_bitmap_buffer, 0, 0);
 }
 
 void PlotWindow::OnEraseBackground(wxEraseEvent & event)
@@ -66,8 +84,10 @@ void PlotWindow::OnEraseBackground(wxEraseEvent & event)
 
 void PlotWindow::OnResize(wxSizeEvent & event)
 {
-	for (auto widget : m_widgets)
-		widget->Fit();
+	m_refresh_bitmap = true;
+	m_bitmap_buffer->Create(GetClientSize());
+	for (auto box : m_boxes)
+		box->Sizing();
 
 	Refresh();
 	Layout();
@@ -80,21 +100,38 @@ void PlotWindow::OnLeftDown(wxMouseEvent & event)
 	x = event.GetX();
 	y = event.GetY();
 	//process interaction with on-plot widgets
-	for (auto widget : m_widgets)
+	//for (auto widget : m_widgets)
+	//{
+	//	if(widget->MouseIsInside(x, y))
+	//	{ 
+	//		widget->OnMouseLeftDown(x, y);
+	//		return;
+	//	}
+	//}
+
+	//process interaction with on-plot boxes
+	for (auto box : m_boxes)
 	{
-		if(widget->MouseIsInside(x, y))
+		if(box->CheckIsMouseInside(x, y))
 		{ 
-			widget->OnMouseLeftDown(x, y);
+			box->MouseLeftDown(x, y);
 			return;
 		}
 	}
 
-
 	//GetParent()->SetFocus();
 	int w, h;
 	GetClientSize(&w, &h);
-	StartPan((double)x / (double)w, 1- (double)y / (double)h);
 
+	if (m_lbaction == LBA_PAN)
+	{
+		StartPan((double)x / (double)w, 1 - (double)y / (double)h);
+	}
+
+	if (m_lbaction == LBA_ZOOMSELECT)
+	{
+		StartZoomSelect((double)x / (double)w, 1 - (double)y / (double)h);
+	}
 
 	if(!HasCapture())
         CaptureMouse();
@@ -106,14 +143,26 @@ void PlotWindow::OnLeftUp(wxMouseEvent & event)
 	x = event.GetX();
 	y = event.GetY();
 
-	EndPan();
 
-	for (auto widget : m_widgets)
+	EndPan();
+	EndZoomSelect();
+
+	//for (auto widget : m_widgets)
+	//{
+	//	if (widget->MouseIsInside(x, y))
+	//	{
+	//		widget->OnMouseLeftUp(x, y);
+	//		//return;
+	//	}
+	//}
+
+	//process interaction with on-plot boxes
+	for (auto box : m_boxes)
 	{
-		if (widget->MouseIsInside(x, y))
+		if (box->CheckIsMouseInside(x, y))
 		{
-			widget->OnMouseLeftUp(x, y);
-			//return;
+			box->MouseLeftUp(x, y);
+//			return;
 		}
 	}
 
@@ -129,14 +178,14 @@ void PlotWindow::OnRightDown(wxMouseEvent & event)
 	x = event.GetX();
 	y = event.GetY();
 
-	for (auto widget : m_widgets)
-	{
-		if (widget->MouseIsInside(x, y))
-		{
-			widget->OnMouseRightUp(x, y);
-			return;
-		}
-	}
+	//for (auto widget : m_widgets)
+	//{
+	//	if (widget->MouseIsInside(x, y))
+	//	{
+	//		widget->OnMouseRightUp(x, y);
+	//		return;
+	//	}
+	//}
 
 	if(m_menu.GetMenuItemCount() != 0)
 		PopupMenu(&m_menu);
@@ -149,14 +198,14 @@ void PlotWindow::OnRightUp(wxMouseEvent & event)
 	x = event.GetX();
 	y = event.GetY();
 
-	for (auto widget : m_widgets)
-	{
-		if (widget->MouseIsInside(x, y))
-		{
-			widget->OnMouseRightUp(x, y);
-			return;
-		}
-	}
+	//for (auto widget : m_widgets)
+	//{
+	//	if (widget->MouseIsInside(x, y))
+	//	{
+	//		widget->OnMouseRightUp(x, y);
+	//		return;
+	//	}
+	//}
 }
 
 void PlotWindow::OnMouseMove(wxMouseEvent & event)
@@ -166,16 +215,31 @@ void PlotWindow::OnMouseMove(wxMouseEvent & event)
 	x = event.GetPosition().x;
 	y = event.GetPosition().y;
 
-	for (auto widget : m_widgets)
+	//for (auto widget : m_widgets)
+	//{
+	//	if (widget->MouseIsInside(x, y))
+	//	{
+	//		widget->MouseMoving(x, y);
+	//	}
+	//}
+
+	for (auto box : m_boxes)
 	{
-		if (widget->MouseIsInside(x, y))
+		if (box->CheckIsMouseInside(x, y))
 		{
-			widget->MouseMoving(x, y);
+			box->MouseMove(x, y);
 		}
 	}
 
-	if (m_panning)
-		ProceedPan((double)x / (double)w, 1- y / (double)h);
+	if (m_lbaction == LBA_PAN && m_panning)
+	{
+		ProceedPan((double)x / (double)w, 1 - y / (double)h);
+	}
+
+	if (m_lbaction == LBA_ZOOMSELECT && (m_zoomselecting || m_zoomsel_switch))
+	{
+		ProceedZoomSelect((double)x / (double)w, 1 - (double)y / (double)h);
+	}
 	//event.Skip();
 }
 
@@ -192,14 +256,14 @@ void PlotWindow::OnMouseWheel(wxMouseEvent & event)
 		factor = 1.2;
 
 	//process interaction with on-plot widgets
-	for (auto widget : m_widgets)
-	{
-		if (widget->MouseIsInside(x, y))
-		{
-			widget->MouseWheel(factor, x, y);
-			return;
-		}
-	}
+	//for (auto widget : m_widgets)
+	//{
+	//	if (widget->MouseIsInside(x, y))
+	//	{
+	//		widget->MouseWheel(factor, x, y);
+	//		return;
+	//	}
+	//}
 
 	
 
@@ -249,9 +313,15 @@ void PlotWindow::Render(wxGraphicsContext * gc)
 	}
 
 	//render widgets
-	for (auto widget : m_widgets)
+	//for (auto widget : m_widgets)
+	//{
+	//	widget->Render(gc);
+	//}
+
+	//render boxes
+	for (auto box : m_boxes)
 	{
-		widget->Render(gc);
+		box->Render(gc);
 	}
 }
 
@@ -262,10 +332,34 @@ void PlotWindow::RedrawPlot()
 	Update();
 }
 
+void PlotWindow::DrawZoomSelection(double rx, double ry)
+{
+	DPRINTF("PlotWindow::DrawZoomSelection\n");
+	int width, height;
+	GetSize(&width, &height);
+
+	int x, y, w, h;
+	x = m_start_rx_zsel * width;
+	y = (1 - m_start_ry_zsel) * height;
+	w = (rx - m_start_rx_zsel) * width;
+	h = ((1 - ry) - (1 - m_start_ry_zsel)) * height;
+	wxClientDC dc(this);
+	dc.DrawBitmap(*m_bitmap_buffer, 0, 0);
+	dc.SetLogicalFunction(wxXOR);
+	dc.DrawRectangle(x, y, w, h);
+}
+
 void PlotWindow::GetSize(int * width, int * height)
 {
 	GetClientSize(width, height);
 }
+
+//void PlotWindow::OnMenuItem_AddLegends(wxCommandEvent & event)
+//{
+//	DPRINTF("PlotWindow::OnMenuItem_AddLegends\n");
+//	LegendsWidget *legendswidget;
+//	legendswidget = new LegendsWidget(this);
+//}
 
 
 void PlotWindow::OnMouseCaptureLost(wxMouseCaptureLostEvent &event)
