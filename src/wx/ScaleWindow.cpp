@@ -1,6 +1,9 @@
 //#include "stdafx.h"
 #include <wx/dcbuffer.h>
-#include "ScaleWindow.h"
+#include <wx/graphics.h>
+#include "wx/ScaleWindow.h"
+
+using namespace plot;
 
 BEGIN_EVENT_TABLE(ScaleWindow, wxPanel)
 EVT_PAINT(ScaleWindow::OnPaint)

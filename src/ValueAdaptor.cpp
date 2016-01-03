@@ -1,9 +1,13 @@
-//#include "stdafx.h"
-#include "ValueAdaptor.h"
 #include <time.h>
 #include <algorithm>
+#include <assert.h>
+#include <string.h>
 
+#include "ValueAdaptor.h"
 //#include <math.h>
+
+using namespace plot;
+
 
 void AxisAdaptor::InitState(double offset, double range, double wdth)
 {
@@ -64,7 +68,7 @@ template<class T> AxisValueAdaptor<T>::~AxisValueAdaptor()
 template<typename T>
 size_t AxisValueAdaptor<T>::ConvertToStr(char * str, size_t len, size_t indx)
 {
-	wxASSERT(indx < AxisValueAdaptor<T>::m_data->GetSize());
+	assert(indx < AxisValueAdaptor<T>::m_data->GetSize());
 
 	T *data;
 	data = AxisValueAdaptor<T>::m_data->GetDataArray();
@@ -121,7 +125,7 @@ size_t TimeAxisValueAdaptor<T>::ValToStr(char * str, size_t len)
 template<typename T>
 size_t TimeAxisValueAdaptor<T>::ValToStr(char * str, size_t len, T val)
 {
-	wxASSERT(0);
+	assert(0);
 	return size_t();
 }
 
@@ -302,7 +306,7 @@ size_t SimpleAxisValueAdaptor<T>::ValToStr(char * str, size_t len)
 template<typename T>
 size_t SimpleAxisValueAdaptor<T>::ValToStr(char * str, size_t len, T val)
 {
-	wxASSERT(0);
+	assert(0);
 	return 0;
 }
 

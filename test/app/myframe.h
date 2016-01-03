@@ -1,8 +1,9 @@
 #pragma once
 #include "mainframe.h"
-#include "PlotWindow.h"
-#include "Space.h"
-#include "ChartWindow.h"
+#include "wx/wxPlotWindow.h"
+#include "Area.h"
+#include "wx/wxChartWindow.h"
+#include "wx/wxBox.h"
 
 class MyFrame :
 	public MainFrame
@@ -42,17 +43,17 @@ private:
 	void OnMenu_AddVerticalScale(wxCommandEvent &event);
 	static const int ID_MENUPLOT_ADDVERTICALSCALE;
 
-	ChartWindow *m_chartwindow;
-	PlotWindow *m_plotwindow;
-	SeriesND *m_series;
-	DataNoType *m_data;
+	plot::wxChartWindow *m_chartwindow;
+	plot::wxPlotWindow *m_wxPlotWindow;
+	plot::Series *m_series;
+	plot::DataNoType *m_data;
 
 
-	SeriesND *m_2ndpageseries;
-	PlotWindow *m_2ndpageplotwindow;
-	DataNoType *m_2ndpagexdata, *m_2ndpageydata;
-	SpaceND *m_2ndpagespace;
-
+	plot::Series *m_2ndpageseries;
+	plot::wxPlotWindow *m_2ndpageplotwindow;
+	plot::DataNoType *m_2ndpagexdata, *m_2ndpageydata;
+	plot::Area *m_2ndpagearea;
+	plot::wxLegendsBox *m_2ndlegendsbox;
 	
 	//help functions
 	void fill_plot_choices();

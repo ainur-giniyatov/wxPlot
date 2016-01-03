@@ -1,7 +1,9 @@
-//#include "stdafx.h"
-#include "Scale.h"
 #include <float.h>
 #include <algorithm>
+
+#include "Scale.h"
+
+using namespace plot;
 
 Scale::Scale()
 {
@@ -62,7 +64,7 @@ void Scale::SetOffset(double offset)
 	m_offset = offset;
 
 	for (auto axis : m_axes)
-		axis->SetOffset(m_offset);
+		axis->m_offset = m_offset;
 
 }
 
@@ -71,7 +73,7 @@ void Scale::SetRange(double range)
 	m_range = range;
 
 	for (auto axis : m_axes)
-		axis->SetRange(m_range);
+		axis->m_range = m_range;
 
 }
 
@@ -82,8 +84,9 @@ void Scale::RedrawDependantPlots()
 	for (auto axis : m_axes)
 	{
 		Plot *plot = axis->GetOwner()->GetOwner();
-		if (plot != NULL && std::count(vuniqplots.begin(), vuniqplots.end(), plot) == 0)
+		if (plot != NULL && std::none_of(vuniqplots.begin(), vuniqplots.end(), [plot](Plot *p) {return p == plot; }))
 		{
+			plot->_SetViewModifiedFlag();
 			plot->RedrawPlot();
 			vuniqplots.push_back(plot);
 		}

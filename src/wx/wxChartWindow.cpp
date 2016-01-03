@@ -1,15 +1,16 @@
 //#include "stdafx.h"
-#include "ChartWindow.h"
+#include "wx/wxChartWindow.h"
 
+using namespace plot;
 
-const int ChartWindow::ID_PLOTMENUITEM_CLOSE = wxNewId();
+const int wxChartWindow::ID_PLOTMENUITEM_CLOSE = wxNewId();
 
-BEGIN_EVENT_TABLE(ChartWindow, wxPanel)
-EVT_MENU(ID_PLOTMENUITEM_CLOSE, ChartWindow::OnPlotMenuItem_close)
-//EVT_COMMAND(wxID_ANY, wxCommandEventQueued, ChartWindow::OnPlotMenuItem_close_queued)
+BEGIN_EVENT_TABLE(wxChartWindow, wxPanel)
+EVT_MENU(ID_PLOTMENUITEM_CLOSE, wxChartWindow::OnPlotMenuItem_close)
+//EVT_COMMAND(wxID_ANY, wxCommandEventQueued, wxChartWindow::OnPlotMenuItem_close_queued)
 END_EVENT_TABLE()
 
-ChartWindow::ChartWindow(wxWindow *parent, int orientation) :wxPanel(parent, wxID_ANY)
+wxChartWindow::wxChartWindow(wxWindow *parent, int orientation) :wxPanel(parent, wxID_ANY)
 {
 	SetName("chart");
 	m_sizer = new wxBoxSizer(orientation);
@@ -56,36 +57,36 @@ ChartWindow::ChartWindow(wxWindow *parent, int orientation) :wxPanel(parent, wxI
 }
 
 
-ChartWindow::~ChartWindow()
+wxChartWindow::~wxChartWindow()
 {
 	//m_mgr.Disconnect(wxEVT_AUI_PANE_MAXIMIZE, (wxObjectEventFunction)&Figure::OnAuiManagerEvent, NULL, this);
 	//m_mgr.Disconnect(wxEVT_AUI_PANE_RESTORE, (wxObjectEventFunction)&Figure::OnAuiManagerEvent, NULL, this);
 	m_mgr.UnInit();
 }
 
-void ChartWindow::OnPlotMenuItem_close(wxCommandEvent & event)
+void wxChartWindow::OnPlotMenuItem_close(wxCommandEvent & event)
 {
-	DPRINTF("ChartWindow::OnPlotMenuItem_close\n");
-	PlotWindow *plotwindow;
+	DPRINTF("wxChartWindow::OnPlotMenuItem_close\n");
+	wxPlotWindow *plotwindow;
 	wxMenu *menu;
 	menu = (wxMenu *)event.GetEventObject();
-	plotwindow = (PlotWindow *)menu->GetInvokingWindow();
+	plotwindow = (wxPlotWindow *)menu->GetInvokingWindow();
 
-	CallAfter(&ChartWindow::close_plot_delayed, plotwindow);
+	CallAfter(&wxChartWindow::close_plot_delayed, plotwindow);
 	//wxCommandEvent *evt = new wxCommandEvent(wxCommandEventQueued);
-	//evt->SetEventObject(plotwindow);
+	//evt->SetEventObject(wxPlotWindow);
 	//QueueEvent(evt);
 }
 
-//void ChartWindow::OnPlotMenuItem_close_queued(wxCommandEvent & event)
+//void wxChartWindow::OnPlotMenuItem_close_queued(wxCommandEvent & event)
 //{
-//	DPRINTF("ChartWindow::OnPlotMenuItem_close_queued\n");
-//	PlotWindow *plotwindow;
-//	plotwindow = (PlotWindow *)event.GetEventObject();
-//	DeletePlot(plotwindow);
+//	DPRINTF("wxChartWindow::OnPlotMenuItem_close_queued\n");
+//	wxPlotWindow *wxPlotWindow;
+//	wxPlotWindow = (wxPlotWindow *)event.GetEventObject();
+//	DeletePlot(wxPlotWindow);
 //}
 
-void ChartWindow::addplot(PlotWindow * plot)
+void wxChartWindow::addplot(wxPlotWindow * plot)
 {
 	wxWindow *wnd;
 	wnd = (wxWindow *)plot; //((long)plot + sizeof(Plot));//some hack
@@ -103,14 +104,14 @@ void ChartWindow::addplot(PlotWindow * plot)
 	m_mgr.Update();
 }
 
-void ChartWindow::close_plot_delayed(PlotWindow * plot)
+void wxChartWindow::close_plot_delayed(wxPlotWindow * plot)
 {
 	DeletePlot(plot);
 }
 
-PlotWindow * ChartWindow::CreatePlotWindow()
+wxPlotWindow * wxChartWindow::CreatewxPlotWindow()
 {
-	PlotWindow *plotwindow = new PlotWindow(m_plotscontainer);
+	wxPlotWindow *plotwindow = new wxPlotWindow(m_plotscontainer);
 	plotwindow->SetLeftButtonAction(m_lbaction);
 	addplot(plotwindow);
 	plotwindow->SetCommonScale(m_scale);
@@ -118,7 +119,7 @@ PlotWindow * ChartWindow::CreatePlotWindow()
 	return plotwindow;
 }
 
-void ChartWindow::DeletePlot(PlotWindow * plot)
+void wxChartWindow::DeletePlot(wxPlotWindow * plot)
 {
 	wxASSERT(plot != NULL);
 	m_mgr.DetachPane(plot);
@@ -126,7 +127,7 @@ void ChartWindow::DeletePlot(PlotWindow * plot)
 	plot->Destroy();
 }
 
-void ChartWindow::SetLeftButtonAction(LEFTBUTTON_ACTION lba)
+void wxChartWindow::SetLeftButtonAction(LEFTBUTTON_ACTION lba)
 {
 	m_lbaction = lba;
 	wxWindowList wlist;
@@ -135,7 +136,7 @@ void ChartWindow::SetLeftButtonAction(LEFTBUTTON_ACTION lba)
 	{
 		if (!(*wlist_iter)->GetName().Cmp("plot"))
 		{
-			((PlotWindow *)*wlist_iter)->SetLeftButtonAction(lba);
+			((wxPlotWindow *)*wlist_iter)->SetLeftButtonAction(lba);
 		}
 	}
 }

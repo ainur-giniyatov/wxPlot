@@ -85,37 +85,43 @@
 		</Linker>
 		<Unit filename="../include/Area.h" />
 		<Unit filename="../include/Axis.h" />
-		<Unit filename="../include/ChartWindow.h" />
+		<Unit filename="../include/Box.h" />
 		<Unit filename="../include/Data.h" />
 		<Unit filename="../include/Grid.h" />
-		<Unit filename="../include/LegendsWidget.h" />
 		<Unit filename="../include/Plot.h" />
-		<Unit filename="../include/PlotWindow.h" />
-		<Unit filename="../include/Renderer.h" />
 		<Unit filename="../include/Scale.h" />
-		<Unit filename="../include/ScaleWidget.h" />
-		<Unit filename="../include/ScaleWindow.h" />
 		<Unit filename="../include/Series.h" />
 		<Unit filename="../include/Space.h" />
 		<Unit filename="../include/ValueAdaptor.h" />
-		<Unit filename="../include/Widget.h" />
+		<Unit filename="../include/pevent.h" />
 		<Unit filename="../include/plot_defs.h" />
+		<Unit filename="../include/wx/ScaleWindow.h" />
+		<Unit filename="../include/wx/colorbase.h" />
+		<Unit filename="../include/wx/wxBox.h" />
+		<Unit filename="../include/wx/wxChartWindow.h" />
+		<Unit filename="../include/wx/wxGrid.h" />
+		<Unit filename="../include/wx/wxPlotWindow.h" />
+		<Unit filename="../include/wx/wxRenderer.h" />
+		<Unit filename="../include/wx/wxScaleBox.h" />
 		<Unit filename="../src/Area.cpp" />
 		<Unit filename="../src/Axis.cpp" />
-		<Unit filename="../src/ChartWindow.cpp" />
+		<Unit filename="../src/Box.cpp" />
 		<Unit filename="../src/Data.cpp" />
 		<Unit filename="../src/Grid.cpp" />
-		<Unit filename="../src/LegendsWidget.cpp" />
 		<Unit filename="../src/Plot.cpp" />
-		<Unit filename="../src/PlotWindow.cpp" />
 		<Unit filename="../src/Renderer.cpp" />
 		<Unit filename="../src/Scale.cpp" />
-		<Unit filename="../src/ScaleWidget.cpp" />
-		<Unit filename="../src/ScaleWindow.cpp" />
 		<Unit filename="../src/Series.cpp" />
-		<Unit filename="../src/Space.cpp" />
 		<Unit filename="../src/ValueAdaptor.cpp" />
-		<Unit filename="../src/Widget.cpp" />
+		<Unit filename="../src/pevent.cpp" />
+		<Unit filename="../src/wx/ScaleWindow.cpp" />
+		<Unit filename="../src/wx/colorbase.cpp" />
+		<Unit filename="../src/wx/wxBox.cpp" />
+		<Unit filename="../src/wx/wxChartWindow.cpp" />
+		<Unit filename="../src/wx/wxGrid.cpp" />
+		<Unit filename="../src/wx/wxPlotWindow.cpp" />
+		<Unit filename="../src/wx/wxRenderer.cpp" />
+		<Unit filename="../src/wx/wxScaleBox.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

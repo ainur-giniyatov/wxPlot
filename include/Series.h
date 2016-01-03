@@ -1,50 +1,51 @@
 #pragma once
+#include <vector>
 
 #include "plot_defs.h"
 #include "Data.h"
+#include "Area.h"
 #include "Renderer.h"
-#include "Space.h"
 
-class WXDLLIMPEXP_PLOTLIB DataNoType;
-class WXDLLIMPEXP_PLOTLIB SpaceND;
-class WXDLLIMPEXP_PLOTLIB Renderer;
-class WXDLLIMPEXP_PLOTLIB Renderer1D;
-class WXDLLIMPEXP_PLOTLIB Renderer2D;
-
-class WXDLLIMPEXP_PLOTLIB SeriesND
+namespace plot
 {
-public:
-	SeriesND(size_t dims_count, const char *series_name = NULL);
-	virtual ~SeriesND();
+	class DLLIMPEXP_PLOTLIB DataNoType;
+	class DLLIMPEXP_PLOTLIB Area;
+	class DLLIMPEXP_PLOTLIB Renderer;
 
-	void SetSeriesName(const char *series_name = NULL, bool update = true);
-	const char *GetSeriesName() { return m_series_name; }
+	class DLLIMPEXP_PLOTLIB Series
+	{
+	public:
+		Series(int dim_num, const char *series_name = NULL);
+		virtual ~Series();
 
-	void SetOwner(SpaceND *space) { m_owner_space = space; };
-	SpaceND *GetOwner() { return m_owner_space; }
+		void SetSeriesName(const char *series_name = NULL, bool update = true);
+		const char *GetSeriesName() { return m_series_name; }
 
-	//virtual void Clear(bool update = true) = 0;
-	//virtual void RemoveData(DataNoType *data) = 0;
-	void SeriesUpdated();
+		Area *GetOwner() { return m_owner; }
 
-	void SetNData(DataNoType *data, AXIS_DIR axis_dir, bool update = true);//previous Datas will be deleted
-	DataNoType *GetNData(AXIS_DIR axis_dir);
+		void SeriesUpdated();
 
-	std::vector<DataNoType *> &GetDatas() { return m_datas; }
-	//virtual void RemoveNData(DataNoType *data, size_t dim_num) override;
-	//virtual void Clear(bool update = true) override;
-	void Fit(bool update = true);
+		void SetData(DataNoType *data, AXIS_DIR axis_dir);
+		DataNoType *GetData(AXIS_DIR axis_dir);
+		//virtual std::vector<DataNoType *> GetDatas() = 0;
+		void RemoveData(DataNoType *data);
+		void DeleteData(DataNoType *data);
 
-	void SetRenderer(Renderer2D *renderer2d);//previous renderer will be deleted
-	//void SetRenderer(Renderer *renderer);
-	Renderer *GetRenderer();
-protected:
-	char *m_series_name;
-	//Area *m_owner_area;
-	SpaceND *m_owner_space;
-	Renderer *m_renderer;
+		void Fit(bool update = true);
 
-	size_t m_dims_count;
-	std::vector<DataNoType *> m_datas;
+		void SetRenderer(Renderer *renderer);//previous renderer will be deleted
+		Renderer *GetRenderer() { return m_renderer; };
 
-};
+	protected:
+		char *m_series_name;
+		Area *m_owner;
+		Renderer *m_renderer;
+
+		friend class Area;
+		void SetOwner(Area *area) { m_owner = area; }
+
+	private:
+		int m_dim_num; //number of dimensions
+		DataNoType **m_datas;
+	};
+}

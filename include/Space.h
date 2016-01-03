@@ -33,7 +33,7 @@ public:
 	void Clear(bool update = true);
 
 	void SpaceUpdated();
-	void SetOwner(Plot *plot) { m_owner_plot = plot; }
+	
 	Plot *GetOwner() { return m_owner_plot; }
 
 	std::vector<SeriesND *> &GetSerie() { return m_serie; }
@@ -48,7 +48,6 @@ public:
 
 
 	Grid *GetGrid() { return m_grid; };
-	void SetGrid(Grid *grid);
 protected:
 	std::vector<SeriesND *> m_serie;
 	Axis ** m_axes;
@@ -64,7 +63,12 @@ protected:
 
 	//Scale *m_yscale;
 
+	friend class Grid;
 	Grid *m_grid;
+	void SetGrid(Grid *grid);
+
+	friend class Plot;
+	void SetOwner(Plot *plot) { m_owner_plot = plot; }
 private:
 
 };

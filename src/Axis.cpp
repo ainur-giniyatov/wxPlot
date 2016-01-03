@@ -1,13 +1,15 @@
-//#include "stdafx.h"
 #include "Axis.h"
-//#include "Scale.h"
+
+#include <assert.h>
+
+using namespace plot;
 
 Axis::Axis()
 {
 	DPRINTF("Axis ctor\n");
 	m_offset = 0.;
-	m_range = 500.0;
-	m_owner_space = NULL;
+	m_range = 100.0;
+	m_owner = NULL;
 	m_commonscale = NULL;
 
 }
@@ -22,7 +24,7 @@ Axis::~Axis()
 
 void Axis::AxisUpdated()
 {
-	wxASSERT(m_owner_space != NULL);
+	assert(m_owner != NULL);
 	DPRINTF("AxisUpdated\n");
 	//if (m_commonscale != NULL)
 	//{
@@ -32,13 +34,16 @@ void Axis::AxisUpdated()
 	//}/*else
 	//	if (m_owner_space != NULL)
 	
-	m_owner_space->SpaceUpdated();
+//	m_owner_space->SpaceUpdated();
 
 }
 
 void Axis::SetOffset(double offset)
 {
-	m_offset = offset;
+	if (m_commonscale != nullptr)
+		m_commonscale->SetOffset(offset);
+	else
+		m_offset = offset;
 }
 
 void Axis::SetRange(double range)
@@ -47,41 +52,43 @@ void Axis::SetRange(double range)
 	{
 		if (range < m_commonscale->GetRangeMax())
 			if (range > m_commonscale->GetRangeMin())
-				m_range = range;
+			{
+				m_commonscale->SetRange(range);
+				//m_range = range;
+			}
 		return;
 	}
 	else
 		m_range = range;
 }
 
-void Axis::PropagateToCommonScale()
-{
-	if (m_commonscale != NULL)
-	{
-		m_commonscale->SetOffset(m_offset);
-		m_commonscale->SetRange(m_range);
+//void Axis::PropagateToCommonScale()
+//{
+//	if (m_commonscale != NULL)
+//	{
+//		m_commonscale->SetOffset(m_offset);
+//		m_commonscale->SetRange(m_range);
+//	}
+//}
 
-	}
-}
-
-void Axis::SetVisibleRange(double offs, double range, bool update)
-{
-	wxASSERT(range > 0);
-
-	Axis *axis;
-
-	SetOffset(offs - range / 10.);
-	SetRange(range + range / 5.);
-
-	PropagateToCommonScale();
-
-	if(update)
-		if (m_commonscale != NULL)
-		{
-			m_commonscale->RedrawDependantPlots();
-			m_commonscale->ScaleRedraw();
-		}
-		else
-			GetOwner()->GetOwner()->RedrawPlot();
-}
+//void Axis::SetVisibleRange(double offs, double range, bool update)
+//{
+//	assert(range > 0);
+//
+//	Axis *axis;
+//
+//	SetOffset(offs - range / 10.);
+//	SetRange(range + range / 5.);
+//
+//	//PropagateToCommonScale();
+//
+//	if(update)
+//		if (m_commonscale != NULL)
+//		{
+//			m_commonscale->RedrawDependantPlots();
+//			m_commonscale->ScaleRedraw();
+//		}
+//		else
+//			GetOwner()->GetOwner()->RedrawPlot();
+//}
 

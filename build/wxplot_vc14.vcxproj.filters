@@ -13,15 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\wx">
+      <UniqueIdentifier>{9a3f93f8-35a8-44a5-971a-53c00ca94a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\wx">
+      <UniqueIdentifier>{65d4fb54-0b78-40e1-a1d6-0e91500c2163}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\Area.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\Axis.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\ChartWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Data.h">
@@ -33,22 +33,10 @@
     <ClInclude Include="..\include\plot_defs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\PlotWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\Scale.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\ScaleWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\Series.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\Space.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\ValueAdaptor.h">
@@ -60,15 +48,42 @@
     <ClInclude Include="..\include\Box.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\Area.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\wx\ScaleWindow.h">
+      <Filter>Header Files\wx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\wx\wxBox.h">
+      <Filter>Header Files\wx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\wx\wxGrid.h">
+      <Filter>Header Files\wx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\wx\wxScaleBox.h">
+      <Filter>Header Files\wx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\wx\wxRenderer.h">
+      <Filter>Header Files\wx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\wx\wxPlotWindow.h">
+      <Filter>Header Files\wx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\wx\wxChartWindow.h">
+      <Filter>Header Files\wx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\wx\colorbase.h">
+      <Filter>Header Files\wx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pevent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Area.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Axis.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\ChartWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Data.cpp">
@@ -77,31 +92,52 @@
     <ClCompile Include="..\src\Plot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\PlotWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Scale.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Series.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Space.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\ValueAdaptor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Grid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Box.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ScaleWindow.cpp">
+    <ClCompile Include="..\src\Area.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Grid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wx\ScaleWindow.cpp">
+      <Filter>Source Files\wx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wx\wxBox.cpp">
+      <Filter>Source Files\wx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wx\wxGrid.cpp">
+      <Filter>Source Files\wx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wx\wxScaleBox.cpp">
+      <Filter>Source Files\wx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wx\wxRenderer.cpp">
+      <Filter>Source Files\wx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wx\wxPlotWindow.cpp">
+      <Filter>Source Files\wx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wx\wxChartWindow.cpp">
+      <Filter>Source Files\wx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wx\colorbase.cpp">
+      <Filter>Source Files\wx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pevent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

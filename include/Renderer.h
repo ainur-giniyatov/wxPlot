@@ -1,90 +1,54 @@
 #pragma once
 
 #include "plot_defs.h"
-
 #include "Series.h"
 #include "Data.h"
 #include "Plot.h"
-#include "Space.h"
+#include "Area.h"
 #include "Axis.h"
 #include "ValueAdaptor.h"
 
-#include <wx/graphics.h>
-
-template <typename T> class WXDLLIMPEXP_PLOTLIB DataTyped;
-class WXDLLIMPEXP_PLOTLIB DataNoType;
-class WXDLLIMPEXP_PLOTLIB SeriesND;
-class WXDLLIMPEXP_PLOTLIB Plot;
-class WXDLLIMPEXP_PLOTLIB Axis;
-class WXDLLIMPEXP_PLOTLIB SpaceND;
-template <typename T> class WXDLLIMPEXP_PLOTLIB AxisValueAdaptor;
-
-class WXDLLIMPEXP_PLOTLIB Renderer
+namespace plot
 {
-public:
-	Renderer();
-	virtual ~Renderer();
+	template <typename T> class DLLIMPEXP_PLOTLIB DataTyped;
+	class DLLIMPEXP_PLOTLIB DataNoType;
+	class DLLIMPEXP_PLOTLIB Series;
+	class DLLIMPEXP_PLOTLIB Plot;
+	class DLLIMPEXP_PLOTLIB Axis;
+	template <typename T> class DLLIMPEXP_PLOTLIB AxisValueAdaptor;
 
-	void SetOwner(SeriesND *series);
-	SeriesND *GetOwner() { return m_owner_series; }
+	class DLLIMPEXP_PLOTLIB Renderer
+	{
+	public:
+		Renderer();
+		virtual ~Renderer();
 
-	virtual void Render(wxGraphicsContext *gc) = 0;
-protected:
-	SeriesND *m_owner_series;
+		void SetOwner(Series *series);
+		Series *GetOwner() { return m_owner_series; }
 
-	int m_text_pos;
+		virtual void Render(void *) = 0;
+		virtual void PutMark(void *, int x, int y) = 0;
+		virtual void PutLine(void *, int x, int y, int w, int h) = 0;
+		void SetMarkerStyle(MARKER_STYLES marker_style);
+		void SetMarkerSize(int marker_size);
+		void SetMarkerColourIndex(int marker_colour_index);
+		void SetLineStyle(LINE_STYLES line_style);
+		void SetLineThickness(int line_thickness);
+		void SetLineColourIndex(int line_colour_index);
 
-	MARKER_STYLES m_marker_style;
-	int m_marker_size;
-	size_t m_marker_color_index;
+	protected:
+		Series *m_owner_series;
 
-	LINE_STYLE m_line_style;
-	int m_line_thickness;
-	size_t m_line_color_index;
+		int m_text_pos;
 
-};
-//
-//class WXDLLIMPEXP_PLOTLIB Renderer1D : public Renderer
-//{
-//public:
-//	Renderer1D();
-//	virtual ~Renderer1D();
-//
-//};
-//
-//template<typename T> class WXDLLIMPEXP_PLOTLIB Renderer1DTyped : public Renderer1D
-//{
-//public:
-//	Renderer1DTyped();
-//	virtual ~Renderer1DTyped();
-//
-//	virtual void Render(wxGraphicsContext *gc) override;
-//};
-//
-//template  class Renderer1DTyped<int>;
-//template  class Renderer1DTyped<float>;
+		MARKER_STYLES m_marker_style;
+		int m_marker_size;
+		size_t m_marker_color_index;
 
-class WXDLLIMPEXP_PLOTLIB Renderer2D : public Renderer
-{
-public:
-	Renderer2D();
-	virtual ~Renderer2D();
+		LINE_STYLES m_line_style;
+		int m_line_thickness;
+		size_t m_line_color_index;
 
-};
+	};
 
-template<typename T1, typename T2> class WXDLLIMPEXP_PLOTLIB Renderer2DTyped : public Renderer2D
-{
-public:
-	Renderer2DTyped();
-	virtual ~Renderer2DTyped();
-
-	virtual void Render(wxGraphicsContext *gc) override;
-};
-
-template WXDLLIMPEXP_PLOTLIB class Renderer2DTyped<int, int>;
-template WXDLLIMPEXP_PLOTLIB class Renderer2DTyped<time_t, int>;
-template WXDLLIMPEXP_PLOTLIB class Renderer2DTyped<float, float>;
-template WXDLLIMPEXP_PLOTLIB class Renderer2DTyped<time_t, float>;
-//template WXDLLIMPEXP_PLOTLIB class Renderer2DTyped<double>;
-//template WXDLLIMPEXP_PLOTLIB class Renderer2DTyped<float>;
-//template WXDLLIMPEXP_PLOTLIB class Renderer2DTyped<short int>;
+}

@@ -1,30 +1,31 @@
-//#include "stdafx.h"
-#include "Series.h"
 #include <algorithm>
+#include <assert.h>
+#include <string.h>
+
+#include "Series.h"
+
+
+using namespace plot;
 
 const char *s_series_name_null = "null";
 
-SeriesND::SeriesND(size_t dims_count, const char *series_name)
+Series::Series(int dim_num, const char *series_name)
 {
-	DPRINTF("SeriesND ctor\n");
+	DPRINTF("Series ctor\n");
 	m_series_name = NULL;
-	//m_owner_area = NULL;
-	m_owner_space = NULL;
+	m_owner = NULL;
 	SetSeriesName(series_name, false);
 	m_renderer = NULL;
 
-	wxASSERT(dims_count > 0);
-	wxASSERT(dims_count == 2);//only 2d for now
+	m_dim_num = dim_num;
+	assert(m_dim_num > 0 && m_dim_num < 3);
 
-	m_dims_count = dims_count;
-	for (size_t indx = 0; indx < m_dims_count; indx++)
-	{
-		m_datas.push_back(NULL);
-	}
+	m_datas = (DataNoType **)malloc(sizeof(DataNoType *) * m_dim_num);
+	for (int indx = 0; indx < m_dim_num; indx++)
+		m_datas[indx] = nullptr;
 }
 
-
-SeriesND::~SeriesND()
+Series::~Series()
 {
 	DPRINTF("Series dtor\n");
 	if (m_series_name != NULL && m_series_name != s_series_name_null)
@@ -37,20 +38,17 @@ SeriesND::~SeriesND()
 		delete m_renderer;
 	}
 
-//delete datas
-	for (auto data : m_datas)
+//delete data
+	for (int indx = 0; indx < m_dim_num; indx++)
 	{
-		if (data == NULL)
-			continue;
-		data->SetOwner(NULL);
-		delete data;
+		if (m_datas[indx] != nullptr)
+			DeleteData(m_datas[indx]);
 	}
 
-	if(m_owner_space != NULL)
-		m_owner_space->RemoveSeries(this);
+	free(m_datas);
 }
 
-void SeriesND::SetSeriesName(const char * series_name, bool update)
+void Series::SetSeriesName(const char * series_name, bool update)
 {
 	if (m_series_name != NULL && m_series_name != s_series_name_null)
 	{
@@ -69,91 +67,203 @@ void SeriesND::SetSeriesName(const char * series_name, bool update)
 		SeriesUpdated();
 }
 
-void SeriesND::SeriesUpdated()
+void Series::SeriesUpdated()
 {
-	DPRINTF("Series updated\n");
-	/*if (m_owner_area != NULL)
-		m_owner_area->AreaUpdated();*/
-	if (m_owner_space != NULL)
-		m_owner_space->SpaceUpdated();
 }
 
-Renderer * SeriesND::GetRenderer()
+void Series::SetData(DataNoType * data, AXIS_DIR axis_dir)
 {
-//	wxASSERT(m_renderer != NULL);
-	return m_renderer;
-}
-
-
-void SeriesND::SetNData(DataNoType * data, AXIS_DIR axis_dir, bool update)
-{
-	wxASSERT(axis_dir < m_dims_count);
-
-	data->SetAxisDir(axis_dir);
-
-
-	if (m_datas[axis_dir] != NULL && m_datas[axis_dir]->GetOwner() != NULL)
-	{
-		delete m_datas[axis_dir];
-	}
+	assert(axis_dir < m_dim_num);
+	assert(data != nullptr);
+	if (m_datas[axis_dir] != nullptr)
+		DeleteData(m_datas[axis_dir]);
 
 	m_datas[axis_dir] = data;
-	if(data != NULL)
-		data->SetOwner(this);
-
-	if (update)
-		SeriesUpdated();
+	data->_SetOwner(this);
 }
 
-DataNoType * SeriesND::GetNData(AXIS_DIR axis_dir)
+DataNoType * Series::GetData(AXIS_DIR axis_dir)
 {
-	wxASSERT(axis_dir < m_dims_count);
-	return m_datas[axis_dir];
+	//assert(axis_dir < m_dim_num);
+	return axis_dir < m_dim_num ? m_datas[axis_dir] : nullptr;
 }
 
-
-void SeriesND::Fit(bool update)
+void Series::RemoveData(DataNoType * data)
 {
-	for (auto data : m_datas)
+	int indx;
+	for (indx = 0; indx < m_dim_num; indx++)
 	{
-		data->Fit(false);
-	}
-
-	if (update)
-	{
-		std::vector<Plot *> vuniqplot;
-		for (size_t indx = 0; indx < m_owner_space->GetDimsCount(); indx++) //auto axis : m_owner_space->GetAxes())
+		if (m_datas[indx] == data)
 		{
-			Scale *scale;
-			scale = m_owner_space->GetAxis((AXIS_DIR)indx)->GetCommonScale();
-			if (scale != NULL)
-			{
-				scale->ScaleRedraw();
-				for (auto axis : scale->GetAxes())
-				{
-					Plot *plot;
-					plot = axis->GetOwner()->GetOwner();
-					if (plot != NULL && std::count(vuniqplot.begin(), vuniqplot.end(), plot) == 0)
-					{
-						plot->RedrawPlot();
-						vuniqplot.push_back(plot);
-					}
-				}
-			}
+			m_datas[indx] = nullptr;
+			data->_SetOwner(nullptr);
+			break;
 		}
 	}
+	assert(indx != m_dim_num);//not found
 }
 
-void SeriesND::SetRenderer(Renderer2D * renderer2d)
+void Series::DeleteData(DataNoType * data)
 {
-	assert(renderer2d != NULL);
-	if (m_renderer != NULL)
+	int indx;
+	for (indx = 0; indx < m_dim_num; indx++)
 	{
-		m_renderer->SetOwner(NULL);
-		delete m_renderer;
+		if (m_datas[indx] == data)
+		{
+			m_datas[indx] = nullptr;
+			//data->_SetOwner(nullptr);
+			delete data;
+			break;
+		}
 	}
+	assert(indx != m_dim_num);//not found
 
-	m_renderer = renderer2d;
-	m_renderer->SetOwner(this);
-	SeriesUpdated();
 }
+
+void Series::Fit(bool update)
+{
+}
+
+void Series::SetRenderer(Renderer * renderer)
+{
+	if (m_renderer != nullptr)
+		delete m_renderer;
+	m_renderer = renderer;
+	m_renderer->SetOwner(this);
+}
+
+//void Series::SeriesUpdated()
+//{
+//	DPRINTF("Series updated\n");
+//	/*if (m_owner_area != NULL)
+//		m_owner_area->AreaUpdated();*/
+//	//if (m_owner_space != NULL)
+//	//	m_owner_space->SpaceUpdated();
+//}
+//
+//Renderer * Series::GetRenderer()
+//{
+////	wxASSERT(m_renderer != NULL);
+//	return m_renderer;
+//}
+
+
+//
+//void Series::Fit(bool update)
+//{
+//	for (auto data : m_datas)
+//	{
+//		data->Fit(false);
+//	}
+//
+//	if (update)
+//	{
+//		std::vector<Plot *> vuniqplot;
+//		for (size_t indx = 0; indx < m_owner_space->GetDimsCount(); indx++) //auto axis : m_owner_space->GetAxes())
+//		{
+//			Scale *scale;
+//			scale = m_owner_space->GetAxis((AXIS_DIR)indx)->GetCommonScale();
+//			if (scale != NULL)
+//			{
+//				scale->ScaleRedraw();
+//				for (auto axis : scale->GetAxes())
+//				{
+//					Plot *plot;
+//					plot = axis->GetOwner()->GetOwner();
+//					if (plot != NULL && std::count(vuniqplot.begin(), vuniqplot.end(), plot) == 0)
+//					{
+//						plot->RedrawPlot();
+//						vuniqplot.push_back(plot);
+//					}
+//				}
+//			}
+//		}
+//	}
+//}
+
+//void Series::SetRenderer(Renderer2D * renderer2d)
+//{
+//	assert(renderer2d != NULL);
+//	if (m_renderer != NULL)
+//	{
+//		m_renderer->SetOwner(NULL);
+//		delete m_renderer;
+//	}
+//
+//	m_renderer = renderer2d;
+//	m_renderer->SetOwner(this);
+//	SeriesUpdated();
+//}
+//
+//Series2D::Series2D(const char * series_name):Series(series_name)
+//{
+//	m_xdata = m_ydata = nullptr;
+//}
+//
+//Series2D::~Series2D()
+//{
+//	if (m_xdata != nullptr)
+//		delete m_xdata;
+//
+//	if (m_ydata != nullptr)
+//		delete m_ydata;
+//}
+//
+//void Series2D::SetData(DataNoType * data, AXIS_DIR axis_dir, bool update)
+//{
+//	if (axis_dir == AXIS_X)
+//	{
+//		if (m_xdata != nullptr)
+//			delete m_xdata;
+//
+//		m_xdata = data;
+//		m_xdata->SetOwner(this);
+//	}
+//	else
+//		if (axis_dir == AXIS_Y)
+//		{
+//			if (m_ydata != nullptr)
+//				delete m_ydata;
+//			m_ydata = data;
+//			m_ydata->SetOwner(this);
+//		}
+//		else
+//			assert(0);
+//}
+//
+//DataNoType * Series2D::GetData(AXIS_DIR axis_dir)
+//{
+//	if (axis_dir == AXIS_X)
+//		return m_xdata;
+//
+//	if (axis_dir == AXIS_Y)
+//		return m_ydata;
+//
+//	assert(0);
+//	return nullptr;
+//}
+//
+//std::vector<DataNoType*> Series2D::GetDatas()
+//{
+//	std::vector<DataNoType*> datas;
+//	if (m_xdata != nullptr)
+//		datas.push_back(m_xdata);
+//
+//	if (m_ydata != nullptr)
+//		datas.push_back(m_ydata);
+//
+//	return datas;
+//}
+//
+//void Series2D::RemoveData(DataNoType * data)
+//{
+//	if (data == m_xdata)
+//		m_xdata = nullptr;
+//
+//	if (data == m_ydata)
+//		m_ydata = nullptr;
+//}
+//
+//void Series2D::Fit(bool update)
+//{
+//}

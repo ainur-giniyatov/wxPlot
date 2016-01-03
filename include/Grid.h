@@ -1,32 +1,31 @@
 #pragma once
-
-#include <wx/graphics.h>
-
 #include "plot_defs.h"
 #include "Series.h"
-#include "Renderer.h"
 #include "Axis.h"
-#include "Space.h"
+#include "Area.h"
 
-class WXDLLIMPEXP_PLOTLIB SeriesND;
-class WXDLLIMPEXP_PLOTLIB Renderer;
-class WXDLLIMPEXP_PLOTLIB Axis;
-class WXDLLIMPEXP_PLOTLIB Renderer2D;
-class WXDLLIMPEXP_PLOTLIB SpaceND;
-template <class T> class WXDLLIMPEXP_PLOTLIB ValueAdaptor;
-
-class WXDLLIMPEXP_PLOTLIB Grid
+namespace plot
 {
-public:
-	/*constructor invokes owner_space->SetGrid(this)*/
-	Grid(SpaceND *owner_space);
-	virtual ~Grid();
+	class DLLIMPEXP_PLOTLIB Series;
+	//class DLLIMPEXP_PLOTLIB Renderer;
+	class DLLIMPEXP_PLOTLIB Axis;
+	//class DLLIMPEXP_PLOTLIB Renderer2D;
+	class DLLIMPEXP_PLOTLIB Area;
+	template <class T> class DLLIMPEXP_PLOTLIB ValueAdaptor;
 
-	void Render(wxGraphicsContext *gc);
-	void GridUpdated();
+	class DLLIMPEXP_PLOTLIB Grid
+	{
+	public:
+		/*constructor invokes owner_space->SetGrid(this)*/
+		Grid(Area *owner);
+		virtual ~Grid();
 
-	
-protected:
-	SpaceND *m_owner_space;
-private:
-};
+		virtual void Render(void *) = 0;
+		void GridUpdated();
+
+
+	protected:
+		Area *m_owner;
+	private:
+	};
+}

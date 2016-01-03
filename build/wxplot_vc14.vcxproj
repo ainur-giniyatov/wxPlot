@@ -163,7 +163,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MAKINGDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MAKINGDLL;_CRT_SECURE_NO_WARNINGS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -209,7 +209,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MAKINGDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;MAKINGDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -266,34 +266,44 @@
     <ClInclude Include="..\include\Area.h" />
     <ClInclude Include="..\include\Axis.h" />
     <ClInclude Include="..\include\Box.h" />
-    <ClInclude Include="..\include\ChartWindow.h" />
     <ClInclude Include="..\include\Data.h" />
     <ClInclude Include="..\include\Grid.h" />
+    <ClInclude Include="..\include\pevent.h" />
     <ClInclude Include="..\include\Plot.h" />
-    <ClInclude Include="..\include\PlotWindow.h" />
     <ClInclude Include="..\include\plot_defs.h" />
     <ClInclude Include="..\include\Renderer.h" />
     <ClInclude Include="..\include\Scale.h" />
-    <ClInclude Include="..\include\ScaleWindow.h" />
     <ClInclude Include="..\include\Series.h" />
-    <ClInclude Include="..\include\Space.h" />
     <ClInclude Include="..\include\ValueAdaptor.h" />
+    <ClInclude Include="..\include\wx\colorbase.h" />
+    <ClInclude Include="..\include\wx\wxChartWindow.h" />
+    <ClInclude Include="..\include\wx\wxPlotWindow.h" />
+    <ClInclude Include="..\include\wx\ScaleWindow.h" />
+    <ClInclude Include="..\include\wx\wxBox.h" />
+    <ClInclude Include="..\include\wx\wxGrid.h" />
+    <ClInclude Include="..\include\wx\wxRenderer.h" />
+    <ClInclude Include="..\include\wx\wxScaleBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Area.cpp" />
     <ClCompile Include="..\src\Axis.cpp" />
     <ClCompile Include="..\src\Box.cpp" />
-    <ClCompile Include="..\src\ChartWindow.cpp" />
     <ClCompile Include="..\src\Data.cpp" />
     <ClCompile Include="..\src\Grid.cpp" />
+    <ClCompile Include="..\src\pevent.cpp" />
     <ClCompile Include="..\src\Plot.cpp" />
-    <ClCompile Include="..\src\PlotWindow.cpp" />
     <ClCompile Include="..\src\Renderer.cpp" />
     <ClCompile Include="..\src\Scale.cpp" />
-    <ClCompile Include="..\src\ScaleWindow.cpp" />
     <ClCompile Include="..\src\Series.cpp" />
-    <ClCompile Include="..\src\Space.cpp" />
     <ClCompile Include="..\src\ValueAdaptor.cpp" />
+    <ClCompile Include="..\src\wx\colorbase.cpp" />
+    <ClCompile Include="..\src\wx\wxChartWindow.cpp" />
+    <ClCompile Include="..\src\wx\wxPlotWindow.cpp" />
+    <ClCompile Include="..\src\wx\ScaleWindow.cpp" />
+    <ClCompile Include="..\src\wx\wxBox.cpp" />
+    <ClCompile Include="..\src\wx\wxGrid.cpp" />
+    <ClCompile Include="..\src\wx\wxRenderer.cpp" />
+    <ClCompile Include="..\src\wx\wxScaleBox.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
