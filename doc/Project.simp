@@ -1,0 +1,715 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<sim-project version="8.4" multi-file="no">
+  <meta>
+    <name>Project</name>
+    <authors> </authors>
+    <description />
+  </meta>
+  <counters models="2">
+    <entity-names>
+      <counter>
+        <item-type stereotype="" type="UmlClass" />
+        <value>21</value>
+      </counter>
+      <counter>
+        <item-type stereotype="" type="UmlInterface" />
+        <value>1</value>
+      </counter>
+      <counter>
+        <item-type stereotype="" type="UmlEnumeration" />
+        <value>1</value>
+      </counter>
+    </entity-names>
+    <entity-ids>
+      <counter>
+        <item-type stereotype="" type="UmlClass" />
+        <value>22</value>
+      </counter>
+      <counter>
+        <item-type stereotype="" type="UmlComment" />
+        <value>2</value>
+      </counter>
+      <counter>
+        <item-type stereotype="" type="UmlCommentConnector" />
+        <value>2</value>
+      </counter>
+      <counter>
+        <item-type stereotype="" type="UmlDependency" />
+        <value>5</value>
+      </counter>
+      <counter>
+        <item-type stereotype="" type="UmlAssociation" />
+        <value>4</value>
+      </counter>
+      <counter>
+        <item-type stereotype="" type="UmlGeneralization" />
+        <value>14</value>
+      </counter>
+      <counter>
+        <item-type stereotype="" type="UmlInterface" />
+        <value>2</value>
+      </counter>
+      <counter>
+        <item-type stereotype="" type="UmlProvidedInterfaceConnector" />
+        <value>2</value>
+      </counter>
+      <counter>
+        <item-type stereotype="" type="UmlEnumeration" />
+        <value>2</value>
+      </counter>
+      <counter>
+        <item-type stereotype="" type="AbstractElementGroup" />
+        <value>17</value>
+      </counter>
+    </entity-ids>
+    <diagrams>
+      <counter>
+        <type>SoftwareIdeasModeler.Core.Diagrams.UmlDiagrams.UmlClassDiagram</type>
+        <value>1</value>
+      </counter>
+    </diagrams>
+    <fields>
+      <counter>
+        <type>SoftwareIdeasModeler.Core.DiagramItems.Fields.AttributeField</type>
+        <value>23</value>
+      </counter>
+      <counter>
+        <type>SoftwareIdeasModeler.Core.DiagramItems.Fields.OperationField</type>
+        <value>24</value>
+      </counter>
+      <counter>
+        <type>SoftwareIdeasModeler.Core.DiagramItems.Fields.EnumerationItemField</type>
+        <value>5</value>
+      </counter>
+    </fields>
+  </counters>
+  <alias-groups />
+  <management>
+    <persons>
+      <person id="P454032ee66614f4aaf550533d6f44747">
+        <first-name />
+        <last-name />
+        <role />
+        <e-mail />
+        <phone-number />
+        <description />
+        <color>#00000000</color>
+      </person>
+    </persons>
+    <tasks />
+    <requirements />
+    <issues />
+    <to-dos />
+  </management>
+  <glossary />
+  <types>
+    <type-sets>
+      <type-set file="UmlTypes.xml" />
+    </type-sets>
+    <custom-types>
+      <type id="Class:di334644913646410677" tid="" name="DataNoTyped" description="" nullable="false" class-ref="di334644913646410677" />
+      <type id="Class:di292432184728289171" tid="" name="Series" description="" nullable="false" class-ref="di292432184728289171" />
+      <type id="Area" tid="" name="Area" description="" nullable="false" />
+      <type id="Class:di614016099485148129" tid="" name="Box" description="" nullable="false" class-ref="di614016099485148129" />
+      <type id="Class:di192746608600107865" tid="" name="Plot" description="" nullable="false" class-ref="di192746608600107865" />
+      <type id="()" tid="" name="()" description="" nullable="false" />
+      <type id="wxGraphicsContext" tid="" name="wxGraphicsContext" description="" nullable="false" />
+      <type id="Class:di549569814671146265" tid="" name="Axis" description="" nullable="false" class-ref="di549569814671146265" />
+      <type id="double" tid="" name="double" description="" nullable="false" />
+      <type id="Class:di764506862635478951" tid="" name="AXIS_DIR" description="" nullable="false" class-ref="di764506862635478951" />
+      <type id="AXIS_DIR (" tid="" name="AXIS_DIR (" description="" nullable="false" />
+      <type id="Class:di854908478398735987" tid="" name="Scale" description="" nullable="false" class-ref="di854908478398735987" />
+      <type id="Axis, in dir : AXIS_DIR)" tid="" name="Axis, in dir : AXIS_DIR)" description="" nullable="false" />
+      <type id="Axis)" tid="" name="Axis)" description="" nullable="false" />
+      <type id="Class:di350469769684917435" tid="" name="Renderer" description="" nullable="false" class-ref="di350469769684917435" />
+    </custom-types>
+  </types>
+  <filters />
+  <items>
+    <item id="di355102638106053875" cid="ELEM001" type="uml-provided-interface-connector" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:29:24">
+      <stereotypes />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+  </items>
+  <models>
+    <model id="p172255933291768202" name="Model 1" type="model" namespace="" order-index="1">
+      <meta>
+        <authors>
+          <author> </author>
+        </authors>
+        <description />
+        <creation-date>12/30/2015 19:21:55</creation-date>
+        <change-date>01/01/0001 00:00:00</change-date>
+        <revision-count>0</revision-count>
+        <version />
+      </meta>
+      <abstract-items />
+      <sub-models />
+      <diagram type="uml-class" id="p576437465501519725" name="ClassDiagram1" order-index="1" show-id="false" show-name="true" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" show-template-parameters="true" show-fields="true" show-empty-compartments="true" show-attributes="true" show-attribute-visibility="true" show-operations="true" show-operation-parameters="true" show-operation-visibility="true" show-nullability="true" show-sequence-number="false" show-extension-points="false" show-relationship-texts="true" show-description="false" show-field-description="false" auto-routed-paths="false" view-location="-200,-306" zoom="0.7258333">
+        <style>
+          <background-color index="1" color="#FFFFFFFF" />
+          <background-color index="2" color="#FFFFFFFF" />
+          <background-type type="solid" />
+        </style>
+        <meta>
+          <authors>
+            <author> </author>
+          </authors>
+          <description />
+          <creation-date>12/30/2015 19:21:55</creation-date>
+          <change-date>12/30/2015 23:17:39</change-date>
+          <revision-count>0</revision-count>
+          <version />
+        </meta>
+        <abstract-items>
+          <item id="di903196217744094669" cid="C001" type="class" name="DataTyped&lt;T&gt;" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:22:25">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di292432184728289171" cid="C002" type="class" name="Series" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:23:02">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="a944826b5ee674b659d1d3e1b86a802bb619" cid="AT019" name="m_renderer" type="Renderer" type-id="Class:di350469769684917435" visibility="private">
+                <style class="default" />
+              </attribute>
+            </attributes>
+            <operations>
+              <operation id="oe9268786ee8d4eaab9d99b8aa1d8673838" cid="OP009" name="SetData" type="" type-id="" visibility="public">
+                <style class="default" />
+                <parameters>
+                  <parameter id="paf214774e8eb4984be5257c507dbb19e" name="data" type="DataNoTyped" type-id="Class:di334644913646410677" direction="In" />
+                  <parameter id="pc906fc01023a425aabbfdf6bf5d700cb" name="dir" type="AXIS_DIR" type-id="Class:di764506862635478951" direction="In" />
+                </parameters>
+                <source-codes>
+                  <source-code language="ActionScript" />
+                </source-codes>
+              </operation>
+              <operation id="o8d606482227141a0ade0e7feaa1bc4af367" cid="OP021" name="SetRenderer" type="" type-id="" visibility="public">
+                <style class="default" />
+                <parameters>
+                  <parameter id="pa38744ddf43141ba83ca422c673eb570" name="renderer" type="Renderer" type-id="Class:di350469769684917435" direction="In" />
+                </parameters>
+                <source-codes />
+              </operation>
+              <operation id="o9f25560d6b724c3cba4d18293c6aea17902" cid="OP022" name="GetRenderer" type="Renderer" type-id="Class:di350469769684917435" visibility="public">
+                <style class="default" />
+                <source-codes />
+              </operation>
+            </operations>
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di334644913646410677" cid="C005" type="class" name="DataNoTyped" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:28:28">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations>
+              <operation id="o144c2399e31f4cda87e8abc59fdd59b4271" cid="OP002" name="GetOwner" type="Series" type-id="Class:di292432184728289171" visibility="public">
+                <style class="default" />
+                <source-codes>
+                  <source-code language="ActionScript" />
+                </source-codes>
+              </operation>
+            </operations>
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di883704599336403035" cid="GNR002" type="generalization" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:28:28">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+          </item>
+          <item id="di452820333134986706" cid="C008" type="class" name="wxWindow" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:41:41">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di192746608600107865" cid="C007" type="class" name="Plot" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:41:29">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="a95eeb66ac1d940bfbb33874e4874ecc6155" cid="AT007" name="m_areas" type="Area" type-id="Area" visibility="private" multiplicity="0..*">
+                <style class="default" />
+              </attribute>
+              <attribute id="a5abdc80e7149477d9c74a647288fc388487" cid="AT008" name="m_boxes" type="Box" type-id="Class:di614016099485148129" visibility="private" multiplicity="0..*">
+                <style class="default" />
+              </attribute>
+            </attributes>
+            <operations>
+              <operation id="o4e42935ec6054d4eb32a126121b82cdb970" cid="OP006" name="Plot" type="" type-id="" visibility="public">
+                <style class="default" />
+                <source-codes />
+              </operation>
+              <operation id="o04d717dcaa724cdaa9d901b40e7de992693" cid="OP007" name="~Plot" type="" type-id="" visibility="public">
+                <style class="default" />
+                <source-codes />
+              </operation>
+              <operation id="ode8eaa595e584097bf2ef7b757fe3ba01" cid="OP005" name="AddArea" type="()" type-id="()" visibility="public">
+                <style class="default" />
+                <parameters>
+                  <parameter id="p798308dc3af6476ab9bbe1eac755a4a7" name="area" type="Area" type-id="Area" direction="In" />
+                </parameters>
+                <source-codes />
+              </operation>
+              <operation id="o09d7616fc71a48689fa49b0368d77ebe848" cid="OP008" name="AddBox" type="()" type-id="()" visibility="public">
+                <style class="default" />
+                <parameters>
+                  <parameter id="p1ab829760646496b953acf8575e0600d" name="box" type="Box" type-id="Class:di614016099485148129" direction="In" />
+                </parameters>
+                <source-codes />
+              </operation>
+              <operation id="oc9397a35250a43659386ef0ac995b8ab785" cid="OP019" name="RemoveBox" type="" type-id="" visibility="public">
+                <style class="default" />
+                <parameters>
+                  <parameter id="p6a1299a7f6a34e2d8d2931be9a6b112d" name="box" type="Box" type-id="Class:di614016099485148129" direction="In" />
+                </parameters>
+                <source-codes />
+              </operation>
+              <operation id="oc489b79b2d8c432bbacfc4a61ae9b1ee578" cid="OP020" name="DeleteBox" type="" type-id="" visibility="public">
+                <style class="default" />
+                <parameters>
+                  <parameter id="p4c34d66bb5f849afb4220c2568605606" name="box" type="Box" type-id="Class:di614016099485148129" direction="In" />
+                </parameters>
+                <source-codes />
+              </operation>
+            </operations>
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di183275763244745176" cid="C009" type="class" name="PlotWindow" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:41:59">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di818012717795546866" cid="GNR003" type="generalization" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:42:13">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+          </item>
+          <item id="di473842255292700051" cid="GNR004" type="generalization" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:42:21">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+          </item>
+          <item id="di256765318145611538" cid="C010" type="class" name="Area" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:44:49">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="afab9a2aee0d14271bfc464b8b7fbb048271" cid="AT005" name="m_series" type="Series" type-id="Class:di292432184728289171" visibility="private" multiplicity="0..*">
+                <style class="default" />
+              </attribute>
+              <attribute id="a50b21438c94a495abec265db5cd9d6ee196" cid="AT022" name="m_axes" type="Axis" type-id="Class:di549569814671146265" visibility="private" multiplicity="0..*">
+                <style class="default" />
+              </attribute>
+            </attributes>
+            <operations>
+              <operation id="o03706afd508d491fa8f2ce126a143fef666" cid="OP016" name="AddSeries" type="" type-id="" visibility="public">
+                <style class="default" />
+                <parameters>
+                  <parameter id="pe462faef44c04dc581f52cd1a3888b36" name="series" type="Series" type-id="Class:di292432184728289171" direction="In" />
+                </parameters>
+                <source-codes />
+              </operation>
+              <operation id="o09a4ed69eb7147ce9de4c12a8339a667633" cid="OP023" name="GetAxis" type="" type-id="" visibility="public">
+                <style class="default" />
+                <parameters>
+                  <parameter id="pef4407ee86ae489fb18fe6787b3622f8" name="dir" type="AXIS_DIR" type-id="Class:di764506862635478951" direction="In" />
+                </parameters>
+                <source-codes />
+              </operation>
+            </operations>
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di614016099485148129" cid="C011" type="class" name="Box" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:46:30">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations>
+              <operation id="o7afc0cb1e1074146bd5b7dc9d64f1cb7982" cid="OP004" name="Box" type="" type-id="" visibility="public">
+                <style class="default" />
+                <parameters>
+                  <parameter id="p835a405f9cba4eeeb83d17746a587d7b" name="owner" type="Plot" type-id="Class:di192746608600107865" direction="In" />
+                </parameters>
+                <source-codes>
+                  <source-code language="ActionScript" />
+                </source-codes>
+              </operation>
+            </operations>
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di953018018204444810" cid="C012" type="class" name="wxBox" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:46:37">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations>
+              <operation id="o463b94b535844ad0b95617c8dd3f1136122" cid="OP011" name="Render" type="()" type-id="()" visibility="public">
+                <style class="default" />
+                <parameters>
+                  <parameter id="p5aab81ec25ce46ec9ea837249c8e3117" name="gc" type="wxGraphicsContext" type-id="wxGraphicsContext" direction="In" />
+                </parameters>
+                <source-codes />
+              </operation>
+            </operations>
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di116399033676673577" cid="GNR005" type="generalization" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 19:47:38">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+          </item>
+          <item id="di258117337748178643" cid="C014" type="class" name="wxTitleBox" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 20:13:57">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di705744431201645638" cid="C015" type="class" name="wxScaleBox" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 20:14:07">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di458755549222013870" cid="C016" type="class" name="wxLegendsBox" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 20:14:15">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di827031717700578900" cid="GNR007" type="generalization" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 20:14:23">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+          </item>
+          <item id="di277033723809577388" cid="GNR008" type="generalization" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 20:14:39">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+          </item>
+          <item id="di744597007107672067" cid="GNR009" type="generalization" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 20:14:45">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+          </item>
+          <item id="di854908478398735987" cid="C017" type="class" name="Scale" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 20:33:24">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="a586efb98fa93497ab1b28fc6f96461f411" cid="AT014" name="m_axes" type="Axis" type-id="Class:di549569814671146265" visibility="private" multiplicity="0..*">
+                <style class="default" />
+              </attribute>
+            </attributes>
+            <operations>
+              <operation id="o68c25d05e88f419daee1f8053d0b38b132" cid="OP013" name="AddAxis" type="()" type-id="()" visibility="public">
+                <style class="default" />
+                <parameters>
+                  <parameter id="pe0d02b519f684d2ca20ce3f8fe22a55b" name="axis" type="Axis" type-id="Class:di549569814671146265" direction="In" />
+                </parameters>
+                <source-codes />
+              </operation>
+            </operations>
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di203538611722659562" cid="GNR010" type="generalization" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 20:33:32">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+          </item>
+          <item id="di549569814671146265" cid="C018" type="class" name="Axis" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 20:34:22">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="a9ab971b7451340a5896adf5b126c1854520" cid="AT010" name="m_offset" type="double" type-id="double" visibility="private">
+                <style class="default" />
+              </attribute>
+              <attribute id="abc7b358156f3461bbe9772240d6863f8650" cid="AT011" name="m_range" type="double" type-id="double" visibility="private">
+                <style class="default" />
+              </attribute>
+              <attribute id="ade77d0b6de644a1ab140b79383edb57d855" cid="AT015" name="m_common_scale" type="Scale" type-id="Class:di854908478398735987" visibility="private">
+                <style class="default" />
+              </attribute>
+            </attributes>
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di764506862635478951" cid="E001" type="enumeration" name="AXIS_DIR" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 20:36:36">
+            <stereotypes>
+              <stereotype name="enumeration" />
+            </stereotypes>
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <enumeration-items>
+              <enumeration-item id="a525efc8fa5d5422f8c53f3f16b39bb35767" cid="ENI001" name="AXIS_X">
+                <style class="default" />
+              </enumeration-item>
+              <enumeration-item id="aeeaa94208fa143989ea13261b88df27787" cid="ENI002" name="AXIS_Y">
+                <style class="default" />
+              </enumeration-item>
+              <enumeration-item id="a36fd1a1e7792401b8ccb442351036b69501" cid="ENI003" name="AXIS_Z">
+                <style class="default" />
+              </enumeration-item>
+              <enumeration-item id="aef8023ca348b4c5abedca63d21ebc229573" cid="ENI004" name="AXIS_NONE">
+                <style class="default" />
+              </enumeration-item>
+            </enumeration-items>
+          </item>
+          <item id="di350469769684917435" cid="C020" type="class" name="Renderer" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 23:14:10">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di152890039379760447" cid="C021" type="class" name="wxRenderer" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 23:15:10">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="di889305064377611187" cid="GNR012" type="generalization" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" visibility="package" creator="P454032ee66614f4aaf550533d6f44747" creation-date="12/30/2015 23:17:33">
+            <stereotypes />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+          </item>
+        </abstract-items>
+        <layer name="Default" visible="true" enabled="true" locked="false">
+          <item id="di192746608600107865" iid="0d4bf04b81244ce1bfe0cfbefab1512e" creation-date="12/30/2015 19:41:29" order-index="6" type="entity">
+            <layout ax="833" ay="-386.5" awidth="213" aheight="185" x="833" y="-386.5" width="213" height="185" angle="0" />
+            <class />
+          </item>
+          <item id="di452820333134986706" iid="c121bd8421b44ca5bf989a1ffdc3aec6" creation-date="12/30/2015 19:41:41" order-index="7" type="entity">
+            <layout ax="1132" ay="-386.5" awidth="112" aheight="74" x="1132" y="-386.5" width="112" height="74" angle="0" />
+            <class />
+          </item>
+          <item id="di183275763244745176" iid="d6cce23b5d464b4a95b6a8fede43078c" creation-date="12/30/2015 19:41:59" order-index="8" type="entity">
+            <layout ax="973" ay="-94" awidth="241" aheight="175" x="973" y="-94" width="241" height="175" angle="0" />
+            <class />
+          </item>
+          <item id="di903196217744094669" iid="1d7706accd5a471f98a2feffa58c1ad2" creation-date="12/30/2015 19:22:25" order-index="0" type="entity">
+            <layout ax="-134.5" ay="-25.5" awidth="140" aheight="160" x="-134.5" y="-25.5" width="140" height="160" angle="0" />
+            <class />
+          </item>
+          <item id="di818012717795546866" iid="ee25b80954bb44bd9f5f2154fedb8375" creation-date="12/30/2015 19:42:13" order-index="9" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" lock-to-fields="false" name-position="10,-10" auto-path="" x1="1118" y1="-94" x2="1178" y2="-312" start-border-pos="0.150463183391144" end-border-pos="0.648177828107561">
+              <points>
+                <point x="1118" y="-94" />
+                <point x="1178" y="-312" />
+              </points>
+            </layout>
+            <relation from="di183275763244745176" from-iid="d6cce23b5d464b4a95b6a8fede43078c" to="di452820333134986706" to-iid="c121bd8421b44ca5bf989a1ffdc3aec6" />
+          </item>
+          <item id="di292432184728289171" iid="c11c08be394342ecb80dff66c0917541" creation-date="12/30/2015 19:23:02" order-index="1" type="entity">
+            <layout ax="68.75" ay="-233.5" awidth="383.5" aheight="122" x="68.75" y="-233.5" width="383.5" height="122" angle="0" />
+            <class />
+          </item>
+          <item id="di334644913646410677" iid="abe774849f384449b1c16a42b473fd4a" creation-date="12/30/2015 19:28:28" order-index="4" type="entity">
+            <layout ax="-171" ay="-233.5" awidth="213" aheight="160" x="-171" y="-233.5" width="213" height="160" angle="0" />
+            <class />
+          </item>
+          <item id="di473842255292700051" iid="380d881fcdd34d5da4d4eb6174885186" creation-date="12/30/2015 19:42:21" order-index="10" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" lock-to-fields="false" name-position="10,-10" auto-path="" x1="1047" y1="-94" x2="990" y2="-202" start-border-pos="0.0767058693027101" end-border-pos="0.566045555150565">
+              <points>
+                <point x="1047" y="-94" />
+                <point x="990" y="-202" />
+              </points>
+            </layout>
+            <relation from="di183275763244745176" from-iid="d6cce23b5d464b4a95b6a8fede43078c" to="di192746608600107865" to-iid="0d4bf04b81244ce1bfe0cfbefab1512e" />
+          </item>
+          <item id="di883704599336403035" iid="9f36b00a3c0f432ba80e06b061b60ce9" creation-date="12/30/2015 19:28:28" order-index="5" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" lock-to-fields="false" name-position="10,-10" auto-path="" x1="-64" y1="-26" x2="-64" y2="-74" start-border-pos="0.125892857142857" end-border-pos="0.624413145539906">
+              <points>
+                <point x="-64" y="-26" />
+                <point x="-64" y="-74" />
+              </points>
+            </layout>
+            <relation from="di903196217744094669" from-iid="1d7706accd5a471f98a2feffa58c1ad2" to="di334644913646410677" to-iid="abe774849f384449b1c16a42b473fd4a" />
+          </item>
+          <item id="di256765318145611538" iid="6ad2c6a335f9489089c8a2796f2bd9ae" creation-date="12/30/2015 19:44:49" order-index="11" type="entity">
+            <layout ax="479" ay="-233.5" awidth="241" aheight="134" x="479" y="-233.5" width="241" height="134" angle="0" />
+            <class />
+          </item>
+          <item id="di614016099485148129" iid="3fa93d5995ff4a2094173534876bff56" creation-date="12/30/2015 19:46:30" order-index="12" type="entity">
+            <layout ax="42" ay="220" awidth="170" aheight="58" x="42" y="220" width="170" height="58" angle="0" />
+            <class />
+          </item>
+          <item id="di953018018204444810" iid="823badfd40a64a9d9a5fdb1817cdacc3" creation-date="12/30/2015 19:46:37" order-index="13" type="entity">
+            <layout ax="-6" ay="346.5" awidth="266" aheight="66" x="-6" y="346.5" width="266" height="66" angle="0" />
+            <class />
+          </item>
+          <item id="di116399033676673577" iid="19114ec52e2a4d158f3a0a58f5edee08" creation-date="12/30/2015 19:47:38" order-index="14" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" lock-to-fields="false" name-position="10,-10" auto-path="" x1="127" y1="346" x2="127" y2="278" start-border-pos="0.125" end-border-pos="0.625">
+              <points>
+                <point x="127" y="346" />
+                <point x="127" y="278" />
+              </points>
+            </layout>
+            <relation from="di953018018204444810" from-iid="823badfd40a64a9d9a5fdb1817cdacc3" to="di614016099485148129" to-iid="3fa93d5995ff4a2094173534876bff56" />
+          </item>
+          <item id="di258117337748178643" iid="9e6672cad078433284b18a4bef4764e5" creation-date="12/30/2015 20:13:57" order-index="17" type="entity">
+            <layout ax="-112" ay="508.5" awidth="97" aheight="49" x="-112" y="508.5" width="97" height="49" angle="0" />
+            <class />
+          </item>
+          <item id="di705744431201645638" iid="6dd47cafa4854d64a4ad87c716f065d7" creation-date="12/30/2015 20:14:07" order-index="18" type="entity">
+            <layout ax="316" ay="512" awidth="101" aheight="49" x="316" y="512" width="101" height="49" angle="0" />
+            <class />
+          </item>
+          <item id="di458755549222013870" iid="b20fdd151efc4f458cd5bb2e0ce85f5a" creation-date="12/30/2015 20:14:15" order-index="19" type="entity">
+            <layout ax="65" ay="512" awidth="127" aheight="49" x="65" y="512" width="127" height="49" angle="0" />
+            <class />
+          </item>
+          <item id="di827031717700578900" iid="596fc75d1516455baa7461ed5f42399b" creation-date="12/30/2015 20:14:23" order-index="20" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" lock-to-fields="false" name-position="10,-10" auto-path="" x1="-33" y1="508" x2="87" y2="412" start-border-pos="0.204147299540412" end-border-pos="0.662544845638419">
+              <points>
+                <point x="-33" y="508" />
+                <point x="87" y="412" />
+              </points>
+            </layout>
+            <relation from="di258117337748178643" from-iid="9e6672cad078433284b18a4bef4764e5" to="di953018018204444810" to-iid="823badfd40a64a9d9a5fdb1817cdacc3" />
+          </item>
+          <item id="di277033723809577388" iid="329a064b28004a849a0e20da57388ba0" creation-date="12/30/2015 20:14:39" order-index="21" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" lock-to-fields="false" name-position="10,-10" auto-path="" x1="329" y1="512" x2="176" y2="412" start-border-pos="0.0327494404103496" end-border-pos="0.578923275596217">
+              <points>
+                <point x="329" y="512" />
+                <point x="176" y="412" />
+              </points>
+            </layout>
+            <relation from="di705744431201645638" from-iid="6dd47cafa4854d64a4ad87c716f065d7" to="di953018018204444810" to-iid="823badfd40a64a9d9a5fdb1817cdacc3" />
+          </item>
+          <item id="di744597007107672067" iid="ecfe256a0e3047238c8d035fa4330b7c" creation-date="12/30/2015 20:14:45" order-index="22" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" lock-to-fields="false" name-position="10,-10" auto-path="" x1="128" y1="512" x2="127" y2="412" start-border-pos="0.123712900116688" end-border-pos="0.624807207207931">
+              <points>
+                <point x="128" y="512" />
+                <point x="127" y="412" />
+              </points>
+            </layout>
+            <relation from="di458755549222013870" from-iid="b20fdd151efc4f458cd5bb2e0ce85f5a" to="di953018018204444810" to-iid="823badfd40a64a9d9a5fdb1817cdacc3" />
+          </item>
+          <item id="di854908478398735987" iid="20338ea567ff4a5587253f86317dd6cf" creation-date="12/30/2015 20:33:24" order-index="23" type="entity">
+            <layout ax="652" ay="190" awidth="213" aheight="88" x="652" y="190" width="213" height="88" angle="0" />
+            <class />
+          </item>
+          <item id="di203538611722659562" iid="c64cf8aa74fd4e41b28a783c6d38afbb" creation-date="12/30/2015 20:33:32" order-index="24" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" lock-to-fields="false" name-position="10,-10" auto-path="" x1="397" y1="512" x2="701" y2="278" start-border-pos="0.20087206245649" end-border-pos="0.692620434111832">
+              <points>
+                <point x="397" y="512" />
+                <point x="701" y="278" />
+              </points>
+            </layout>
+            <relation from="di705744431201645638" from-iid="6dd47cafa4854d64a4ad87c716f065d7" to="di854908478398735987" to-iid="20338ea567ff4a5587253f86317dd6cf" />
+          </item>
+          <item id="di549569814671146265" iid="076e432ed6f94d6883c55c2ed9b6731e" creation-date="12/30/2015 20:34:22" order-index="25" type="entity">
+            <layout ax="260" ay="-55.5" awidth="199" aheight="104" x="260" y="-55.5" width="199" height="104" angle="0" />
+            <class />
+          </item>
+          <item id="di764506862635478951" iid="ee03fe6d3d0c481e8c28aa7abbed35ae" creation-date="12/30/2015 20:36:36" order-index="26" type="entity">
+            <layout ax="12.5" ay="-411.5" awidth="112" aheight="122" x="12.5" y="-411.5" width="112" height="122" angle="0" />
+            <enumeration />
+          </item>
+          <item id="di350469769684917435" iid="ff5a05ac146b4e52bd0a7cfb748a0822" creation-date="12/30/2015 23:14:10" order-index="29" type="entity">
+            <layout ax="815" ay="379.5" awidth="118" aheight="49" x="815" y="379.5" width="118" height="49" angle="0" />
+            <class />
+          </item>
+          <item id="di152890039379760447" iid="e1391641b0614ccea15755b1f371a51f" creation-date="12/30/2015 23:15:10" order-index="30" type="entity">
+            <layout ax="680" ay="512" awidth="141" aheight="49" x="680" y="512" width="141" height="49" angle="0" />
+            <class />
+          </item>
+          <item id="di889305064377611187" iid="59978f1593b843e199b41ceba40e8e66" creation-date="12/30/2015 23:17:33" order-index="31" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" lock-to-fields="false" name-position="10,-10" auto-path="" x1="773" y1="512" x2="851" y2="428" start-border-pos="0.16408771487838" end-border-pos="0.672765828795352">
+              <points>
+                <point x="773" y="512" />
+                <point x="851" y="428" />
+              </points>
+            </layout>
+            <relation from="di152890039379760447" from-iid="e1391641b0614ccea15755b1f371a51f" to="di350469769684917435" to-iid="ff5a05ac146b4e52bd0a7cfb748a0822" />
+          </item>
+        </layer>
+      </diagram>
+    </model>
+  </models>
+  <documents />
+  <document-templates />
+</sim-project>

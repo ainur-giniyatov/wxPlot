@@ -42,7 +42,7 @@ MyFrame::MyFrame():MainFrame(NULL)
 	bSizer7->Add(m_2ndpageplotwindow, 1, wxEXPAND);
 	m_panel_page2->Layout();
 
-	//m_2ndlegendsbox = new plot::wxLegendsBox(m_2ndpageplotwindow);
+	m_2ndlegendsbox = new plot::wxLegendsBox(m_2ndpageplotwindow);
 
 	m_2ndpagearea = new plot::Area(2);
 
