@@ -283,8 +283,34 @@
     <ClInclude Include="..\include\wx\wxGrid.h" />
     <ClInclude Include="..\include\wx\wxRenderer.h" />
     <ClInclude Include="..\include\wx\wxScaleBox.h" />
+    <ClInclude Include="..\other\PopupSeriesTool.h" />
+    <ClInclude Include="..\other\PopupToolBar.h" />
+    <ClInclude Include="..\other\SeriesTool.h" />
+    <ClInclude Include="..\other\SeriesTool_fb.h" />
+    <ClInclude Include="..\other\toolbarmenu.h" />
+    <ClInclude Include="..\other\wxColorComboBox.h" />
+    <ClInclude Include="..\other\wxLineStyleComboBox.h" />
+    <ClInclude Include="..\other\wxMarkStyleComboBox.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\other\PopupSeriesTool.cpp" />
+    <ClCompile Include="..\other\PopupToolBar.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release LIB|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug LIB|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\other\SeriesTool.cpp" />
+    <ClCompile Include="..\other\SeriesTool_fb.cpp" />
+    <ClCompile Include="..\other\toolbarmenu.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release LIB|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug LIB|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\other\wxColorComboBox.cpp" />
+    <ClCompile Include="..\other\wxLineStyleComboBox.cpp" />
+    <ClCompile Include="..\other\wxMarkStyleComboBox.cpp" />
     <ClCompile Include="..\src\Area.cpp" />
     <ClCompile Include="..\src\Axis.cpp" />
     <ClCompile Include="..\src\Box.cpp" />

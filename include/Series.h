@@ -5,6 +5,7 @@
 #include "Data.h"
 #include "Area.h"
 #include "Renderer.h"
+#include "pevent.h"
 
 namespace plot
 {
@@ -31,11 +32,12 @@ namespace plot
 		void RemoveData(DataNoType *data);
 		void DeleteData(DataNoType *data);
 
-		void Fit(bool update = true);
+		void Fit();
 
 		void SetRenderer(Renderer *renderer);//previous renderer will be deleted
 		Renderer *GetRenderer() { return m_renderer; };
 
+		void BringToFront();
 	protected:
 		char *m_series_name;
 		Area *m_owner;
@@ -48,4 +50,17 @@ namespace plot
 		int m_dim_num; //number of dimensions
 		DataNoType **m_datas;
 	};
+
+
+	class DLLIMPEXP_PLOTLIB PEventSeriesNameChanged : public PEvent
+	{
+	public:
+		PEventSeriesNameChanged();
+		virtual ~PEventSeriesNameChanged() {};
+		static int GetEventId() { return s_event_id; }
+	protected:
+	private:
+		static const int s_event_id;
+	};
+
 }

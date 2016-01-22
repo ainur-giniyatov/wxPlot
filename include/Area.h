@@ -40,7 +40,9 @@ namespace plot
 		virtual void ProceedPan(const  Point<double> &pan_proceed_rel_coord);
 		virtual void EndPan();
 
-		virtual void ZoomSelection(double start_rx, double start_ry, double end_rx, double end_ry);
+		virtual void ZoomSelection(Point<double>& start_p, Point<double>& end_p);
+
+		void Fit(AXIS_DIR axis_dir);
 
 		//internal use methods start with _
 		void _SetOwner(Plot *plot) { m_owner_plot = plot; }

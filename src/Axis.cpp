@@ -71,24 +71,22 @@ void Axis::SetRange(double range)
 //	}
 //}
 
-//void Axis::SetVisibleRange(double offs, double range, bool update)
-//{
-//	assert(range > 0);
-//
-//	Axis *axis;
-//
-//	SetOffset(offs - range / 10.);
-//	SetRange(range + range / 5.);
-//
-//	//PropagateToCommonScale();
-//
-//	if(update)
-//		if (m_commonscale != NULL)
-//		{
-//			m_commonscale->RedrawDependantPlots();
-//			m_commonscale->ScaleRedraw();
-//		}
-//		else
-//			GetOwner()->GetOwner()->RedrawPlot();
-//}
+void Axis::_SetVisibleRange(double offs, double range, bool update)
+{
+	assert(range > 0);
+
+	Axis *axis;
+
+	SetOffset(offs - range / 10.);
+	SetRange(range + range / 5.);
+
+	if(update)
+		if (m_commonscale != NULL)
+		{
+			m_commonscale->RedrawDependantPlots();
+			m_commonscale->ScaleRedraw();
+		}
+		else
+			GetOwner()->GetOwner()->RedrawPlot();
+}
 

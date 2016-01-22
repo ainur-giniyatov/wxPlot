@@ -1,3 +1,4 @@
+#include "wx/colorbase.h" //temporary
 #include "Renderer.h"
 
 using namespace plot;
@@ -13,13 +14,37 @@ Renderer::Renderer()
 	m_text_pos = s_text_pos;
 	s_text_pos += s_text_height;
 
+	m_visible = true;
+	m_line_visible = true;
+	m_markers_visible = true;
 	m_marker_style = MARKER_CIRCLE;
-	m_marker_size = 2;
-	m_marker_color_index = 0;
+	m_marker_size = rand() % 4 + 2;
+	m_marker_color_index = rand() % COLOR_BASE_COUNT;
+
+	switch (rand() % 5)
+	{
+	case 0:
+		SetMarkerStyle(MARKER_CIRCLE);
+		break;
+	case 1:
+		SetMarkerStyle(MARKER_ROMB);
+		break;
+	case 2:
+		SetMarkerStyle(MARKER_SQUARE);
+		break;
+	case 3:
+		SetMarkerStyle(MARKER_CROSS);
+		break;
+	case 4:
+		SetMarkerStyle(MARKER_PLUS);
+		break;
+	default:;
+		assert(0);
+	}
 
 	m_line_style = LINE_SOLID;
-	m_line_thickness = 1;
-	m_line_color_index = 0;
+	m_line_thickness = rand() % 3 + 1;
+	m_line_color_index = rand() % COLOR_BASE_COUNT;
 }
 
 

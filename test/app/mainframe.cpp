@@ -70,6 +70,8 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
 	m_button_newplot = new wxButton( m_panel1, wxID_ANY, wxT("New plot"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_button_newplot->SetToolTip( wxT("Add plot") );
+	
 	bSizer2->Add( m_button_newplot, 0, wxALL|wxEXPAND, 5 );
 	
 	wxArrayString m_choice_plotsChoices;

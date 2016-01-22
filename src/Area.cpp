@@ -237,7 +237,85 @@ void Area::EndPan()
 {
 }
 
-void Area::ZoomSelection(double start_rx, double start_ry, double end_rx, double end_ry)
+void Area::ZoomSelection(Point<double>& start_p, Point<double>& end_p)
 {
+	DPRINTF("Area::ZoomSelection\n");
+
+	Axis *xaxis;
+	Axis *yaxis;
+	xaxis = m_axes[AXIS_X]; //let x be 1st dimension
+	yaxis = m_axes[AXIS_Y]; //let y be 2nd dimension
+	double start_rx, end_rx, start_ry, end_ry;
+	start_rx = start_p.x;
+	end_rx = end_p.x;
+	start_ry = start_p.y;
+	end_ry = end_p.y;
+
+	double temp;
+	temp = start_rx;
+	if (start_rx > end_rx)
+	{
+		start_rx = end_rx;
+		end_rx = temp;
+	}
+
+	temp = start_ry;
+	if (start_ry > end_ry)
+	{
+		start_ry = end_ry;
+		end_ry = temp;
+	}
+
+	//TO DO: need to review this code
+	if (xaxis != NULL)
+	{
+		//xaxis->SetOffset(m_pan_start_at_vx - xaxis->GetRange() * (rx - m_pan_start_at_rx));
+		xaxis->SetOffset(xaxis->GetOffset() + xaxis->GetRange() * start_rx);
+		xaxis->SetRange(xaxis->GetRange() * (end_rx - start_rx));
+	}
+
+
+	if (yaxis != NULL)
+	{
+		//yaxis->SetOffset(m_pan_start_at_vy - yaxis->GetRange() * (ry - m_pan_start_at_ry));
+		yaxis->SetOffset(yaxis->GetOffset() + yaxis->GetRange() * start_ry);
+		yaxis->SetRange(yaxis->GetRange() * (end_ry - start_ry));
+	}
+
+}
+
+void plot::Area::Fit(AXIS_DIR axis_dir)
+{
+	assert(axis_dir < m_dim_num);
+	double max, min;
+
+	for (auto series : m_serie)
+	{
+		DataNoType *data = series->GetData(axis_dir);
+		if (data != nullptr)
+		{
+			max = min = data->GetDataMin();
+			break;
+		}
+	}
+
+	for (auto series : m_serie)
+	{
+		DataNoType *data = series->GetData(axis_dir);
+		if (data != nullptr)
+		{
+			if (min > data->GetDataMin())
+				min = data->GetDataMin();
+			if (max < data->GetDataMax())
+				max = data->GetDataMax();
+		}
+	}
+
+	Axis *axis;
+	axis = GetAxis(axis_dir);
+	if (axis != nullptr)
+	{
+		axis->_SetVisibleRange(min, max - min);
+	}
 }
 

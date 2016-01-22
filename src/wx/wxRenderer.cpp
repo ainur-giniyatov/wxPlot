@@ -26,6 +26,9 @@ wxRendererTyped<T1, T2>::~wxRendererTyped()
 template<typename T1, typename T2>
 void wxRendererTyped<T1, T2>::Render(void* v_gc)
 {
+	if (!m_visible)
+		return;
+
 	wxGraphicsContext *gc = (wxGraphicsContext *)v_gc;
 	int width, height;
 	
@@ -76,7 +79,7 @@ void wxRendererTyped<T1, T2>::Render(void* v_gc)
 	size_t indx = 0;
 		
 	//drawing lines
-	if (m_line_style != LINE_NONE)
+	if (m_line_visible)
 	{
 	
 		int x1, y1, x2, y2;
@@ -121,7 +124,7 @@ void wxRendererTyped<T1, T2>::Render(void* v_gc)
 	}
 	
 	//draw marks
-	if (m_marker_style != MARKER_NONE)
+	if (m_markers_visible)
 	{
 		indx = 0;
 		int x1, y1, x2, y2;

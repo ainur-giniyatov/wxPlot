@@ -17,7 +17,7 @@ DataNoType::DataNoType(size_t size, const char *data_name)
 
 	m_maxmin_manual = false;
 
-	m_axis_dir = AXIS_NONE;
+//	m_axis_dir = AXIS_NONE;
 }
 
 
@@ -61,14 +61,26 @@ void plot::DataNoType::_SetOwner(Series * series)
 	m_owner_series = series;
 }
 
-//Axis * DataNoType::get_adj_axis()
-//{
-//	Axis *axis;
-//	assert(m_owner_series != NULL && m_owner_series->GetOwner() != NULL);
-//	axis = m_owner_series->GetOwner()->GetAxis(m_axis_dir);
-//	assert(axis != NULL);
-//	return axis;
-//}
+Axis * DataNoType::get_adj_axis()
+{
+	Axis *axis;
+	int axis_dir = -1;
+	assert(m_owner_series != NULL && m_owner_series->GetOwner() != NULL);
+	for (int indx = 0; m_owner_series->GetData((AXIS_DIR)indx) != nullptr; indx++)
+	{
+		if (m_owner_series->GetData((AXIS_DIR)indx) == this)
+		{
+			axis_dir = indx;
+			break;
+		}
+	}
+
+	assert(axis_dir != -1);
+
+	axis = m_owner_series->GetOwner()->GetAxis((AXIS_DIR)axis_dir);
+	assert(axis != NULL);
+	return axis;
+}
 
 template<class T>
 DataTyped<T>::DataTyped( size_t size, const char *data_name):DataNoType( size, data_name)
@@ -222,11 +234,11 @@ void DataTyped<T>::Fit(bool update)
 
 	range = maxv - minv;
 
-
-
-//	get_adj_axis()->SetVisibleRange(minv, range, update);
+	get_adj_axis()->_SetVisibleRange(minv, range, update);
 
 
 
 }
+
+
 

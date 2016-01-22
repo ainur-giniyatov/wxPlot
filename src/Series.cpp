@@ -63,12 +63,22 @@ void Series::SetSeriesName(const char * series_name, bool update)
 	else
 		m_series_name = (char *)s_series_name_null;
 
+
+	if (m_owner != nullptr && m_owner->GetOwner() != nullptr)
+	{
+		PEventSeriesNameChanged *evt;
+		evt = new PEventSeriesNameChanged();
+		m_owner->GetOwner()->_GetEventsList()->ProcessEvent(evt);
+	}
+
 	if (update)
 		SeriesUpdated();
 }
 
 void Series::SeriesUpdated()
 {
+	m_owner->GetOwner()->_SetViewModifiedFlag();
+	m_owner->GetOwner()->RedrawPlot();
 }
 
 void Series::SetData(DataNoType * data, AXIS_DIR axis_dir)
@@ -120,8 +130,17 @@ void Series::DeleteData(DataNoType * data)
 
 }
 
-void Series::Fit(bool update)
+void Series::Fit()
 {
+	int axes_num = 0;
+	for (int indx = 0; GetData((AXIS_DIR)indx) != nullptr; indx++, axes_num++);
+
+	//TO DO double updating causes flicker
+	for (int indx = 0; indx < axes_num  ; indx++)
+	{
+		GetData((AXIS_DIR)indx)->Fit(true);
+	}
+	//GetData((AXIS_DIR)(axes_num - 1))->Fit();
 }
 
 void Series::SetRenderer(Renderer * renderer)
@@ -130,6 +149,20 @@ void Series::SetRenderer(Renderer * renderer)
 		delete m_renderer;
 	m_renderer = renderer;
 	m_renderer->SetOwner(this);
+}
+
+void plot::Series::BringToFront()
+{
+	assert(m_owner != nullptr);
+	for (auto series_iter = m_owner->GetSerie().begin(); series_iter != m_owner->GetSerie().end(); ++series_iter)
+	{
+		if (*series_iter == this)
+		{
+			m_owner->GetSerie().erase(series_iter);
+			m_owner->GetSerie().push_back(this);
+			break;
+		}
+	}
 }
 
 //void Series::SeriesUpdated()
@@ -267,3 +300,10 @@ void Series::SetRenderer(Renderer * renderer)
 //void Series2D::Fit(bool update)
 //{
 //}
+
+const int PEventSeriesNameChanged::s_event_id = PEventList::GetNewEventId();
+
+plot::PEventSeriesNameChanged::PEventSeriesNameChanged()
+{
+	m_event_id = s_event_id;
+}

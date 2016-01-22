@@ -229,11 +229,9 @@ void Plot::EndPan()
 void Plot::StartZoomSelect(const Point<double> &zoom_sel_start_rel_coord)
 {
 	DPRINTF("Plot::StartZoomSelect\n");
-	//wxASSERT(!m_zoomselecting);
+	assert(!m_zoomselecting);
 
-	//m_start_rx_zsel = start_rx;
-	//m_start_ry_zsel = start_ry;
-
+	m_zoom_sel_start_rel_coord = zoom_sel_start_rel_coord;
 	m_zoomsel_switch = true;
 	m_zoomselecting = false;
 }
@@ -242,33 +240,31 @@ void Plot::ProceedZoomSelect(const Point<double> &zoom_sel_proceed_rel_coord)
 {
 	DPRINTF("Plot::ProceedZoomSelect\n");
 
-	//m_end_rx_zsel = rx;
-	//m_end_ry_zsel = ry;
+	m_zoom_sel_end_rel_coord = zoom_sel_proceed_rel_coord;
+	int width, height, xd, yd;
+	GetSize(&width, &height);
 
-	//int width, height, xd, yd;
-	//GetSize(&width, &height);
+	xd = abs((m_zoom_sel_end_rel_coord.x - m_zoom_sel_start_rel_coord.x) * width);
+	yd = abs((m_zoom_sel_end_rel_coord.y - m_zoom_sel_start_rel_coord.y) * height);
 
-	//xd = abs((rx - m_start_rx_zsel) * width);
-	//yd = abs((ry - m_start_ry_zsel) * height);
-
-	//if (m_zoomselecting)
-	//{
-	//	DrawZoomSelection(rx, ry);
-	//	if (xd < 10 || yd < 10)
-	//	{
-	//		iterate_axes_redraw_uniq_commonscales_uniq_plots();
-	//		m_zoomselecting = false;
-	//		m_zoomsel_switch = false;
-	//	}
-	//}
-	//else
-	//{
-	//	if (m_zoomsel_switch && (xd > 10 && yd > 10))
-	//	{
-	//		m_zoomselecting = true;
-	//		m_zoomsel_switch = false;
-	//	}
-	//}
+	if (m_zoomselecting)
+	{
+		DrawZoomSelection();
+		if (xd < 10 || yd < 10)
+		{
+			iterate_axes_redraw_uniq_commonscales_uniq_plots();
+			m_zoomselecting = false;
+			m_zoomsel_switch = false;
+		}
+	}
+	else
+	{
+		if (m_zoomsel_switch && (xd > 10 && yd > 10))
+		{
+			m_zoomselecting = true;
+			m_zoomsel_switch = false;
+		}
+	}
 
 }
 
@@ -280,6 +276,10 @@ void Plot::EndZoomSelect()
 
 	if (m_zoomselecting)
 	{
+		for (auto area : m_areas)
+		{
+			area->ZoomSelection(m_zoom_sel_start_rel_coord, m_zoom_sel_end_rel_coord);
+		}
 		//for (auto space : m_spaces)
 		//{
 		//	space->ZoomSelection(m_start_rx_zsel, m_start_ry_zsel, m_end_rx_zsel, m_end_ry_zsel);

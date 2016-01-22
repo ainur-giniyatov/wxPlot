@@ -325,6 +325,7 @@ plot::LegendsBox::LegendsBox(Plot * owner):Box(owner)
 {
 
 	Connect(PEventSeriesAdded::GetEventId(), (HandlerMethod)&LegendsBox::OnSeriesAdded);
+	Connect(PEventSeriesNameChanged::GetEventId(), (HandlerMethod)&LegendsBox::OnSeriesNameChanged);
 	m_sticked_to = STICKEDTO_RIGHT | STICKEDTO_VER_CENTER;
 	Sizing();
 }
@@ -359,11 +360,6 @@ void plot::LegendsBox::RemoveSeries(Series * series)
 	Sizing();
 }
 
-void plot::LegendsBox::Sizing()
-{
-	Box::Sizing();
-}
-
 
 void plot::LegendsBox::OnSeriesAdded(PEvent & event)
 {
@@ -372,5 +368,10 @@ void plot::LegendsBox::OnSeriesAdded(PEvent & event)
 		AddSeries(evt.GetSeries());
 	else
 		RemoveSeries(evt.GetSeries());
+}
+
+void plot::LegendsBox::OnSeriesNameChanged(PEvent & event)
+{
+	Sizing();
 }
 

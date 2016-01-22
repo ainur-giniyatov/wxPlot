@@ -72,6 +72,7 @@ wxTitleBox::~wxTitleBox()
 void wxTitleBox::Render(void * v_gc)
 {
 	wxGraphicsContext *gc = (wxGraphicsContext *)v_gc;
+	gc->SetFont(*wxNORMAL_FONT, *wxBLACK);
 	m_title = wxString::Format("%s", ((wxPlotWindow *)m_owner)->GetPlotName());
 	gc->DrawText(m_title, m_rect.left + 3, m_rect.top + 3);
 }
@@ -91,6 +92,7 @@ void wxTitleBox::Sizing()
 plot::wxLegendsBox::wxLegendsBox(wxPlotWindow * plotwindow):LegendsBox(plotwindow)
 {
 	margin = 3;
+	Sizing();
 }
 
 plot::wxLegendsBox::~wxLegendsBox()
@@ -115,6 +117,7 @@ void wxLegendsBox::MouseRightUp(int mx, int my)
 void plot::wxLegendsBox::Render(void *v_gc)
 {
 	wxGraphicsContext *gc = (wxGraphicsContext *)v_gc;
+	gc->SetFont(*wxNORMAL_FONT, *wxBLACK);
 	gc->SetPen(*wxBLUE_PEN);
 	gc->SetBrush(*wxWHITE_BRUSH);
 	int w, h;
@@ -131,12 +134,20 @@ void plot::wxLegendsBox::Render(void *v_gc)
 		gc->GetTextExtent(text, &tw, &th);
 		gc->DrawText(text, m_rect.left + tx, m_rect.top + ty);
 
-		item->m_series->GetRenderer()->PutLine(gc, m_rect.left + margin, m_rect.top + ty + th / 2., 28, 0);
-		item->m_series->GetRenderer()->PutMark(gc, m_rect.left + margin + 28 / 2, m_rect.top + ty + th / 2.);
+		if (item->m_series->GetRenderer()->GetVisible())
+		{
+			if (item->m_series->GetRenderer()->GetLineVisible())
+				item->m_series->GetRenderer()->PutLine(gc, m_rect.left + margin, m_rect.top + ty + th / 2., 28, 0);
+			if (item->m_series->GetRenderer()->GetMarksVisible())
+				item->m_series->GetRenderer()->PutMark(gc, m_rect.left + margin + 28 / 2, m_rect.top + ty + th / 2.);
+		}
+		else
+		{
 
+		}
 		ty += th + margin;
-		gc->SetBrush(*wxTRANSPARENT_BRUSH);
-		gc->DrawRectangle(item->m_rect.left + m_rect.left, item->m_rect.top + m_rect.top, item->m_rect.Width(), item->m_rect.Height());
+		//gc->SetBrush(*wxTRANSPARENT_BRUSH);
+		//gc->DrawRectangle(item->m_rect.left + m_rect.left, item->m_rect.top + m_rect.top, item->m_rect.Width(), item->m_rect.Height());
 	}
 
 }
@@ -172,5 +183,5 @@ void plot::wxLegendsBox::Sizing()
 	m_rect.right = m_rect.left + w;
 	m_rect.bottom = m_rect.top + h;
 
-	LegendsBox::Sizing();
+	Box::Sizing();
 }

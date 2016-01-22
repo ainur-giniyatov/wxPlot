@@ -33,8 +33,9 @@ namespace plot
 		Scale *GetCommonScale() { return m_commonscale; }
 		//void PropagateToCommonScale();
 
+		//internal use methods
 		/*adjust visible range for the axis and redraw dependant plots*/
-		//void SetVisibleRange(double offs, double range, bool update = true);
+		void _SetVisibleRange(double offs, double range, bool update = true);
 	protected:
 
 		//friend Renderer;

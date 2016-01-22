@@ -1,4 +1,5 @@
 #include <wx/textdlg.h>
+#include <wx/tooltip.h>
 #include <float.h>
 
 #include "myframe.h"
@@ -24,7 +25,7 @@ END_EVENT_TABLE()
 static int s_plc = 1;
 MyFrame::MyFrame():MainFrame(NULL)
 {
-
+	wxToolTip::Enable(true);
 	//1st page
 	m_chartwindow = new plot::wxChartWindow(m_panel2, wxVERTICAL);
 	bSizer3->Add(m_chartwindow, 1, wxEXPAND);
@@ -193,9 +194,10 @@ void MyFrame::m_button2OnButtonClick(wxCommandEvent & event)
 	double shft = (rand() % 700);
 	double phshft = (rand() % 10);
 	double ampshft = (rand() % 100) + 30;
+	double xshft = (rand() % 1000);
 	for (int i = 0; i < datasize; i++)
 	{
-		xdata->SetValue((double)i / 2., i);
+		xdata->SetValue((double)i / 2. + xshft, i);
 		ydata->SetValue(sin((double)i / (double)datasize * (37. + rand() % 2) + phshft) * ampshft + shft, i);
 	}
 
@@ -214,30 +216,7 @@ void MyFrame::m_button2OnButtonClick(wxCommandEvent & event)
 	//renderer2d = new Renderer2DTyped<double, double>();
 	plot::wxRendererTyped<double, double> *renderer;
 	renderer = new plot::wxRendererTyped<double, double>();
-	renderer->SetLineColourIndex(rand() % COLOR_BASE_COUNT);
-	renderer->SetLineThickness(rand() % 3 + 1);
-	renderer->SetMarkerSize(rand() % 4 + 2);
-	renderer->SetMarkerColourIndex(rand() % COLOR_BASE_COUNT);
-	switch (rand() % 5)
-	{
-	case 0:
-		renderer->SetMarkerStyle(MARKER_CIRCLE);
-		break;
-	case 1:
-		renderer->SetMarkerStyle(MARKER_ROMB);
-		break;
-	case 2:
-		renderer->SetMarkerStyle(MARKER_SQUARE);
-		break;
-	case 3:
-		renderer->SetMarkerStyle(MARKER_CROSS);
-		break;
-	case 4:
-		renderer->SetMarkerStyle(MARKER_PLUS);
-		break;
-	default:;
-		assert(0);
-	}
+	
 	series->SetRenderer(renderer);
 
 	wxTextEntryDialog dlg(this, "Series name");
@@ -392,7 +371,7 @@ void MyFrame::m_button_FitOnButtonClick(wxCommandEvent & event)
 {
 	if (m_data != NULL)
 	{
-		//m_data->Fit();
+		m_data->Fit();
 		return;
 	}
 	if (m_series != NULL)
@@ -402,7 +381,8 @@ void MyFrame::m_button_FitOnButtonClick(wxCommandEvent & event)
 	}
 	if (m_wxPlotWindow != NULL)
 	{
-		m_wxPlotWindow->FitPlot();
+		m_wxPlotWindow->GetArea(0)->Fit(AXIS_X);
+		//m_wxPlotWindow->FitPlot();
 		return;
 	}
 }
@@ -455,11 +435,13 @@ void MyFrame::m_button_spaceupdateOnButtonClick(wxCommandEvent & event)
 void MyFrame::m_menuItem_panOnMenuSelection(wxCommandEvent & event)
 {
 	m_chartwindow->SetLeftButtonAction(LBA_PAN);
+	m_2ndpageplotwindow->SetLeftButtonAction(LBA_PAN);
 }
 
 void MyFrame::m_menuItem_zoomOnMenuSelection(wxCommandEvent & event)
 {
 	m_chartwindow->SetLeftButtonAction(LBA_ZOOMSELECT);
+	m_2ndpageplotwindow->SetLeftButtonAction(LBA_ZOOMSELECT);
 }
 
 void MyFrame::m_button_add_boxOnButtonClick(wxCommandEvent & event)

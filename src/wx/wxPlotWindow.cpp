@@ -7,11 +7,17 @@
 #include "wx/wxGrid.h"
 #include "wx/wxRenderer.h"
 
+//#include "../../other/PopupToolBar.h"
+#include "../../other/PopupSeriesTool.h"
 
 using namespace plot;
 
-//const int wxPlotWindow::ID_MENUITEM_ADDLEGENDS = wxNewId();
+const int wxPlotWindow::IDMENUITEM_SERIESPROPERTIES = wxNewId();
 const int wxPlotWindow::IDMENUITEM_DELETESERIES = wxNewId();
+//const int wxPlotWindow::IDMENUITEM_SERIESPROPERTIES = wxNewId();
+const int wxPlotWindow::IDMENUITEM_SERIESFITVERT = wxNewId();
+const int wxPlotWindow::IDMENUITEM_SERIESFITHOR = wxNewId();
+const int wxPlotWindow::IDMENUITEM_SERIESFITALL = wxNewId();
 
 BEGIN_EVENT_TABLE(wxPlotWindow, wxWindow)
 EVT_PAINT(wxPlotWindow::OnPaint)
@@ -39,8 +45,22 @@ wxPlotWindow::wxPlotWindow(wxWindow * parent) :wxWindow(parent, wxID_ANY, wxDefa
 	SetSizer(m_sizer);
 	Layout();
 
+	m_seriesmenu.Append(IDMENUITEM_SERIESFITVERT, "Fit vertical");
+	Connect(IDMENUITEM_SERIESFITVERT, wxEVT_MENU, (wxObjectEventFunction)&wxPlotWindow::OnMenuItem_SeriesFitVert);
+
+	m_seriesmenu.Append(IDMENUITEM_SERIESFITHOR, "Fit horiz");
+	Connect(IDMENUITEM_SERIESFITHOR, wxEVT_MENU, (wxObjectEventFunction)&wxPlotWindow::OnMenuItem_SeriesFitHor);
+	
+	m_seriesmenu.Append(IDMENUITEM_SERIESFITALL, "Fit both");
+	Connect(IDMENUITEM_SERIESFITALL, wxEVT_MENU, (wxObjectEventFunction)&wxPlotWindow::OnMenuItem_SeriesFitAll);
+	
+	m_seriesmenu.Append(IDMENUITEM_SERIESPROPERTIES, "Properties");
+	Connect(IDMENUITEM_SERIESPROPERTIES, wxEVT_MENU, (wxObjectEventFunction)&wxPlotWindow::OnMenuItem_SeriesProperties);
+
 	m_seriesmenu.Append(IDMENUITEM_DELETESERIES, "Delete");
 	Connect(IDMENUITEM_DELETESERIES, wxEVT_MENU, (wxObjectEventFunction)&wxPlotWindow::OnMenuItem_DeleteSeries);
+	
+	
 	m_bitmap_buffer = new wxBitmap();
 
 	m_diag_texts_pos_y = 5;
@@ -63,7 +83,7 @@ void wxPlotWindow::OnPaint(wxPaintEvent & event)
 	wxBufferedPaintDC dc(this);
 	//dc.SetPen(*wxTRANSPARENT_PEN);
 	//dc.DrawRectangle(GetClientRect());
-	dc.Clear();
+	//dc.Clear();
 	/*m_refresh_bitmap = true;
 	if (m_refresh_bitmap)
 	{
@@ -109,7 +129,18 @@ void wxPlotWindow::OnResize(wxSizeEvent & event)
 void plot::wxPlotWindow::_popup_seriesmenu(Series * series)
 {
 	m_series_pointed = series;
-	PopupMenu(&m_seriesmenu);
+	series->BringToFront();
+	wxPopupSeriesTool *popup_tool;
+	popup_tool = new wxPopupSeriesTool(this, m_series_pointed);
+	popup_tool->Show();
+//	popup_tool->Popup();
+//	wxPopupToolBar *poptbar;
+//	poptbar = new wxPopupToolBar(this, series);
+////	poptbar->Show();
+//	poptbar->Popup();
+//	//ToolBarMenu *tbm;
+//	//tbm = new ToolBarMenu(this);
+//	//PopupMenu(&m_seriesmenu);
 }
 
 void plot::wxPlotWindow::OnMenuItem_DeleteSeries(wxCommandEvent & event)
@@ -382,18 +413,30 @@ void wxPlotWindow::RedrawPlot()
 void wxPlotWindow::DrawZoomSelection()
 {
 	DPRINTF("wxPlotWindow::DrawZoomSelection\n");
-	//int width, height;
-	//GetSize(&width, &height);
+	int width, height;
+	GetSize(&width, &height);
 
-	//int x, y, w, h;
-	//x = m_start_rx_zsel * width;
-	//y = (1 - m_start_ry_zsel) * height;
-	//w = (rx - m_start_rx_zsel) * width;
-	//h = ((1 - ry) - (1 - m_start_ry_zsel)) * height;
-	//wxClientDC dc(this);
-	//dc.DrawBitmap(*m_bitmap_buffer, 0, 0);
-	//dc.SetLogicalFunction(wxXOR);
-	//dc.DrawRectangle(x, y, w, h);
+	int x, y, w, h;
+	x = m_zoom_sel_start_rel_coord.x * width;
+	y = (1 - m_zoom_sel_start_rel_coord.y) * height;
+	w = m_zoom_sel_end_rel_coord.x * width - x;
+	h = (1 - m_zoom_sel_end_rel_coord.y) * height - y;
+	wxClientDC dc(this);
+	dc.DrawBitmap(*m_bitmap_buffer, 0, 0);
+	dc.SetLogicalFunction(wxXOR);
+	dc.DrawRectangle(x, y, w, h);
+
+	wxGraphicsContext *gc = wxGraphicsContext::Create(dc);
+
+	wxGrid *grid = NULL;
+	grid = (wxGrid *)m_areas[0]->GetGrid();
+	if (grid != NULL)
+		grid->Render(gc);
+
+	for (auto box : m_boxes)
+		box->Render(gc);
+
+	delete gc;
 }
 
 void wxPlotWindow::GetSize(int * width, int * height)
@@ -414,3 +457,22 @@ void wxPlotWindow::OnMouseCaptureLost(wxMouseCaptureLostEvent &event)
 
 }
 
+void plot::wxPlotWindow::OnMenuItem_SeriesProperties(wxCommandEvent & event)
+{
+
+}
+
+void plot::wxPlotWindow::OnMenuItem_SeriesFitVert(wxCommandEvent & event)
+{
+}
+
+void plot::wxPlotWindow::OnMenuItem_SeriesFitHor(wxCommandEvent & event)
+{
+
+}
+
+void plot::wxPlotWindow::OnMenuItem_SeriesFitAll(wxCommandEvent & event)
+{
+	m_series_pointed->Fit();
+
+}

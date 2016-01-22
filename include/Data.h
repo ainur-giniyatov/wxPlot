@@ -1,11 +1,14 @@
 #pragma once
 #include "plot_defs.h"
 #include "Series.h"
+#include "Axis.h"
+#include "pevent.h"
 
 namespace plot
 {
 	class DLLIMPEXP_PLOTLIB Series;
 	class DLLIMPEXP_PLOTLIB Series2D;
+	class DLLIMPEXP_PLOTLIB Axis;
 
 	class DLLIMPEXP_PLOTLIB DataNoType
 	{
@@ -13,8 +16,8 @@ namespace plot
 		DataNoType(size_t size = 0, const char *data_name = NULL);
 		virtual ~DataNoType();
 
-		void SetAxisDir(AXIS_DIR axis_dir) { m_axis_dir = axis_dir; }
-		AXIS_DIR GetAxisDir() { return m_axis_dir; }
+		//void SetAxisDir(AXIS_DIR axis_dir) { m_axis_dir = axis_dir; }
+		//AXIS_DIR GetAxisDir() { return m_axis_dir; }
 
 		void SetDataName(const char *name);
 		const char *GetDataName() { return m_data_name; }
@@ -29,7 +32,8 @@ namespace plot
 		virtual double GetDataMax() = 0;
 		virtual double GetDataMin() = 0;
 
-		//virtual void Fit() = 0;
+		virtual void Fit(bool update = true) = 0;
+
 		//internal use methods start with _
 		void _SetOwner(Series *series);
 	protected:
@@ -39,12 +43,12 @@ namespace plot
 		Series *m_owner_series;
 
 		bool m_maxmin_manual;
-		AXIS_DIR m_axis_dir;
+//		AXIS_DIR m_axis_dir;
 
 
 
 		//helper funcs
-		//Axis *get_adj_axis();
+		Axis *get_adj_axis();
 	};
 
 
@@ -80,6 +84,8 @@ namespace plot
 
 
 	};
+
+	
 
 #include <time.h>
 	//#ifdef MAKINGDLL

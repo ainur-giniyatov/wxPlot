@@ -118,7 +118,7 @@ namespace plot
 		void AddSeries(Series *series);
 		void RemoveSeries(Series *series);
 
-		virtual void Sizing() override;
+		//virtual void Sizing() override;
 
 		struct LegendItem
 		{
@@ -132,5 +132,6 @@ namespace plot
 	private:
 		//virtual void MouseRightUp(int mx, int my) override;
 		void OnSeriesAdded(PEvent& event);
+		void OnSeriesNameChanged(PEvent& event);
 	};
 }

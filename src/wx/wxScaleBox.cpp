@@ -24,6 +24,7 @@ void wxScaleBox::Render(void * v_gc)
 {
 	DPRINTF("wxScaleBox::Render\n");
 	wxGraphicsContext *gc = (wxGraphicsContext *)v_gc;
+	gc->SetFont(*wxNORMAL_FONT, *wxBLACK);
 	//wxBrush brush;
 	//brush.SetColour(((wxPlotWindow *)m_owner)->GetBackgroundColour());
 	//gc->SetBrush(brush);
@@ -46,7 +47,7 @@ void wxScaleBox::Render(void * v_gc)
 	if (m_valueadaptor == NULL)
 		return;
 
-	gc->SetFont(*wxNORMAL_FONT, *wxBLACK);
+
 	wxString text;
 	wxDouble fh, fw;
 	

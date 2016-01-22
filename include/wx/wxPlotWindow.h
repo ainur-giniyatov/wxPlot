@@ -48,8 +48,21 @@ namespace plot
 
 		wxMenu m_seriesmenu;
 		Series *m_series_pointed;
+		
 		static const int IDMENUITEM_DELETESERIES;
 		void OnMenuItem_DeleteSeries(wxCommandEvent &event);
+		
+		static const int IDMENUITEM_SERIESPROPERTIES;
+		void OnMenuItem_SeriesProperties(wxCommandEvent &event);
+
+		static const int IDMENUITEM_SERIESFITVERT;
+		void OnMenuItem_SeriesFitVert(wxCommandEvent &event);
+		
+		static const int IDMENUITEM_SERIESFITHOR;
+		void OnMenuItem_SeriesFitHor(wxCommandEvent &event);
+		
+		static const int IDMENUITEM_SERIESFITALL;
+		void OnMenuItem_SeriesFitAll(wxCommandEvent &event);
 		//wxMenu *m_menu_addwidget;
 
 		//static const int ID_MENUITEM_ADDLEGENDS;

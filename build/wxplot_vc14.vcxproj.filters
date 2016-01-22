@@ -19,6 +19,9 @@
     <Filter Include="Source Files\wx">
       <UniqueIdentifier>{65d4fb54-0b78-40e1-a1d6-0e91500c2163}</UniqueIdentifier>
     </Filter>
+    <Filter Include="other">
+      <UniqueIdentifier>{1dc19a58-3659-4aa5-ab39-f976a7ef7fe2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Axis.h">
@@ -81,6 +84,30 @@
     <ClInclude Include="..\include\pevent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\other\toolbarmenu.h">
+      <Filter>other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\other\PopupToolBar.h">
+      <Filter>other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\other\SeriesTool_fb.h">
+      <Filter>other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\other\SeriesTool.h">
+      <Filter>other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\other\PopupSeriesTool.h">
+      <Filter>other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\other\wxLineStyleComboBox.h">
+      <Filter>other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\other\wxMarkStyleComboBox.h">
+      <Filter>other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\other\wxColorComboBox.h">
+      <Filter>other</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Axis.cpp">
@@ -139,6 +166,30 @@
     </ClCompile>
     <ClCompile Include="..\src\pevent.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\other\toolbarmenu.cpp">
+      <Filter>other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\other\PopupToolBar.cpp">
+      <Filter>other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\other\SeriesTool_fb.cpp">
+      <Filter>other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\other\SeriesTool.cpp">
+      <Filter>other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\other\PopupSeriesTool.cpp">
+      <Filter>other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\other\wxMarkStyleComboBox.cpp">
+      <Filter>other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\other\wxLineStyleComboBox.cpp">
+      <Filter>other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\other\wxColorComboBox.cpp">
+      <Filter>other</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -69,7 +69,7 @@ namespace plot
 		void StartZoomSelect(const Point<double> &zoom_sel_start_rel_coord);
 		void ProceedZoomSelect(const Point<double> &zoom_sel_proceed_rel_coord);
 		void EndZoomSelect();
-		virtual void DrawZoomSelection() {};
+		virtual void DrawZoomSelection() = 0;
 
 		void Zoom(const Point<double> &zoom_wheel_rel_coord, double xfactor, double yfactor);
 
@@ -80,7 +80,8 @@ namespace plot
 
 		bool m_zoomsel_switch;
 		bool m_zoomselecting;
-
+		Point<double> m_zoom_sel_start_rel_coord;
+		Point<double> m_zoom_sel_end_rel_coord;
 		char *m_plot_name;
 
 		Scale *m_commonscale;
