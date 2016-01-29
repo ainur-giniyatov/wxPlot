@@ -52,7 +52,7 @@ void Area::AddSeries(Series * series)
 {
 	if (std::none_of(m_serie.begin(), m_serie.end(), [series](Series *z) {return z == series; }))
 	{
-		series->SetOwner(this);
+		series->_setowner(this);
 		m_serie.push_back(series);
 		if (m_owner_plot != nullptr)
 		{
@@ -124,6 +124,19 @@ Axis * Area::GetAxis(AXIS_DIR axis_dir)
 //void Area::ZoomSelection(double start_rx, double start_ry, double end_rx, double end_ry)
 //{
 //}
+
+void plot::Area::_SetOwner(Plot * plot)
+{
+	m_owner_plot = plot;
+	if (m_owner_plot != nullptr)
+	{
+		int w, h;
+		m_owner_plot->GetSize(&w, &h);
+		for (auto series : m_serie)
+			if (series->GetRenderer() != nullptr)
+				series->GetRenderer()->_setsize(w, h);
+	}
+}
 
 void Area::_SetGrid(Grid * grid)
 {

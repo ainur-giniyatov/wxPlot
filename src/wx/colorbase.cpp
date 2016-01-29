@@ -23,7 +23,8 @@ long COLOR_BASE[] = {
     //0xD3D3D3,
     0x969696,
     0x0000FF,
-    0xFF00FF
+    0xFF00FF,
+	0x000000
     };
 int COLOR_BASE_COUNT = sizeof(COLOR_BASE) / sizeof(long);
 

@@ -11,12 +11,12 @@ namespace plot
 		wxRendererTyped();
 		virtual ~wxRendererTyped();
 
-
+		virtual bool _isspotted(Point<int> &mouse_coord, SeriesSelection & series_selection) override;
 	protected:
 	private:
 		virtual void Render(void *) override;
-		virtual void PutMark(void *, int x, int y) override;
-		virtual void PutLine(void *, int x, int y, int w, int h) override;
+
+		size_t m_left_index, m_right_index;//indexes of leftmost and rightmost visible markers
 	};
 
 	template DLLIMPEXP_PLOTLIB class wxRendererTyped<double, double>;

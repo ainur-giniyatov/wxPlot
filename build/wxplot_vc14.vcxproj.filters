@@ -108,6 +108,18 @@
     <ClInclude Include="..\other\wxColorComboBox.h">
       <Filter>other</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\Marker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\wx\wxMarker.h">
+      <Filter>Header Files\wx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\wx\wxLine.h">
+      <Filter>Header Files\wx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Axis.cpp">
@@ -190,6 +202,18 @@
     </ClCompile>
     <ClCompile Include="..\other\wxColorComboBox.cpp">
       <Filter>other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Marker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wx\wxMarker.cpp">
+      <Filter>Source Files\wx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Line.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wx\wxLine.cpp">
+      <Filter>Source Files\wx</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -3,14 +3,16 @@
 
 #include "wx/wxPlotWindow.h"
 #include "wx/wxChartWindow.h"
-#include "wx/wxBox.h"
 #include "wx/wxGrid.h"
 #include "wx/wxRenderer.h"
 
 //#include "../../other/PopupToolBar.h"
-#include "../../other/PopupSeriesTool.h"
+
+
 
 using namespace plot;
+
+wxDEFINE_EVENT(PLOTCLICKED, plot::PlotClickEvent);
 
 const int wxPlotWindow::IDMENUITEM_SERIESPROPERTIES = wxNewId();
 const int wxPlotWindow::IDMENUITEM_DELETESERIES = wxNewId();
@@ -68,6 +70,8 @@ wxPlotWindow::wxPlotWindow(wxWindow * parent) :wxWindow(parent, wxID_ANY, wxDefa
 	wxTitleBox *titlebox;
 	titlebox = new wxTitleBox(this);
 	AddBox(titlebox);
+
+	m_popup_tool = new wxPopupSeriesTool(this);
 }
 
 wxPlotWindow::~wxPlotWindow()
@@ -104,7 +108,7 @@ void wxPlotWindow::OnPaint(wxPaintEvent & event)
 	dc.DrawBitmap(*m_bitmap_buffer, 0, 0);*/
 
 	wxGraphicsContext *gc = wxGraphicsContext::Create(dc);
-
+	
 	Render(gc);
 
 	delete gc;
@@ -118,7 +122,15 @@ void wxPlotWindow::OnEraseBackground(wxEraseEvent & event)
 void wxPlotWindow::OnResize(wxSizeEvent & event)
 {
 	m_is_data_view_modified = true;
-	m_bitmap_buffer->Create(GetClientSize());
+	
+	wxSize sz(GetClientSize());
+	
+	for (auto area : m_areas)
+		for (auto series : area->GetSerie())
+			series->GetRenderer()->_setsize(sz.GetWidth(), sz.GetHeight());
+		
+	
+	m_bitmap_buffer->Create(sz);
 	for (auto box : m_boxes)
 		box->Sizing();
 
@@ -128,11 +140,10 @@ void wxPlotWindow::OnResize(wxSizeEvent & event)
 
 void plot::wxPlotWindow::_popup_seriesmenu(Series * series)
 {
-	m_series_pointed = series;
-	series->BringToFront();
-	wxPopupSeriesTool *popup_tool;
-	popup_tool = new wxPopupSeriesTool(this, m_series_pointed);
-	popup_tool->Show();
+	//m_series_pointed = series;
+	m_popup_tool->SetSelectedSeries(series);
+	m_popup_tool->Position(wxGetMousePosition(), wxSize(0, 0));
+	m_popup_tool->Show();
 //	popup_tool->Popup();
 //	wxPopupToolBar *poptbar;
 //	poptbar = new wxPopupToolBar(this, series);
@@ -145,7 +156,7 @@ void plot::wxPlotWindow::_popup_seriesmenu(Series * series)
 
 void plot::wxPlotWindow::OnMenuItem_DeleteSeries(wxCommandEvent & event)
 {
-	m_series_pointed->GetOwner()->DeleteSeries(m_series_pointed);
+	//m_series_pointed->GetOwner()->DeleteSeries(m_series_pointed);
 }
 
 void wxPlotWindow::OnLeftDown(wxMouseEvent & event)
@@ -155,17 +166,36 @@ void wxPlotWindow::OnLeftDown(wxMouseEvent & event)
 	x = event.GetX();
 	y = event.GetY();
 
+	PlotClickEvent plotclick_event(PLOTCLICKED, GetId(), this);
+	plotclick_event.SetEventObject(this);
+
 	//process interaction with on-plot boxes
 	for (auto box : m_boxes)
 	{
 		if(box->CheckIsMouseInside(x, y))
 		{
 			box->MouseLeftDown(x, y);
+			//plotclick_event.SetBox(box);
 			return;
 		}
 	}
 
-	//GetParent()->SetFocus();
+	SeriesSelection ser_sel;
+	_getspottedseries(Point<int>(x, y), ser_sel);
+	if (ser_sel.GetSeries() != nullptr)
+	{
+		ser_sel.GetSeries()->BringToFront();
+		ser_sel.GetSeries()->SeriesUpdated();
+		plotclick_event.SetSeriesSelection(ser_sel);
+		if (m_popup_tool->IsShown())
+		{
+			m_popup_tool->SetSelectedSeries(ser_sel.GetSeries());
+		}
+	}
+
+	
+	ProcessWindowEvent(plotclick_event);
+
 	int w, h;
 	GetClientSize(&w, &h);
 
@@ -181,6 +211,22 @@ void wxPlotWindow::OnLeftDown(wxMouseEvent & event)
 
 	if(!HasCapture())
         CaptureMouse();
+}
+
+void plot::wxPlotWindow::_getspottedseries(Point<int>&mouse_coords, SeriesSelection & seriesselection)
+{
+	seriesselection = SeriesSelection(nullptr, 0, 0);
+
+	//selection of series
+	for (auto area : m_areas)
+		for (auto series = area->GetSerie().rbegin(); series != area->GetSerie().rend(); ++ series)
+			if ((*series)->GetRenderer()->_isspotted(mouse_coords, seriesselection))
+			{
+#ifdef _DEBUG
+				printf("spot: %s, [%i %i]\n", seriesselection.GetSeries()->GetSeriesName(), seriesselection.GetStartIndex(), seriesselection.GetEndIndex());
+#endif
+				return;
+			}
 }
 
 void wxPlotWindow::OnLeftUp(wxMouseEvent & event)
@@ -234,6 +280,17 @@ void wxPlotWindow::OnRightDown(wxMouseEvent & event)
 		}
 	}
 
+	//series menu
+	SeriesSelection ser_sel;
+	_getspottedseries(Point<int>(x, y), ser_sel);
+	if (ser_sel.GetSeries() != nullptr)
+	{
+		ser_sel.GetSeries()->BringToFront();
+		_popup_seriesmenu(ser_sel.GetSeries());
+		return;
+	}
+
+	//plot menu
 	if(m_menu.GetMenuItemCount() != 0)
 		PopupMenu(&m_menu);
 }
@@ -336,10 +393,14 @@ void wxPlotWindow::Render(wxGraphicsContext * gc)
 {
 	wxDouble diag_texts_pos_y = m_diag_texts_pos_y;
 	DPRINTF("wxPlotWindow::Render\n");
+#ifdef _DEBUG
+	Timer timer;
+#endif
+
 	gc->SetFont(*wxNORMAL_FONT, *wxBLACK);
 	int w, h;
 	GetClientSize(&w, &h);
-	gc->SetAntialiasMode(wxANTIALIAS_NONE);
+	gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
 
 	if (!m_areas.empty())
 	{
@@ -357,7 +418,7 @@ void wxPlotWindow::Render(wxGraphicsContext * gc)
 			memdc.Clear();
 			wxGraphicsContext *gc = wxGraphicsContext::Create(memdc);
 			gc->SetFont(*wxNORMAL_FONT, *wxBLACK);
-			gc->SetAntialiasMode(wxANTIALIAS_NONE);
+			//gc->SetAntialiasMode(wxANTIALIAS_NONE);
 			//render data
 			for (auto area : m_areas)
 			{
@@ -401,6 +462,12 @@ void wxPlotWindow::Render(wxGraphicsContext * gc)
 	{
 		((wxBox*)*box_iter)->Render(gc);
 	}
+
+#ifdef _DEBUG
+	double t = timer.elapsed() * 1000.;
+	printf("render elapsed: %f\n", t);
+#endif
+
 }
 
 void wxPlotWindow::RedrawPlot()
@@ -444,6 +511,13 @@ void wxPlotWindow::GetSize(int * width, int * height)
 	GetClientSize(width, height);
 }
 
+//void plot::wxPlotWindow::_spotseries(SeriesSelection & seriesselection)
+//{
+//#ifdef _DEBUG
+//	printf("spot: %s %i %i\n", seriesselection.GetSeries()->GetSeriesName(), seriesselection.GetStartIndex(), seriesselection.GetEndIndex());
+//#endif
+//}
+
 //void wxPlotWindow::OnMenuItem_AddLegends(wxCommandEvent & event)
 //{
 //	DPRINTF("wxPlotWindow::OnMenuItem_AddLegends\n");
@@ -473,6 +547,6 @@ void plot::wxPlotWindow::OnMenuItem_SeriesFitHor(wxCommandEvent & event)
 
 void plot::wxPlotWindow::OnMenuItem_SeriesFitAll(wxCommandEvent & event)
 {
-	m_series_pointed->Fit();
+	//m_series_pointed->Fit();
 
 }

@@ -10,12 +10,13 @@
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
-#include <wx/string.h>
-#include <wx/checkbox.h>
+#include <wx/treectrl.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
+#include <wx/string.h>
+#include <wx/checkbox.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
@@ -42,6 +43,7 @@ class SeriesTool_fb : public wxPanel
 	private:
 	
 	protected:
+		wxTreeCtrl* m_treeCtrl1;
 		wxToolBar* m_toolBar1;
 		wxToolBarToolBase* m_tool6; 
 		wxToolBarToolBase* m_tool7; 

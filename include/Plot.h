@@ -15,6 +15,7 @@ namespace plot
 {
 	class DLLIMPEXP_PLOTLIB DataNoType;
 	class DLLIMPEXP_PLOTLIB Series;
+	class SeriesSelection;
 	class DLLIMPEXP_PLOTLIB Axis;
 	class DLLIMPEXP_PLOTLIB Scale;
 	class DLLIMPEXP_PLOTLIB Box;
@@ -40,8 +41,8 @@ namespace plot
 		Area *GetArea(size_t indx) { return m_areas[indx]; }
 		void Clear(bool update = true);
 
-		virtual void RedrawPlot() {};
-		virtual void GetSize(int *width, int *height) {};
+		virtual void RedrawPlot() = 0;
+		virtual void GetSize(int *width, int *height) = 0;
 
 		void FitPlot(bool update = true);
 
@@ -55,6 +56,7 @@ namespace plot
 		void SetLeftButtonAction(LEFTBUTTON_ACTION lba) { m_lbaction = lba; };
 
 		//internal use methods start with _
+		//virtual void _spotseries(SeriesSelection &seriesselection) = 0;
 		void _SetViewModifiedFlag();
 		PEventList *_GetEventsList() { return m_eventslist; }
 
@@ -73,7 +75,6 @@ namespace plot
 
 		void Zoom(const Point<double> &zoom_wheel_rel_coord, double xfactor, double yfactor);
 
-		//std::vector<SpaceND *> m_spaces;
 		std::vector<Area *> m_areas;
 
 		bool m_panning;
@@ -91,6 +92,7 @@ namespace plot
 		LEFTBUTTON_ACTION m_lbaction;
 
 		bool m_is_data_view_modified;
+
 		//helpers
 		void iterate_axes_redraw_uniq_commonscales_uniq_plots();
 

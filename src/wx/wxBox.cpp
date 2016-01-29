@@ -1,6 +1,8 @@
 #include <wx/dcclient.h>
 #include <wx/graphics.h>
 #include "wx/wxBox.h"
+#include "wx/wxMarker.h"
+#include "wx/wxLine.h"
 
 using namespace plot;
 
@@ -124,7 +126,7 @@ void plot::wxLegendsBox::Render(void *v_gc)
 	w = m_rect.Width();
 	h = m_rect.Height();
 	gc->DrawRectangle(m_rect.left, m_rect.top, w, h);
-
+	gc->Clip(m_rect.left, m_rect.top, w, h);
 	int tx = margin +  margin + 28, ty = margin;
 	
 	for (auto item : m_items)
@@ -136,10 +138,16 @@ void plot::wxLegendsBox::Render(void *v_gc)
 
 		if (item->m_series->GetRenderer()->GetVisible())
 		{
-			if (item->m_series->GetRenderer()->GetLineVisible())
-				item->m_series->GetRenderer()->PutLine(gc, m_rect.left + margin, m_rect.top + ty + th / 2., 28, 0);
-			if (item->m_series->GetRenderer()->GetMarksVisible())
-				item->m_series->GetRenderer()->PutMark(gc, m_rect.left + margin + 28 / 2, m_rect.top + ty + th / 2.);
+			if (item->m_series->GetRenderer()->GetLine()->GetVisible())
+			{
+				((wxLine *)(item->m_series->GetRenderer()->GetLine()))->InitStyleAndColour(gc);
+				item->m_series->GetRenderer()->GetLine()->Render(gc, Point<int>(m_rect.left + margin, m_rect.top + ty + th / 2.), Point<int>(m_rect.left + margin + 28, m_rect.top + ty + th / 2.));
+			}
+			if (item->m_series->GetRenderer()->GetMarker()->GetVisible())
+			{
+				((wxMarker *)(item->m_series->GetRenderer()->GetMarker()))->InitStyleAndColour(gc);
+				item->m_series->GetRenderer()->GetMarker()->Render(gc, Point<int>(m_rect.left + margin + 28 / 2, m_rect.top + ty + th / 2.));
+			}
 		}
 		else
 		{
@@ -149,7 +157,7 @@ void plot::wxLegendsBox::Render(void *v_gc)
 		//gc->SetBrush(*wxTRANSPARENT_BRUSH);
 		//gc->DrawRectangle(item->m_rect.left + m_rect.left, item->m_rect.top + m_rect.top, item->m_rect.Width(), item->m_rect.Height());
 	}
-
+	gc->ResetClip();
 }
 
 void plot::wxLegendsBox::Sizing()

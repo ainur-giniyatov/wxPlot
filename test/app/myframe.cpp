@@ -12,6 +12,8 @@
 #include "wx/wxGrid.h"
 #include "wx/wxRenderer.h"
 #include "wx/colorbase.h"
+#include "wx/wxMarker.h"
+#include "wx/wxLine.h"
 
 const int MyFrame::ID_MENUPLOT_ADDLEGEND = wxNewId();
 const int MyFrame::ID_MENUPLOT_ADDVERTICALSCALE = wxNewId();
@@ -20,6 +22,8 @@ BEGIN_EVENT_TABLE(MyFrame, MainFrame)
 EVT_MOUSEWHEEL(MyFrame::OnMouseWheel)
 EVT_MENU(MyFrame::ID_MENUPLOT_ADDLEGEND, MyFrame::OnMenu_AddLegend)
 EVT_MENU(MyFrame::ID_MENUPLOT_ADDVERTICALSCALE, MyFrame::OnMenu_AddVerticalScale)
+EVT_PLOT_CLICKED(wxID_ANY, MyFrame::OnPlotClicked)
+
 END_EVENT_TABLE()
 
 static int s_plc = 1;
@@ -73,14 +77,14 @@ MyFrame::MyFrame():MainFrame(NULL)
 
 	plot::Renderer *renderer = new plot::wxRendererTyped<double, double>();
 	m_2ndpageseries->SetRenderer(renderer);
-	renderer->SetMarkerStyle(MARKER_CIRCLE);
-	renderer->SetLineColourIndex(2);
-	renderer->SetLineThickness(4);
+
+	renderer->SetMarker(new plot::wxMarkerCircle());
+	renderer->SetLine(new plot::wxSimpleLine(7, 4));
 
 	m_2ndpagearea->AddSeries(m_2ndpageseries);
 
 	//
-	datasize = 200;
+	datasize = 5;
 	xdata = new plot::DataTyped<double>(datasize);
 	ydata = new plot::DataTyped<double>(datasize);
 
@@ -96,10 +100,8 @@ MyFrame::MyFrame():MainFrame(NULL)
 
 	renderer = new plot::wxRendererTyped<double, double>();
 	series->SetRenderer(renderer);
-	renderer->SetMarkerStyle(MARKER_SQUARE);
-	renderer->SetMarkerColourIndex(6);
-	renderer->SetLineColourIndex(3);
-	renderer->SetLineThickness(1);
+	renderer->SetMarker(new plot::wxMarkerSquare());
+	renderer->SetLine(new plot::wxSimpleLine(5, 2));
 
 	m_2ndpageplotwindow->AddArea(m_2ndpagearea);
 	m_2ndpagearea->AddSeries(series);
@@ -123,6 +125,9 @@ MyFrame::MyFrame():MainFrame(NULL)
 	plot::Grid *grid;
 	grid = new plot::wxGrid(m_2ndpagearea);
 
+	m_popup_tool = new wxPopupSeriesTool(m_notebook1->GetPage(1));
+	//m_popup_tool->Position(wxGetMousePosition(), wxSize(0, 0));
+	m_popup_tool->Show();
 }
 
 
@@ -216,7 +221,7 @@ void MyFrame::m_button2OnButtonClick(wxCommandEvent & event)
 	//renderer2d = new Renderer2DTyped<double, double>();
 	plot::wxRendererTyped<double, double> *renderer;
 	renderer = new plot::wxRendererTyped<double, double>();
-	
+	renderer->SetMarker(new plot::wxMarkerCircle());
 	series->SetRenderer(renderer);
 
 	wxTextEntryDialog dlg(this, "Series name");
@@ -226,6 +231,8 @@ void MyFrame::m_button2OnButtonClick(wxCommandEvent & event)
 	}
 
 	fill_series_choices();
+
+
 }
 
 void MyFrame::m_button3OnButtonClick(wxCommandEvent & event)
@@ -492,6 +499,23 @@ void MyFrame::OnMenu_AddVerticalScale(wxCommandEvent & event)
 	//scalewidget = new ScaleWidget(wxPlotWindow, wxVERTICAL);
 	//scalewidget->SetValueAdaptor(new SimpleAxisValueAdaptor<double>());
 	//scalewidget->AddAxis(wxPlotWindow->GetSpace(0)->GetAxis(AXIS_Y));
+}
+
+void MyFrame::OnPlotClicked(plot::PlotClickEvent & event)
+{
+	DPRINTF("MyFrame::OnPlotClicked\n");
+	printf("plot name: %s\n", event.GetPlot()->GetPlotName());
+	if (event.GetSeriesSelection()->GetSeries() != nullptr)
+	{
+		auto series = event.GetSeriesSelection()->GetSeries();
+		printf("series name: %s [%i-%i]\n", series->GetSeriesName(), event.GetSeriesSelection()->GetStartIndex(), event.GetSeriesSelection()->GetEndIndex());
+		m_popup_tool->SetSelectedSeries(series);
+	}
+
+	if (event.GetBox() != nullptr)
+	{
+		printf("box: __\n");
+	}
 }
 
 void MyFrame::fill_plot_choices()

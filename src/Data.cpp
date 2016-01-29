@@ -230,7 +230,7 @@ void DataTyped<T>::Fit(bool update)
 	maxv = GetDataMax();
 	minv = GetDataMin();
 
-	assert(maxv > minv);
+	assert(maxv >= minv);
 
 	range = maxv - minv;
 

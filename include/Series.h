@@ -38,19 +38,34 @@ namespace plot
 		Renderer *GetRenderer() { return m_renderer; };
 
 		void BringToFront();
+
+
+		void _setowner(Area *area);
 	protected:
 		char *m_series_name;
 		Area *m_owner;
 		Renderer *m_renderer;
 
-		friend class Area;
-		void SetOwner(Area *area) { m_owner = area; }
 
 	private:
 		int m_dim_num; //number of dimensions
 		DataNoType **m_datas;
 	};
 
+	class SeriesSelection
+	{
+	public:
+		SeriesSelection(Series *series = nullptr, size_t b = 0, size_t e = 0) { m_series_selected = series; m_begin = b; m_end = e; };
+		Series *GetSeries() { return m_series_selected; }
+		size_t GetStartIndex() { return m_begin; }
+		size_t GetEndIndex() { return m_end; }
+		virtual ~SeriesSelection() {};
+	protected:
+	private:
+		Series *m_series_selected;
+		size_t m_begin;
+		size_t m_end;
+	};
 
 	class DLLIMPEXP_PLOTLIB PEventSeriesNameChanged : public PEvent
 	{

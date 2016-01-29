@@ -16,6 +16,12 @@
 
 SeriesTool_fb::SeriesTool_fb( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
+	wxBoxSizer* bSizer4;
+	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_treeCtrl1 = new wxTreeCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 150,-1 ), wxTR_DEFAULT_STYLE );
+	bSizer4->Add( m_treeCtrl1, 0, wxALL|wxEXPAND, 5 );
+	
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
@@ -135,9 +141,12 @@ SeriesTool_fb::SeriesTool_fb( wxWindow* parent, wxWindowID id, const wxPoint& po
 	bSizer1->Add( bSizer2, 0, wxEXPAND, 5 );
 	
 	
-	this->SetSizer( bSizer1 );
+	bSizer4->Add( bSizer1, 1, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer4 );
 	this->Layout();
-	bSizer1->Fit( this );
+	bSizer4->Fit( this );
 	
 	// Connect Events
 	m_checkBox_name->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SeriesTool_fb::m_checkBox_nameOnCheckBox ), NULL, this );

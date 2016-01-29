@@ -5,6 +5,8 @@
 
 namespace plot
 {
+	class DLLIMPEXP_PLOTLIB wxPlotWindow;
+
 	class DLLIMPEXP_PLOTLIB wxBox : public wxEvtHandler, public Box
 	{
 	public:

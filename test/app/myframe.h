@@ -4,6 +4,7 @@
 #include "Area.h"
 #include "wx/wxChartWindow.h"
 #include "wx/wxBox.h"
+#include "../../other/PopupSeriesTool.h"
 
 class MyFrame :
 	public MainFrame
@@ -43,6 +44,8 @@ private:
 	void OnMenu_AddVerticalScale(wxCommandEvent &event);
 	static const int ID_MENUPLOT_ADDVERTICALSCALE;
 
+	void OnPlotClicked(plot::PlotClickEvent &event);
+
 	plot::wxChartWindow *m_chartwindow;
 	plot::wxPlotWindow *m_wxPlotWindow;
 	plot::Series *m_series;
@@ -55,6 +58,8 @@ private:
 	plot::Area *m_2ndpagearea;
 	plot::wxLegendsBox *m_2ndlegendsbox;
 	
+	wxPopupSeriesTool *m_popup_tool;
+
 	//help functions
 	void fill_plot_choices();
 	void fill_series_choices();

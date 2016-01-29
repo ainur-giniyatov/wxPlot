@@ -34,7 +34,7 @@ Series::~Series()
 //delete renderer
 	if (m_renderer != NULL)
 	{
-		m_renderer->SetOwner(NULL);
+		m_renderer->_setowner(NULL);
 		delete m_renderer;
 	}
 
@@ -148,7 +148,7 @@ void Series::SetRenderer(Renderer * renderer)
 	if (m_renderer != nullptr)
 		delete m_renderer;
 	m_renderer = renderer;
-	m_renderer->SetOwner(this);
+	m_renderer->_setowner(this);
 }
 
 void plot::Series::BringToFront()
@@ -162,6 +162,17 @@ void plot::Series::BringToFront()
 			m_owner->GetSerie().push_back(this);
 			break;
 		}
+	}
+}
+
+void plot::Series::_setowner(Area * area)
+{
+	m_owner = area;
+	if (m_owner != nullptr && m_owner->GetOwner() != nullptr && m_renderer != nullptr)
+	{
+		int w, h;
+		m_owner->GetOwner()->GetSize(&w, &h);
+		m_renderer->_setsize(w, h);
 	}
 }
 

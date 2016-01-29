@@ -73,7 +73,7 @@ void Axis::SetRange(double range)
 
 void Axis::_SetVisibleRange(double offs, double range, bool update)
 {
-	assert(range > 0);
+	assert(range >= 0);
 
 	Axis *axis;
 

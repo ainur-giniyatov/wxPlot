@@ -54,7 +54,7 @@ void ScaleWindow::ScaleRedraw()
 	Update();
 }
 
-static char s_buff[20];
+static char s_buff[64];
 
 void ScaleWindow::OnPaint(wxPaintEvent & event)
 {
@@ -109,7 +109,7 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 		else
 			gc->StrokeLine(0, x, tick_len, x);
 
-		m_valueadaptor->ValToStr(s_buff, 20);
+		m_valueadaptor->ValToStr(s_buff, 64);
 		text = s_buff;
 		if(m_valueadaptor->IsBold())
 		{ 
@@ -127,13 +127,14 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 
 	}
 
-	if (m_valueadaptor->ValBiggerPart(s_buff, 20))
+	if (m_valueadaptor->ValBiggerPart(s_buff, 64))
 	{
 		m_font.MakeBold();
 		gc->SetFont(m_font, *wxBLACK);
 		gc->GetTextExtent(s_buff, &fw, &fh);
 		gc->DrawText(s_buff, (width - fw) / 2., height - fh - 1);
 	}
+
 	delete gc;
 }
 

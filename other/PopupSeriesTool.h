@@ -6,12 +6,13 @@
 #include "SeriesTool.h"
 #include "Series.h"
 
-class wxPopupSeriesTool : public wxPopupWindow //wxPopupTransientWindow
+class DLLIMPEXP_PLOTLIB wxPopupSeriesTool : public wxPopupWindow //wxPopupTransientWindow
 {
 public:
-	wxPopupSeriesTool(wxWindow *parent, plot::Series *series);
+	wxPopupSeriesTool(wxWindow *parent);
 	virtual ~wxPopupSeriesTool();
 
+	void SetSelectedSeries(plot::Series *series);
 protected:
 private:
 	SeriesTool *m_seriestool;

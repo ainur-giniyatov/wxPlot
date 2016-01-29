@@ -142,8 +142,15 @@ bool TimeAxisValueAdaptor<T>::ValBiggerPart(char * str, size_t len)
 	{
 		struct tm tmstruct;
 		memset(&tmstruct, 0, sizeof(struct tm));
-		memcpy(&tmstruct, gmtime(&tv1), sizeof(struct tm));
-		strftime(str, len, "%d-%b-%y", &tmstruct);
+		if (gmtime(&tv1) != NULL)
+		{
+			memcpy(&tmstruct, gmtime(&tv1), sizeof(struct tm));
+			strftime(str, len, "%d-%b-%y", &tmstruct);
+		}
+		else
+		{
+			sprintf(str, "error");
+		}
 		return true;
 	}
 	return false;

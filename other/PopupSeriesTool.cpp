@@ -9,7 +9,7 @@ EVT_MOUSE_CAPTURE_LOST(wxPopupSeriesTool::OnMouseCaptureLost)
 
 wxEND_EVENT_TABLE();
 
-wxPopupSeriesTool::wxPopupSeriesTool(wxWindow * parent, plot::Series * series):wxPopupWindow(parent, wxBORDER_STATIC)
+wxPopupSeriesTool::wxPopupSeriesTool(wxWindow * parent):wxPopupWindow(parent, wxBORDER_STATIC)
 {
 	wxSizer *bSizer;
 	bSizer = new wxBoxSizer(wxVERTICAL);
@@ -17,7 +17,7 @@ wxPopupSeriesTool::wxPopupSeriesTool(wxWindow * parent, plot::Series * series):w
 	wxButton *button_close = new wxButton(this, wxID_ANY, "x", wxDefaultPosition, wxSize(15, 15));
 	bSizer->Add(button_close, 0, wxALIGN_RIGHT, 4);
 	
-	m_seriestool = new SeriesTool(this, series);
+	m_seriestool = new SeriesTool(this);
 	bSizer->Add(m_seriestool, 1, wxALL | wxEXPAND, 4);
 
 	SetSizer(bSizer);
@@ -28,13 +28,17 @@ wxPopupSeriesTool::wxPopupSeriesTool(wxWindow * parent, plot::Series * series):w
 	m_seriestool->Connect(wxEVT_MOTION, (wxObjectEventFunction)&wxPopupSeriesTool::OnMouseMove, nullptr, this);
 	Connect(button_close->GetId(), wxEVT_BUTTON, (wxObjectEventFunction)&wxPopupSeriesTool::OnCloseButton);
 
-	Position(wxGetMousePosition(), wxSize(0, 0));
 
 	m_moving = false;
 }
 
 wxPopupSeriesTool::~wxPopupSeriesTool()
 {
+}
+
+void wxPopupSeriesTool::SetSelectedSeries(plot::Series * series)
+{
+	m_seriestool->SetSelectedSeries(series);
 }
 
 //void wxPopupSeriesTool::OnDismiss()
@@ -81,7 +85,8 @@ void wxPopupSeriesTool::OnMouseCaptureLost(wxMouseCaptureLostEvent & event)
 void wxPopupSeriesTool::OnCloseButton(wxCommandEvent & event)
 {
 	DPRINTF("wxPopupSeriesTool::OnCloseButton\n");
-	Destroy();
+	Hide();
+	//Destroy();
 }
 
 

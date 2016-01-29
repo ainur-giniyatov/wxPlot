@@ -268,6 +268,8 @@
     <ClInclude Include="..\include\Box.h" />
     <ClInclude Include="..\include\Data.h" />
     <ClInclude Include="..\include\Grid.h" />
+    <ClInclude Include="..\include\Line.h" />
+    <ClInclude Include="..\include\Marker.h" />
     <ClInclude Include="..\include\pevent.h" />
     <ClInclude Include="..\include\Plot.h" />
     <ClInclude Include="..\include\plot_defs.h" />
@@ -277,6 +279,8 @@
     <ClInclude Include="..\include\ValueAdaptor.h" />
     <ClInclude Include="..\include\wx\colorbase.h" />
     <ClInclude Include="..\include\wx\wxChartWindow.h" />
+    <ClInclude Include="..\include\wx\wxLine.h" />
+    <ClInclude Include="..\include\wx\wxMarker.h" />
     <ClInclude Include="..\include\wx\wxPlotWindow.h" />
     <ClInclude Include="..\include\wx\ScaleWindow.h" />
     <ClInclude Include="..\include\wx\wxBox.h" />
@@ -316,6 +320,8 @@
     <ClCompile Include="..\src\Box.cpp" />
     <ClCompile Include="..\src\Data.cpp" />
     <ClCompile Include="..\src\Grid.cpp" />
+    <ClCompile Include="..\src\Line.cpp" />
+    <ClCompile Include="..\src\Marker.cpp" />
     <ClCompile Include="..\src\pevent.cpp" />
     <ClCompile Include="..\src\Plot.cpp" />
     <ClCompile Include="..\src\Renderer.cpp" />
@@ -324,6 +330,8 @@
     <ClCompile Include="..\src\ValueAdaptor.cpp" />
     <ClCompile Include="..\src\wx\colorbase.cpp" />
     <ClCompile Include="..\src\wx\wxChartWindow.cpp" />
+    <ClCompile Include="..\src\wx\wxLine.cpp" />
+    <ClCompile Include="..\src\wx\wxMarker.cpp" />
     <ClCompile Include="..\src\wx\wxPlotWindow.cpp" />
     <ClCompile Include="..\src\wx\ScaleWindow.cpp" />
     <ClCompile Include="..\src\wx\wxBox.cpp" />

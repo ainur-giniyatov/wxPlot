@@ -1,4 +1,5 @@
 #pragma once
+#include <wx/event.h>
 #include <wx/window.h>
 #include <wx/panel.h>
 
@@ -9,10 +10,51 @@
 
 #include "../Plot.h"
 #include "ScaleWindow.h"
+#include "../../other/PopupSeriesTool.h"
+#include "wxBox.h"
 
 namespace plot
 {
-	class DLLIMPEXP_PLOTLIB wxPlotWindow :
+	class DLLIMPEXP_PLOTLIB wxPlotWindow;
+	class DLLIMPEXP_PLOTLIB wxBox;
+
+	class  PlotClickEvent : public wxCommandEvent
+	{
+	public:
+		PlotClickEvent(wxEventType eventType, int winind, wxPlotWindow *plot, Series *series = nullptr, wxBox *box = nullptr) : wxCommandEvent(eventType, winind), m_series_selection(nullptr)
+		{ 
+			m_plotwindow = nullptr;
+			m_box = nullptr;
+			m_plotwindow = plot;
+			m_box = box;
+		}
+		virtual ~PlotClickEvent() {};
+
+		void SetBox(wxBox *box) { m_box = box; }
+		void SetSeriesSelection(const SeriesSelection &ser_selection) { m_series_selection = ser_selection; }
+		wxPlotWindow *GetPlot() { return m_plotwindow; }
+		wxBox *GetBox() { return m_box; }
+		SeriesSelection *GetSeriesSelection() { return &m_series_selection; };
+
+		virtual wxEvent *Clone() const { return new PlotClickEvent(*this); }
+
+	protected:
+	private:
+		SeriesSelection m_series_selection;
+		wxPlotWindow *m_plotwindow;
+		wxBox *m_box;
+	};
+
+};
+	wxDECLARE_EXPORTED_EVENT(DLLIMPEXP_PLOTLIB, PLOTCLICKED, plot::PlotClickEvent);
+//extern const DLLIMPEXP_PLOTLIB wxEventTypeTag< plot::PlotClickEvent > PLOTCLICKED;
+	
+	#define PlotClickedEventHandler(func) (&func)
+	#define EVT_PLOT_CLICKED(id, func) wx__DECLARE_EVT1(PLOTCLICKED, id, PlotClickedEventHandler(func))
+
+namespace plot
+{
+		class DLLIMPEXP_PLOTLIB wxPlotWindow :
 		public wxWindow, public Plot
 	{
 	public:
@@ -24,6 +66,7 @@ namespace plot
 
 		//internal use
 		void _popup_seriesmenu(Series *series);
+		
 	private:
 		void OnPaint(wxPaintEvent &event);
 		void OnEraseBackground(wxEraseEvent &event);
@@ -47,8 +90,13 @@ namespace plot
 		wxMenu m_menu;
 
 		wxMenu m_seriesmenu;
-		Series *m_series_pointed;
+		//Series *m_series_pointed;
+
+		//virtual void _spotseries(SeriesSelection &seriesselection) override;
 		
+		/*iterate serie and find if mouse_coords points on any serie mark or line and fills seriesselection object*/
+		void _getspottedseries(Point<int>&mouse_coords, SeriesSelection &seriesselection);
+
 		static const int IDMENUITEM_DELETESERIES;
 		void OnMenuItem_DeleteSeries(wxCommandEvent &event);
 		
@@ -70,6 +118,7 @@ namespace plot
 
 		wxBitmap *m_bitmap_buffer;
 
+		wxPopupSeriesTool *m_popup_tool;
 
 		int m_diag_texts_pos_y;
 		DECLARE_EVENT_TABLE()

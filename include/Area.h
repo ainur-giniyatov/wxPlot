@@ -45,7 +45,7 @@ namespace plot
 		void Fit(AXIS_DIR axis_dir);
 
 		//internal use methods start with _
-		void _SetOwner(Plot *plot) { m_owner_plot = plot; }
+		void _SetOwner(Plot *plot);
 		void _SetGrid(Grid *grid);
 
 	protected:

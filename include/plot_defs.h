@@ -122,6 +122,17 @@ template <typename T> struct Rect {
 			left = p2.x;
 			right = p1.x;
 		}
+
+		if (p2.y > p1.y)
+		{
+			top = p1.y;
+			bottom = p2.y;
+		}
+		else
+		{
+			top = p2.y;
+			bottom = p1.y;
+		}
 	}
 
 	Rect(Rect &r) { left = r.left; right = r.right; top = r.top; bottom = r.bottom; }
@@ -181,6 +192,14 @@ template <typename T> struct Rect {
 		bottom = c + h2;
 	}
 
+	inline void Inflate(T dd)
+	{
+		left -= dd;
+		right += dd;
+		top -= dd;
+		bottom += dd;
+	}
+
 	inline bool IsInside(const Point<T> &p)
 	{
 		return p.x >= left && p.x <= right && p.y >= top && p.y <= bottom;
@@ -192,4 +211,23 @@ template <typename T> struct Rect {
 	T left, right, top, bottom;
 private:
 
+};
+
+#include <iostream>
+#include <chrono>
+
+class Timer
+{
+public:
+	Timer() : beg_(clock_::now()) {}
+	void reset() { beg_ = clock_::now(); }
+	double elapsed() const {
+		return std::chrono::duration_cast<second_>
+			(clock_::now() - beg_).count();
+	}
+
+private:
+	typedef std::chrono::high_resolution_clock clock_;
+	typedef std::chrono::duration<double, std::ratio<1> > second_;
+	std::chrono::time_point<clock_> beg_;
 };
