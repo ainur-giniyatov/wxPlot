@@ -71,7 +71,7 @@ wxPlotWindow::wxPlotWindow(wxWindow * parent) :wxWindow(parent, wxID_ANY, wxDefa
 	titlebox = new wxTitleBox(this);
 	AddBox(titlebox);
 
-	m_popup_tool = new wxPopupSeriesTool(this);
+//	m_popup_tool = new wxPopupSeriesTool(this);
 }
 
 wxPlotWindow::~wxPlotWindow()
@@ -141,9 +141,9 @@ void wxPlotWindow::OnResize(wxSizeEvent & event)
 void plot::wxPlotWindow::_popup_seriesmenu(Series * series)
 {
 	//m_series_pointed = series;
-	m_popup_tool->SetSelectedSeries(series);
-	m_popup_tool->Position(wxGetMousePosition(), wxSize(0, 0));
-	m_popup_tool->Show();
+	//m_popup_tool->SetSelectedSeries(series);
+	//m_popup_tool->Position(wxGetMousePosition(), wxSize(0, 0));
+	//m_popup_tool->Show();
 //	popup_tool->Popup();
 //	wxPopupToolBar *poptbar;
 //	poptbar = new wxPopupToolBar(this, series);
@@ -187,11 +187,15 @@ void wxPlotWindow::OnLeftDown(wxMouseEvent & event)
 		ser_sel.GetSeries()->BringToFront();
 		ser_sel.GetSeries()->SeriesUpdated();
 		plotclick_event.SetSeriesSelection(ser_sel);
-		if (m_popup_tool->IsShown())
-		{
-			m_popup_tool->SetSelectedSeries(ser_sel.GetSeries());
-		}
+	//	if (m_popup_tool->IsShown())
+	//	{
+	//		m_popup_tool->SetSelectedSeries(ser_sel.GetSeries());
+	//	}
 	}
+	//else 
+	//{
+	//	m_popup_tool->SetSelectedSeries(nullptr);
+	//}
 
 	
 	ProcessWindowEvent(plotclick_event);

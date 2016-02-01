@@ -18,6 +18,8 @@ wxGrid::~wxGrid()
 void wxGrid::Render(void * v_gc)
 {
 	wxGraphicsContext *gc = (wxGraphicsContext *)v_gc;
+	wxAntialiasMode antialiasmode = gc->GetAntialiasMode();
+	gc->SetAntialiasMode(wxANTIALIAS_NONE);
 	wxASSERT(m_owner != NULL);
 	//return;
 	Axis *xaxis = m_owner->GetAxis(AXIS_X);
@@ -78,4 +80,6 @@ void wxGrid::Render(void * v_gc)
 			gc->StrokeLine(0, y, width, y);
 		}
 	}
+
+	gc->SetAntialiasMode(antialiasmode);
 }

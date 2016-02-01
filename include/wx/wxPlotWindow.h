@@ -27,6 +27,7 @@ namespace plot
 			m_box = nullptr;
 			m_plotwindow = plot;
 			m_box = box;
+			m_series_selection = series;
 		}
 		virtual ~PlotClickEvent() {};
 
@@ -118,7 +119,7 @@ namespace plot
 
 		wxBitmap *m_bitmap_buffer;
 
-		wxPopupSeriesTool *m_popup_tool;
+		//wxPopupSeriesTool *m_popup_tool;
 
 		int m_diag_texts_pos_y;
 		DECLARE_EVENT_TABLE()

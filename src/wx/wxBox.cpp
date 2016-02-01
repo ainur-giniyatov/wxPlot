@@ -106,11 +106,38 @@ void wxLegendsBox::MouseRightUp(int mx, int my)
 	DPRINTF("wxLegendsBox::MouseRightUp");
 	Point<int> mp;
 	mp = Point<int>(mx - m_rect.left, my - m_rect.top);
+
 	for (auto item_iter : m_items)
 	{
 		if (item_iter->m_rect.IsInside(mp))
 		{
 			((wxPlotWindow *)m_owner)->_popup_seriesmenu(item_iter->m_series);
+			break;
+		}
+	}
+}
+
+void plot::wxLegendsBox::MouseLeftDown(int mx, int my)
+{
+	DPRINTF("wxLegendsBox::MouseLeftDown");
+	
+	Point<int> mp;
+	mp = Point<int>(mx - m_rect.left, my - m_rect.top);
+
+	Box::MouseLeftDown(mx, my);
+	for (auto item_iter : m_items)
+	{
+		if (item_iter->m_rect.IsInside(mp))
+		{
+			SeriesSelection ser_sel(item_iter->m_series, 0, item_iter->m_series->GetData(AXIS_X)->GetSize());
+
+			ser_sel.GetSeries()->BringToFront();
+			ser_sel.GetSeries()->SeriesUpdated();
+
+			wxPlotWindow *plw = (wxPlotWindow *)m_owner;
+			PlotClickEvent pclickevent(PLOTCLICKED, plw->GetId(), plw, item_iter->m_series);
+			pclickevent.SetEventObject(plw);
+			plw->ProcessWindowEvent(pclickevent);
 			break;
 		}
 	}

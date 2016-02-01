@@ -300,6 +300,10 @@ void Area::ZoomSelection(Point<double>& start_p, Point<double>& end_p)
 void plot::Area::Fit(AXIS_DIR axis_dir)
 {
 	assert(axis_dir < m_dim_num);
+
+	if (m_serie.empty())
+		return;
+
 	double max, min;
 
 	for (auto series : m_serie)

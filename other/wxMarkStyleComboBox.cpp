@@ -4,17 +4,31 @@
 wxMarkStyleComboBox::wxMarkStyleComboBox(wxWindow *parent, wxWindowID id):wxOwnerDrawnComboBox(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY)
 {
     //ctor
-    for(int i = 0; i < MARKERSTYLES_COUNT; i++)
-    {
-        Append(wxEmptyString, (void *)MARKERSTYLES[i]);
-    }
-    m_colour_indx = 0;
-    m_mark_size = 3;
+    //for(int i = 0; i < MARKERSTYLES_COUNT; i++)
+    //{
+    //    Append(wxEmptyString, (void *)MARKERSTYLES[i]);
+    //}
+
+
+	plot::wxMarker *marker;
+	marker = new plot::wxMarkerCircle();
+	m_markers.push_back(marker);
+	Append(wxEmptyString, marker);
+
+	marker = new plot::wxMarkerSquare();
+	m_markers.push_back(marker);
+	Append(wxEmptyString, marker);
+
+	marker = new plot::wxMarkerRomb();
+	m_markers.push_back(marker);
+	Append(wxEmptyString, marker);
 }
 
 wxMarkStyleComboBox::~wxMarkStyleComboBox()
 {
     //dtor
+	for (auto marker : m_markers)
+		delete marker;
 }
 
 void wxMarkStyleComboBox::OnDrawBackground(wxDC& dc, const wxRect& rect, int item, int flags) const
@@ -24,16 +38,25 @@ void wxMarkStyleComboBox::OnDrawBackground(wxDC& dc, const wxRect& rect, int ite
 
     wxGraphicsContext *gc;
     gc = wxGraphicsContext::Create(*(wxWindowDC*)&dc);
-//    dc.SetPen(wxColour(COLOR_BASE[m_colour_indx]));
-//    dc.SetBrush(wxColour(COLOR_BASE[m_colour_indx]));
-	MARKER_STYLES mark_style = (MARKER_STYLES)(int)GetClientData(item);
-    PrepareMarkGC(gc, mark_style, m_mark_size, m_colour_indx);
     wxPoint pos;
     pos = rect.GetPosition() + rect.GetSize().Scale(0.5, 0.5);
 
-    PutMark(gc, pos.x, pos.y, mark_style, m_mark_size);
+	plot::wxMarker *marker = m_markers[item];
+	marker->InitStyleAndColour(gc);
+	if(!IsEnabled())
+	{
+		wxColor color(dc.GetPen().GetColour().MakeDisabled(100));
+		wxPen pen(color);
+		gc->SetPen(pen);
+
+		wxBrush brush(color);
+		gc->SetBrush(brush);
+	}
+	marker->Render(gc, Point<int>(pos.x, pos.y));
+
     delete gc;
-    if(flags & wxODCB_PAINTING_CONTROL)
+
+	if(flags & wxODCB_PAINTING_CONTROL)
         return;
 
     if(flags & wxODCB_PAINTING_SELECTED)
@@ -45,28 +68,38 @@ void wxMarkStyleComboBox::OnDrawBackground(wxDC& dc, const wxRect& rect, int ite
 
 }
 
-void wxMarkStyleComboBox::SetMarkStyleSelection(int indx)
+void wxMarkStyleComboBox::SetMarkStyleSelection(plot::wxMarker *marker)
 {
-	for (int i = 0; i < GetCount(); i++)
+	for (int indx = 0; indx < GetCount(); indx++)
 	{
-		if (indx == (int)GetClientData(i))
+		plot::wxMarker *marker1;
+		marker1 = (plot::wxMarker *)GetClientData(indx);
+		if (marker1->_getid() == marker->_getid())
 		{
-			SetSelection(i);
-			return;
-			break;
+			SetSelection(indx);
 		}
 	}
-	assert(0);
+	CopyMarkerAttribs(marker);
 }
 
-void wxMarkStyleComboBox::SetColourIndex(int color_indx)
+void wxMarkStyleComboBox::CopyMarkerAttribs(plot::wxMarker * marker)
 {
-    m_colour_indx = color_indx;
-    Refresh();
+	for (auto marker_i : m_markers)
+	{
+		marker_i->SetSize(marker->GetSize());
+		marker_i->SetFillColourIndex(marker->GetFillColourIndex());
+	}
+	Refresh();
 }
 
-void wxMarkStyleComboBox::SetMarkSize(int mark_size)
+plot::wxMarker * wxMarkStyleComboBox::GetSelectedMarker()
 {
-    m_mark_size = mark_size;
-    Refresh();
+	int indx;
+	indx = GetSelection();
+	if (indx == wxNOT_FOUND)
+		return nullptr;
+
+
+	
+	return m_markers[indx];
 }

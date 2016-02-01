@@ -53,6 +53,7 @@ namespace plot
 	protected:
 	private:
 		void MouseRightUp(int mx, int my) override;
+		virtual void MouseLeftDown(int mx, int my) override;
 		virtual void Sizing() override;
 
 		int margin;

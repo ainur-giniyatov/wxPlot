@@ -27,10 +27,16 @@ void wxColorComboBox::OnDrawBackground(wxDC& dc, const wxRect& rect, int item, i
 {
     if(item == wxNOT_FOUND)
         return;
-    wxColour *colour;
-    colour = (wxColour *)GetClientData(item);
-    dc.SetPen(*colour);
-    dc.SetBrush(*colour);
+
+    wxColour colour(*(wxColour *)GetClientData(item));
+    
+	if (!IsEnabled())
+	{
+		colour = colour.MakeDisabled(100);
+	}
+
+	dc.SetPen(colour);
+	dc.SetBrush(colour);
     dc.DrawRectangle(rect);
 }
 

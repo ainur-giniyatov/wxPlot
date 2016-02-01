@@ -511,6 +511,8 @@ void MyFrame::OnPlotClicked(plot::PlotClickEvent & event)
 		printf("series name: %s [%i-%i]\n", series->GetSeriesName(), event.GetSeriesSelection()->GetStartIndex(), event.GetSeriesSelection()->GetEndIndex());
 		m_popup_tool->SetSelectedSeries(series);
 	}
+	else
+		m_popup_tool->SetSelectedSeries(nullptr);
 
 	if (event.GetBox() != nullptr)
 	{

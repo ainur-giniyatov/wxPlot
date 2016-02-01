@@ -1,6 +1,17 @@
 #include "wx/wxLine.h"
 #include "wx/colorbase.h"
 
+static int s_line_colour_indx = 0;
+
+plot::wxLine::wxLine()
+{
+	m_colour_indx = s_line_colour_indx;
+	m_thickness = 1;
+	s_line_colour_indx++;
+	if (s_line_colour_indx == COLOR_BASE_COUNT)
+		s_line_colour_indx = 0;
+}
+
 void plot::wxLine::InitStyleAndColour(wxGraphicsContext * gc)
 {
 	if (m_colour_indx != -1)

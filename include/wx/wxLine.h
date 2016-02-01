@@ -8,7 +8,7 @@ namespace plot
 	class DLLIMPEXP_PLOTLIB wxLine : public Line
 	{
 	public:
-		wxLine() {};
+		wxLine() ;
 		virtual ~wxLine() {};
 
 		void InitStyleAndColour(wxGraphicsContext *gc);
