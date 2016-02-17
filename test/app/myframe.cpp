@@ -112,15 +112,15 @@ MyFrame::MyFrame():MainFrame(NULL)
 	//m_2ndlegendsbox->AddSeries(series);
 
 	plot::wxScaleBox *scalebox;
-	scalebox = new plot::wxScaleBox(m_2ndpageplotwindow, DIR_VER);
-	scalebox->AddAxis(m_2ndpagearea->GetAxis(AXIS_Y));
-	scalebox->SetRangeLimits(DBL_MAX, DBL_MIN);
-	scalebox->SetValueAdaptor(new plot::SimpleAxisValueAdaptor<double>());
+	scalebox = new plot::wxScaleBox(m_2ndpageplotwindow, DIR_VER, AXIS_Y);
+	scalebox->GetScale()->AddAxis(m_2ndpagearea->GetAxis(AXIS_Y));
+	scalebox->GetScale()->SetRangeLimits(DBL_MAX, DBL_MIN);
+	scalebox->GetScale()->SetValueAdaptor(new plot::SimpleAxisValueAdaptor<double>());
 
-	scalebox = new plot::wxScaleBox(m_2ndpageplotwindow, DIR_HOR);
-	scalebox->AddAxis(m_2ndpagearea->GetAxis(AXIS_X));
-	scalebox->SetRangeLimits(DBL_MAX, DBL_MIN);
-	scalebox->SetValueAdaptor(new plot::SimpleAxisValueAdaptor<double>());
+	scalebox = new plot::wxScaleBox(m_2ndpageplotwindow, DIR_HOR, AXIS_X);
+	scalebox->GetScale()->AddAxis(m_2ndpagearea->GetAxis(AXIS_X));
+	scalebox->GetScale()->SetRangeLimits(DBL_MAX, DBL_MIN);
+	scalebox->GetScale()->SetValueAdaptor(new plot::SimpleAxisValueAdaptor<double>());
 
 	plot::Grid *grid;
 	grid = new plot::wxGrid(m_2ndpagearea);
@@ -287,13 +287,13 @@ void MyFrame::m_button_newplotOnButtonClick(wxCommandEvent & event)
 
 	//ScaleWidget *scalewidget;
 	//scalewidget = new ScaleWidget(wxPlotWindow, wxVERTICAL);
-	plot::wxScaleBox *scalebox = new plot::wxScaleBox(plotwindow, DIR_VER);
+	plot::wxScaleBox *scalebox = new plot::wxScaleBox(plotwindow, DIR_VER, AXIS_Y);
 
 	plot::Grid *grid;
 	grid = new plot::wxGrid(area);
 
-	scalebox->AddAxis(area->GetAxis(AXIS_Y));
-	scalebox->SetValueAdaptor(new plot::SimpleAxisValueAdaptor<double>());
+	scalebox->GetScale()->AddAxis(area->GetAxis(AXIS_Y));
+	scalebox->GetScale()->SetValueAdaptor(new plot::SimpleAxisValueAdaptor<double>());
 
 	plotwindow->RedrawPlot();
 	//LegendsWidget *legendswidget;
@@ -383,13 +383,14 @@ void MyFrame::m_button_FitOnButtonClick(wxCommandEvent & event)
 	}
 	if (m_series != NULL)
 	{
-		m_series->Fit();
+		
+		m_series->Fit(AXIS_MASK_Y | AXIS_MASK_X);
 		return;
 	}
 	if (m_wxPlotWindow != NULL)
 	{
-		m_wxPlotWindow->GetArea(0)->Fit(AXIS_X);
-		//m_wxPlotWindow->FitPlot();
+		m_wxPlotWindow->Plot::Fit(AXIS_MASK_Y | AXIS_MASK_X);
+		
 		return;
 	}
 }
@@ -455,6 +456,31 @@ void MyFrame::m_button_add_boxOnButtonClick(wxCommandEvent & event)
 {
 	plot::wxBox *box;
 	box = new plot::wxBox(m_2ndpageplotwindow);
+}
+
+void MyFrame::m_button_chartfitxOnButtonClick(wxCommandEvent & event)
+{
+	m_chartwindow->Fit(AXIS_MASK_X);
+}
+
+void MyFrame::m_button_chartfityOnButtonClick(wxCommandEvent & event)
+{
+	m_chartwindow->Fit(AXIS_MASK_Y);
+}
+
+void MyFrame::m_button_chartfitbothOnButtonClick(wxCommandEvent & event)
+{
+	m_chartwindow->Fit(AXIS_MASK_X | AXIS_MASK_Y);
+}
+
+void MyFrame::m_tool_undo_viewOnToolClicked(wxCommandEvent & event)
+{
+	m_chartwindow->UndoView();
+}
+
+void MyFrame::m_tool_redo_viewOnToolClicked(wxCommandEvent & event)
+{
+	m_chartwindow->RedoView();
 }
 
 void MyFrame::OnMouseWheel(wxMouseEvent & event)

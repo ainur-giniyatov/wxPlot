@@ -4,16 +4,17 @@
 using namespace plot;
 
 //PEventHandler
-PEventHandler::PEventHandler()
+PEventHandler::PEventHandler(PEventList *evlist)
 {
-	
+	m_eventslist = evlist;
 }
 
 PEventHandler::~PEventHandler()
 {
+
 }
 
-void plot::PEventHandler::Connect(int event_id, HandlerMethod handlermethod)
+void plot::PEventHandler::AddHandler(int event_id, HandlerMethod handlermethod)
 {
 	EventHandlerStruct ehs;
 	ehs.event_id = event_id;
@@ -22,7 +23,7 @@ void plot::PEventHandler::Connect(int event_id, HandlerMethod handlermethod)
 	m_eventslist->m_events.push_back(ehs);
 }
 
-void plot::PEventHandler::Disconnect(int event_id, HandlerMethod handlermethod)
+void plot::PEventHandler::RemoveHandler(int event_id, HandlerMethod handlermethod)
 {
 	for (auto entry_iter = m_eventslist->m_events.begin(); entry_iter != m_eventslist->m_events.end(); ++entry_iter)
 	{
@@ -32,6 +33,11 @@ void plot::PEventHandler::Disconnect(int event_id, HandlerMethod handlermethod)
 			break;
 		}
 	}
+}
+
+void plot::PEventHandler::HandleEvent(PEvent & evt)
+{
+	m_eventslist->ProcessEvent(evt);
 }
 
 //PEventList
@@ -54,22 +60,21 @@ int plot::PEventList::GetNewEventId()
 	return id;
 }
 
-void plot::PEventList::ProcessEvent(PEvent * evt)
+void plot::PEventList::ProcessEvent(PEvent &evt)
 {
 	//iterate events list and invoke registered handler for matched event ids
 	for (auto event_enrty : m_events)
 	{
-		if (event_enrty.event_id == evt->_getevid())
+		if (event_enrty.event_id == evt._getevid())
 		{
 			PEventHandler *evthandler;
 			HandlerMethod handlermethod;
 			evthandler = event_enrty.ev_handler;
 			handlermethod = event_enrty.handlermethod;
-			(evthandler->*handlermethod)(*evt);
+			(evthandler->*handlermethod)(evt);
 		}
 	}
 
-	delete evt;
 }
 
 //PEvent

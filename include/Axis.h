@@ -17,7 +17,7 @@ namespace plot
 	class DLLIMPEXP_PLOTLIB Axis
 	{
 	public:
-		Axis();
+		Axis(AXIS_DIR axis_dir);
 		virtual ~Axis();
 		void AxisUpdated();
 
@@ -36,14 +36,16 @@ namespace plot
 		//internal use methods
 		/*adjust visible range for the axis and redraw dependant plots*/
 		void _SetVisibleRange(double offs, double range, bool update = true);
+		AXIS_DIR _get_axis_dir() { return m_axis_dir; }
+		const std::vector<DataNoType *> _get_adj_datas();
 	protected:
 
-		//friend Renderer;
-		//friend Renderer2D;
 		friend class Scale;
+
 		double m_offset;
 		double m_range;
 
+		AXIS_DIR m_axis_dir;
 		Area *m_owner;
 		Scale *m_commonscale;
 	};

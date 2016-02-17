@@ -14,12 +14,12 @@ using namespace plot;
 
 wxDEFINE_EVENT(PLOTCLICKED, plot::PlotClickEvent);
 
-const int wxPlotWindow::IDMENUITEM_SERIESPROPERTIES = wxNewId();
-const int wxPlotWindow::IDMENUITEM_DELETESERIES = wxNewId();
-//const int wxPlotWindow::IDMENUITEM_SERIESPROPERTIES = wxNewId();
+wxDEFINE_EVENT(PLOTVIEWCHANGED, wxCommandEvent);
+
+const int wxPlotWindow::IDMENUITEM_REMOVESERIES = wxNewId();
 const int wxPlotWindow::IDMENUITEM_SERIESFITVERT = wxNewId();
 const int wxPlotWindow::IDMENUITEM_SERIESFITHOR = wxNewId();
-const int wxPlotWindow::IDMENUITEM_SERIESFITALL = wxNewId();
+const int wxPlotWindow::IDMENUITEM_SERIESFITALLDIMS = wxNewId();
 
 BEGIN_EVENT_TABLE(wxPlotWindow, wxWindow)
 EVT_PAINT(wxPlotWindow::OnPaint)
@@ -31,7 +31,6 @@ EVT_LEFT_UP(wxPlotWindow::OnLeftUp)
 EVT_MOTION(wxPlotWindow::OnMouseMove)
 EVT_RIGHT_DOWN(wxPlotWindow::OnRightDown)
 EVT_RIGHT_UP(wxPlotWindow::OnRightUp)
-//EVT_MENU(wxPlotWindow::ID_MENUITEM_ADDLEGENDS, wxPlotWindow::OnMenuItem_AddLegends)
 END_EVENT_TABLE()
 
 
@@ -47,21 +46,17 @@ wxPlotWindow::wxPlotWindow(wxWindow * parent) :wxWindow(parent, wxID_ANY, wxDefa
 	SetSizer(m_sizer);
 	Layout();
 
-	m_seriesmenu.Append(IDMENUITEM_SERIESFITVERT, "Fit vertical");
+	m_series_menu.Append(IDMENUITEM_REMOVESERIES, "Remove");
+	Connect(IDMENUITEM_REMOVESERIES, wxEVT_MENU, (wxObjectEventFunction)&wxPlotWindow::OnMenuItem_RemoveSeries);
+	
+	m_series_menu.Append(IDMENUITEM_SERIESFITVERT, "Fit vertical");
 	Connect(IDMENUITEM_SERIESFITVERT, wxEVT_MENU, (wxObjectEventFunction)&wxPlotWindow::OnMenuItem_SeriesFitVert);
 
-	m_seriesmenu.Append(IDMENUITEM_SERIESFITHOR, "Fit horiz");
+	m_series_menu.Append(IDMENUITEM_SERIESFITHOR, "Fit horiz");
 	Connect(IDMENUITEM_SERIESFITHOR, wxEVT_MENU, (wxObjectEventFunction)&wxPlotWindow::OnMenuItem_SeriesFitHor);
 	
-	m_seriesmenu.Append(IDMENUITEM_SERIESFITALL, "Fit both");
-	Connect(IDMENUITEM_SERIESFITALL, wxEVT_MENU, (wxObjectEventFunction)&wxPlotWindow::OnMenuItem_SeriesFitAll);
-	
-	m_seriesmenu.Append(IDMENUITEM_SERIESPROPERTIES, "Properties");
-	Connect(IDMENUITEM_SERIESPROPERTIES, wxEVT_MENU, (wxObjectEventFunction)&wxPlotWindow::OnMenuItem_SeriesProperties);
-
-	m_seriesmenu.Append(IDMENUITEM_DELETESERIES, "Delete");
-	Connect(IDMENUITEM_DELETESERIES, wxEVT_MENU, (wxObjectEventFunction)&wxPlotWindow::OnMenuItem_DeleteSeries);
-	
+	m_series_menu.Append(IDMENUITEM_SERIESFITALLDIMS, "Fit both");
+	Connect(IDMENUITEM_SERIESFITALLDIMS, wxEVT_MENU, (wxObjectEventFunction)&wxPlotWindow::OnMenuItem_SeriesFitAllDims);
 	
 	m_bitmap_buffer = new wxBitmap();
 
@@ -140,23 +135,11 @@ void wxPlotWindow::OnResize(wxSizeEvent & event)
 
 void plot::wxPlotWindow::_popup_seriesmenu(Series * series)
 {
-	//m_series_pointed = series;
-	//m_popup_tool->SetSelectedSeries(series);
-	//m_popup_tool->Position(wxGetMousePosition(), wxSize(0, 0));
-	//m_popup_tool->Show();
-//	popup_tool->Popup();
-//	wxPopupToolBar *poptbar;
-//	poptbar = new wxPopupToolBar(this, series);
-////	poptbar->Show();
-//	poptbar->Popup();
-//	//ToolBarMenu *tbm;
-//	//tbm = new ToolBarMenu(this);
-//	//PopupMenu(&m_seriesmenu);
-}
-
-void plot::wxPlotWindow::OnMenuItem_DeleteSeries(wxCommandEvent & event)
-{
-	//m_series_pointed->GetOwner()->DeleteSeries(m_series_pointed);
+	m_the_series = series;
+	series->BringToFront();
+	series->SeriesUpdated();
+	m_series_menu.FindItem(IDMENUITEM_REMOVESERIES)->SetItemLabel(wxString::Format("Remove %s", series->GetSeriesName()));
+	PopupMenu(&m_series_menu);
 }
 
 void wxPlotWindow::OnLeftDown(wxMouseEvent & event)
@@ -289,14 +272,14 @@ void wxPlotWindow::OnRightDown(wxMouseEvent & event)
 	_getspottedseries(Point<int>(x, y), ser_sel);
 	if (ser_sel.GetSeries() != nullptr)
 	{
-		ser_sel.GetSeries()->BringToFront();
 		_popup_seriesmenu(ser_sel.GetSeries());
+		
 		return;
 	}
 
 	//plot menu
-	if(m_menu.GetMenuItemCount() != 0)
-		PopupMenu(&m_menu);
+	if(m_context_menu.GetMenuItemCount() != 0)
+		PopupMenu(&m_context_menu);
 }
 
 
@@ -422,7 +405,7 @@ void wxPlotWindow::Render(wxGraphicsContext * gc)
 			memdc.Clear();
 			wxGraphicsContext *gc = wxGraphicsContext::Create(memdc);
 			gc->SetFont(*wxNORMAL_FONT, *wxBLACK);
-			//gc->SetAntialiasMode(wxANTIALIAS_NONE);
+			gc->SetAntialiasMode(wxANTIALIAS_NONE);
 			//render data
 			for (auto area : m_areas)
 			{
@@ -515,42 +498,44 @@ void wxPlotWindow::GetSize(int * width, int * height)
 	GetClientSize(width, height);
 }
 
-//void plot::wxPlotWindow::_spotseries(SeriesSelection & seriesselection)
-//{
-//#ifdef _DEBUG
-//	printf("spot: %s %i %i\n", seriesselection.GetSeries()->GetSeriesName(), seriesselection.GetStartIndex(), seriesselection.GetEndIndex());
-//#endif
-//}
-
-//void wxPlotWindow::OnMenuItem_AddLegends(wxCommandEvent & event)
-//{
-//	DPRINTF("wxPlotWindow::OnMenuItem_AddLegends\n");
-//	LegendsWidget *legendswidget;
-//	legendswidget = new LegendsWidget(this);
-//}
-
 
 void wxPlotWindow::OnMouseCaptureLost(wxMouseCaptureLostEvent &event)
 {
 
 }
 
-void plot::wxPlotWindow::OnMenuItem_SeriesProperties(wxCommandEvent & event)
+void plot::wxPlotWindow::OnMenuItem_RemoveSeries(wxCommandEvent & event)
 {
-
+	DPRINTF("wxPlotWindow::OnMenuItem_RemoveSeries\n");
+	Area *area;
+	area = m_the_series->GetOwner();
+	area->DeleteSeries(m_the_series);
+	area->GetOwner()->_SetViewModifiedFlag();
+	area->GetOwner()->RedrawPlot();
 }
 
 void plot::wxPlotWindow::OnMenuItem_SeriesFitVert(wxCommandEvent & event)
 {
+	DPRINTF("wxPlotWindow::OnMenuItem_SeriesFitVert\n");
+	m_the_series->GetData(AXIS_Y)->Fit();
 }
 
 void plot::wxPlotWindow::OnMenuItem_SeriesFitHor(wxCommandEvent & event)
 {
-
+	DPRINTF("wxPlotWindow::OnMenuItem_SeriesFitHor\n");
+	m_the_series->GetData(AXIS_X)->Fit();
 }
 
-void plot::wxPlotWindow::OnMenuItem_SeriesFitAll(wxCommandEvent & event)
+void plot::wxPlotWindow::OnMenuItem_SeriesFitAllDims(wxCommandEvent & event)
 {
-	//m_series_pointed->Fit();
+	DPRINTF("wxPlotWindow::OnMenuItem_SeriesFitAllDims\n");
+	//m_the_series->Fit();
+//	assert(0);
+}
 
+void plot::wxPlotWindow::emit_viewchanged()
+{
+	wxCommandEvent event(PLOTVIEWCHANGED, GetId());
+	event.SetEventObject(this);
+	ProcessWindowEvent(event);
 }

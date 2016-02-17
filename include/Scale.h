@@ -9,6 +9,7 @@
 #include "ValueAdaptor.h"
 
 #include <vector>
+#include <map>
 
 namespace plot
 {
@@ -22,7 +23,7 @@ namespace plot
 	class DLLIMPEXP_PLOTLIB Scale
 	{
 	public:
-		Scale();
+		Scale(AXIS_DIR axis_dir);
 		virtual ~Scale();
 
 		void AddAxis(Axis *axis);
@@ -31,18 +32,22 @@ namespace plot
 
 		std::vector<Axis *> &GetAxes() { return m_axes; };
 
+		void ChangeViewDepth(int vcd, bool swtch);
+
 		/*sets offset for the scale and propagates to bound axes*/
 		void SetOffset(double offset);
 
 		/*sets range for the scale and propagates to bound axes*/
 		void SetRange(double range);
 
+		double GetOffset() { return m_offset; }
+		double GetRange() { return m_range; }
 		/*iterate plots and redraw them uniqly*/
-		void RedrawDependantPlots();
+		void RedrawDependantPlots(bool redraw_immdiately = true);
 
 
 		/*redraw scale gui component*/
-		virtual void ScaleRedraw() = 0;
+		//virtual void ScaleRedraw() = 0;
 
 		void ZoomAt(double rv, double factor);
 		void StartPanAt(double rv);
@@ -55,12 +60,24 @@ namespace plot
 		bool IsInRange(double new_range);
 		double inline GetRangeMax() { return m_range_max; };
 		double inline GetRangeMin() { return m_range_min; };
+
+		AXIS_DIR _get_axis_dir() { return m_axis_dir; }
 	protected:
 		std::vector<Axis *> m_axes;
 
-
+		AXIS_DIR m_axis_dir;
+		
 		double m_offset;
 		double m_range;
+		struct VIEWSTEP
+		{
+			VIEWSTEP() = default;
+			double offset;
+			double range;
+		};
+		VIEWSTEP m_previous_view;
+		void store_prev_view() { m_previous_view.offset = m_offset; m_previous_view.range = m_range; };
+		std::map<int, VIEWSTEP> m_view_change_steps;
 
 		double m_range_max;
 		double m_range_min;

@@ -2,8 +2,10 @@
 
 using namespace plot;
 
-wxScaleBox::wxScaleBox(wxPlotWindow * plot, Dir orient):Box(plot), Scale()
+wxScaleBox::wxScaleBox(wxPlotWindow * plot, Dir orient, AXIS_DIR axis_dir):Box(plot)
 {
+	m_scale = new Scale(axis_dir);
+	m_box_tag = "scalebox";
 	m_owner = plot;
 	m_flag_expand_dir = orient;
 	m_orient = orient;
@@ -17,6 +19,7 @@ wxScaleBox::wxScaleBox(wxPlotWindow * plot, Dir orient):Box(plot), Scale()
 
 wxScaleBox::~wxScaleBox()
 {
+	delete m_scale;
 }
 
 static char s_buff[64];
@@ -43,6 +46,11 @@ void wxScaleBox::Render(void * v_gc)
 		height = m_rect.Width();
 	}
 
+	AxisValueAdaptor<double> *m_valueadaptor;
+	double m_offset, m_range;
+	m_valueadaptor = m_scale->GetValueAdaptor();
+	m_offset = m_scale->GetOffset();
+	m_range = m_scale->GetRange();
 
 	if (m_valueadaptor == NULL)
 		return;
@@ -97,6 +105,3 @@ void wxScaleBox::Render(void * v_gc)
 
 }
 
-void wxScaleBox::ScaleRedraw()
-{
-}

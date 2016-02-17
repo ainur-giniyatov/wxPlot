@@ -18,7 +18,7 @@ using namespace plot;
 template<typename T1, typename T2>
 wxRendererTyped<T1, T2>::wxRendererTyped()
 {
-	m_marker = new wxMarkerSquare();
+	m_marker = new wxMarkerCircle();
 	m_line = new wxSimpleLine();
 
 	m_left_index = 0;
@@ -232,9 +232,9 @@ void wxRendererTyped<T1, T2>::Render(void* v_gc)
 				//y2 = m_height - ((double)yda[indx] - yoffset) / yrange * (double)m_height;
 				y2 = m_height - (double)yda[indx] * y_height_div_range + y_offs_mult_width_div_range;
 			}
-	
+#if _DEBUG
 			points_count++;
-
+#endif
 			m_line->Render(gc, Point<int>(x1, y1), Point<int>(x2, y2));
 			x1 = x2;
 			y1 = y2;

@@ -46,6 +46,8 @@ class MainFrame : public wxFrame
 		wxMenu* m_menu1;
 		wxMenu* m_menu3;
 		wxToolBar* m_toolBar1;
+		wxToolBarToolBase* m_tool_undo_view; 
+		wxToolBarToolBase* m_tool_redo_view; 
 		wxStatusBar* m_statusBar1;
 		wxNotebook* m_notebook1;
 		wxPanel* m_panel4;
@@ -61,6 +63,9 @@ class MainFrame : public wxFrame
 		wxButton* m_button_Fit;
 		wxButton* m_button_Rename;
 		wxButton* m_button_Delete;
+		wxButton* m_button_chartfitx;
+		wxButton* m_button_chartfity;
+		wxButton* m_button_chartfitboth;
 		wxPanel* m_panel2;
 		wxBoxSizer* bSizer3;
 		wxPanel* m_panel_page2;
@@ -79,6 +84,8 @@ class MainFrame : public wxFrame
 		virtual void m_menuItem_nullOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItem_panOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItem_zoomOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_tool_undo_viewOnToolClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_tool_redo_viewOnToolClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_newplotOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choice_plotsOnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choice_seriesOnChoice( wxCommandEvent& event ) { event.Skip(); }
@@ -90,6 +97,9 @@ class MainFrame : public wxFrame
 		virtual void m_button_FitOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_RenameOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_DeleteOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_chartfitxOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_chartfityOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_chartfitbothOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_dataupdatedOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_seriesupdateOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_spaceupdateOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
@@ -98,7 +108,7 @@ class MainFrame : public wxFrame
 	
 	public:
 		
-		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("MainFrame"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 642,482 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("MainFrame"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 718,610 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~MainFrame();
 	

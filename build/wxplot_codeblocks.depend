@@ -1,10 +1,10 @@
 # depslib dependency file v1.0
-1451766196 source:d:\git-rep\wxplot\src\area.cpp
+1455602899 source:d:\git-rep\wxplot\src\area.cpp
 	<algorithm>
 	<assert.h>
 	"Area.h"
 
-1451764671 d:\git-rep\wxplot\include\area.h
+1455602899 d:\git-rep\wxplot\include\area.h
 	<vector>
 	"plot_defs.h"
 	"Series.h"
@@ -13,10 +13,12 @@
 	"Plot.h"
 	"Grid.h"
 
-1451515909 d:\git-rep\wxplot\include\plot_defs.h
+1455573813 d:\git-rep\wxplot\include\plot_defs.h
 	<stdlib.h>
 	<crtdbg.h>
 	<stdio.h>
+	<iostream>
+	<chrono>
 
 1387201350 d:\dev\wxpython-src-3.0.2.0\include\wx\wxprec.h
 	"wx/defs.h"
@@ -2555,19 +2557,22 @@
 1387201349 d:\dev\wxpython-src-3.0.2.0\include\wx\cocoa\mdi.h
 	"wx/frame.h"
 
-1451655667 d:\git-rep\wxplot\include\series.h
+1455602296 d:\git-rep\wxplot\include\series.h
 	<vector>
 	"plot_defs.h"
 	"Data.h"
 	"Area.h"
 	"Renderer.h"
+	"pevent.h"
 
-1451673677 d:\git-rep\wxplot\include\data.h
+1451853757 d:\git-rep\wxplot\include\data.h
 	"plot_defs.h"
 	"Series.h"
+	"Axis.h"
+	"pevent.h"
 	<time.h>
 
-1451678491 d:\git-rep\wxplot\include\renderer.h
+1453942918 d:\git-rep\wxplot\include\renderer.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2575,8 +2580,10 @@
 	"Area.h"
 	"Axis.h"
 	"ValueAdaptor.h"
+	"Marker.h"
+	"Line.h"
 
-1451766397 d:\git-rep\wxplot\include\plot.h
+1455599956 d:\git-rep\wxplot\include\plot.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2587,7 +2594,7 @@
 	"pevent.h"
 	<vector>
 
-1451655349 d:\git-rep\wxplot\include\axis.h
+1455593007 d:\git-rep\wxplot\include\axis.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2595,7 +2602,7 @@
 	"Plot.h"
 	"Scale.h"
 
-1451655645 d:\git-rep\wxplot\include\scale.h
+1455598579 d:\git-rep\wxplot\include\scale.h
 	"plot_defs.h"
 	"Series.h"
 	"Data.h"
@@ -2615,7 +2622,7 @@
 	"Grid.h"
 	<vector>
 
-1451656034 source:d:\git-rep\wxplot\src\axis.cpp
+1455593007 source:d:\git-rep\wxplot\src\axis.cpp
 	"Axis.h"
 	<assert.h>
 
@@ -2803,13 +2810,13 @@
 	"Scale.h"
 	<vector>
 
-1451673667 source:d:\git-rep\wxplot\src\data.cpp
+1455517506 source:d:\git-rep\wxplot\src\data.cpp
 	<assert.h>
 	<stdlib.h>
 	<string.h>
 	"Data.h"
 
-1451766205 source:d:\git-rep\wxplot\src\plot.cpp
+1455602118 source:d:\git-rep\wxplot\src\plot.cpp
 	<algorithm>
 	<math.h>
 	<assert.h>
@@ -2828,19 +2835,20 @@
 	"wx/dcclient.h"
 	"wx/window.h"
 
-1451656034 source:d:\git-rep\wxplot\src\renderer.cpp
+1453931969 source:d:\git-rep\wxplot\src\renderer.cpp
 	"Renderer.h"
 
-1451656010 source:d:\git-rep\wxplot\src\scale.cpp
+1455598578 source:d:\git-rep\wxplot\src\scale.cpp
 	<float.h>
 	<algorithm>
+	<assert.h>
 	"Scale.h"
 
 1447897077 source:d:\git-rep\wxplot\src\scalewindow.cpp
 	<wx/dcbuffer.h>
 	"ScaleWindow.h"
 
-1451774562 source:d:\git-rep\wxplot\src\series.cpp
+1455602733 source:d:\git-rep\wxplot\src\series.cpp
 	<algorithm>
 	<assert.h>
 	<string.h>
@@ -2849,7 +2857,7 @@
 1450364552 source:d:\git-rep\wxplot\src\space.cpp
 	"Space.h"
 
-1451656028 source:d:\git-rep\wxplot\src\valueadaptor.cpp
+1453947300 source:d:\git-rep\wxplot\src\valueadaptor.cpp
 	<time.h>
 	<algorithm>
 	<assert.h>
@@ -5897,7 +5905,7 @@
 	"Widget.h"
 	"PlotWindow.h"
 
-1451770982 d:\git-rep\wxplot\include\box.h
+1455584412 d:\git-rep\wxplot\include\box.h
 	"plot_defs.h"
 	"pevent.h"
 	"Series.h"
@@ -5927,7 +5935,7 @@
 	"../Plot.h"
 	"ScaleWindow.h"
 
-1451656034 d:\git-rep\wxplot\include\wx\scalewindow.h
+1455583347 d:\git-rep\wxplot\include\wx\scalewindow.h
 	<wx/panel.h>
 	<vector>
 	"plot_defs.h"
@@ -5937,7 +5945,7 @@
 	"Axis.h"
 	"Scale.h"
 
-1451656034 source:d:\git-rep\wxplot\src\wx\scalewindow.cpp
+1455583347 source:d:\git-rep\wxplot\src\wx\scalewindow.cpp
 	<wx/dcbuffer.h>
 	<wx/graphics.h>
 	"wx/ScaleWindow.h"
@@ -5979,7 +5987,7 @@
 	<vector>
 	"plot_defs.h"
 
-1451770994 source:d:\git-rep\wxplot\src\box.cpp
+1455585868 source:d:\git-rep\wxplot\src\box.cpp
 	<assert.h>
 	<stdlib.h>
 	<algorithm>
@@ -5998,10 +6006,10 @@
 	"../Plot.h"
 	"ScaleWindow.h"
 
-1451515680 source:d:\git-rep\wxplot\src\wx\colorbase.cpp
+1454308992 source:d:\git-rep\wxplot\src\wx\colorbase.cpp
 	"wx/colorbase.h"
 
-1451772279 d:\git-rep\wxplot\include\wx\colorbase.h
+1454308992 d:\git-rep\wxplot\include\wx\colorbase.h
 	<wx/pen.h>
 	<wx/dcclient.h>
 	<wx/graphics.h>
@@ -6036,4 +6044,16 @@
 	"wx/wxBox.h"
 	"wx/wxGrid.h"
 	"wx/wxRenderer.h"
+
+1453872456 d:\git-rep\wxplot\include\marker.h
+	"plot_defs.h"
+
+1453873066 d:\git-rep\wxplot\include\line.h
+	"plot_defs.h"
+
+1453789547 source:d:\git-rep\wxplot\src\line.cpp
+	"Line.h"
+
+1455246483 source:d:\git-rep\wxplot\src\marker.cpp
+	"Marker.h"
 

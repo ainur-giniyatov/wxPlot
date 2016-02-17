@@ -30,6 +30,10 @@ Plot::Plot(const char *plotname)
 	m_lbaction = LBA_ZOOMSELECT;
 
 	m_eventslist = new PEventList();
+
+	AddHandler(PEventAreaAdded::GetEventId(), (HandlerMethod)&Plot::handler_area_added);
+	AddHandler(PEventSeriesAdded::GetEventId(), (HandlerMethod)&Plot::handler_series_added);
+	AddHandler(PEventScaleSet::GetEventId(), (HandlerMethod)&Plot::handler_scale_set);
 }
 
 void Plot::SetPlotName(const char * plotname)
@@ -53,24 +57,17 @@ void Plot::AddArea(Area * area)
 		m_areas.push_back(area);
 		area->_SetOwner(this);
 
-		for (auto series : area->GetSerie())
-		{
-			PEventSeriesAdded *evt = new PEventSeriesAdded();
-			evt->SetSeries(series);
-			m_eventslist->ProcessEvent(evt);
-		}
-		RedrawPlot();
+		HandleEvent(PEventAreaAdded(true));
+		
 	}
 }
 void Plot::RemoveArea(Area * area)
 {
-	for (auto areas_iter = m_areas.begin(); areas_iter != m_areas.end(); ++areas_iter)
+	auto tormv = std::remove(m_areas.begin(), m_areas.end(), area);
+	if (tormv != m_areas.end())
 	{
-		if (*areas_iter == area)
-		{
-			m_areas.erase(areas_iter);
-			break;
-		}
+		m_areas.erase(tormv, m_areas.end());
+		HandleEvent(PEventAreaAdded(false));
 	}
 }
 
@@ -110,32 +107,6 @@ Plot::~Plot()
 	delete m_eventslist;
 }
 
-void Plot::FitPlot(bool update)
-{
-	if (m_areas.empty())
-		return;
-
-	//TO DO correct for fitting all spaces alltogether
-//	for (auto space : m_spaces)
-//	{
-		//m_spaces[0]->Fit(false);
-		//m_spaces[0]->GetAxis(AXIS_X)->AxisUpdated();
-		//m_spaces[0]->GetAxis(AXIS_Y)->AxisUpdated();
-		/*for (auto series : space->GetSerie())
-		{
-			for (auto data : series->GetDatas())
-			{
-
-			}
-		}*/
-//	}
-
-	//if (update)
-	//{
-	//	PlotUpdated();
-	//
-	//}
-}
 
 void Plot::SetCommonScale(Scale * scale)
 {
@@ -179,23 +150,112 @@ void Plot::AddBox(Box *box)
 
 }
 
+void plot::Plot::Fit(int axis_mask)
+{
+	//std::vector<Scale *> scales;
+
+	////collect all common scales and remove duplicates
+	//for (auto area : m_areas)
+	//	for (auto axis : area->_get_axes())
+	//		if (axis->GetCommonScale() != nullptr && ((1 << axis->_get_axis_dir()) & axis_mask))
+	//			scales.push_back(axis->GetCommonScale());
+	//scales.erase(std::unique(scales.begin(), scales.end()), scales.end());
+
+	//for (int xd = 0; xd < 3; xd++)
+	//	if ((1 << xd) & axis_mask)
+	//	{
+	//		double vmax = 0, vmin = 0;
+	//		bool data_aval = false;
+
+	//		for (auto scale : scales)
+	//		{
+	//			if (xd != scale->_get_axis_dir())
+	//				continue;
+
+	//			for (auto axis : scale->GetAxes())
+	//			{
+	//				for (auto data : axis->_get_adj_datas())
+	//				{
+	//					vmax = data->GetDataMax();
+	//					vmin = data->GetDataMin();
+	//					data_aval = true;
+	//					break;
+	//				}
+	//				if (data_aval)
+	//					break;
+	//			}
+
+	//			if (data_aval)
+	//				break;
+	//		}
+
+	//		if (!data_aval)
+	//			continue;
+
+	//		for (auto scale : scales)
+	//		{
+	//			if (xd != scale->_get_axis_dir())
+	//				continue;
+
+	//			for (auto axis : scale->GetAxes())
+	//			{
+	//				for (auto data : axis->_get_adj_datas())
+	//				{
+	//					double tvmin, tvmax;
+	//					tvmin = data->GetDataMin();
+	//					tvmax = data->GetDataMax();
+	//					vmax = vmax > tvmax ? vmax : tvmax;
+	//					vmin = vmin < tvmin ? vmin : tvmin;
+
+	//				}
+	//			}
+	//			double range = vmax - vmin;
+	//			scale->SetOffset(vmin - range / 10.);
+	//			scale->SetRange(range + range / 5.);
+	//			scale->RedrawDependantPlots(false);
+	//		}
+	//	}
+	//
+	//	for (auto scale : scales)
+	//		scale->RedrawDependantPlots();
+	
+}
+
 void Plot::_SetViewModifiedFlag()
 {
 	m_is_data_view_modified = true;
 }
 
+//std::vector<Scale*> plot::Plot::_get_scales()
+//{
+//	std::string tag("scalebox");
+//	std::vector<Scale*> scales;
+//	for (auto box : m_boxes)
+//		if (box->_get_tag().compare(tag) == 0)
+//			scales.push_back(dynamic_cast<Scale*>(box));
+//
+//	return scales;
+//}
+
 void Plot::StartPan(const Point<double> &pan_start_rel_coord)
 {
 	DPRINTF("StartPan\n");
 	assert(!m_panning);
-	//for (auto space : m_spaces)
-	//{
-	//	space->StartPanAt(start_rx, start_ry);
-	//}
 
-	for (auto area : m_areas)
+	//for (auto area : m_areas)
+	//{
+	//	area->StartPan(pan_start_rel_coord);
+	//}
+	//collect all scales and unify
+	
+
+	for (auto scale : m_dependant_scales)
 	{
-		area->StartPan(pan_start_rel_coord);
+		if (scale->_get_axis_dir() == AXIS_X)
+			scale->StartPanAt(pan_start_rel_coord.x);
+
+		if (scale->_get_axis_dir() == AXIS_Y)
+			scale->StartPanAt(pan_start_rel_coord.y);
 	}
 	m_panning = true;
 }
@@ -207,10 +267,23 @@ void Plot::ProceedPan(const Point<double> &pan_proceed_rel_coord)
 		return;
 
 
-	for (auto area : m_areas)
-		area->ProceedPan(pan_proceed_rel_coord);
+	//for (auto area : m_areas)
+	//	area->ProceedPan(pan_proceed_rel_coord);
+
+
+
+	for (auto scale : m_dependant_scales)
+	{
+		if (scale->_get_axis_dir() == AXIS_X)
+			scale->ProceedPanAt(pan_proceed_rel_coord.x);
+
+		if (scale->_get_axis_dir() == AXIS_Y)
+			scale->ProceedPanAt(pan_proceed_rel_coord.y);
+
+	}
+	//RedrawPlot();
 	
-	iterate_axes_redraw_uniq_commonscales_uniq_plots();
+
 }
 
 void Plot::EndPan()
@@ -220,8 +293,27 @@ void Plot::EndPan()
 	if (!m_panning)
 		return;
 
-	for (auto area: m_areas)
-		area->EndPan();
+	//for (auto area: m_areas)
+	//	area->EndPan();
+
+	std::vector<Scale *> scales;
+	for_each(m_areas.begin(), m_areas.end(), [&scales](Area *area)
+	{
+		auto axes = area->_get_axes();
+		for_each(axes.begin(), axes.end(), [&scales](Axis *axis) {if (axis->GetCommonScale() != nullptr) scales.push_back(axis->GetCommonScale()); });
+	}
+	);
+
+	for (auto scale : scales)
+	{
+		if (scale->_get_axis_dir() == AXIS_X)
+			scale->EndPanAt();
+
+		if (scale->_get_axis_dir() == AXIS_Y)
+			scale->EndPanAt();
+	}
+
+	emit_viewchanged();
 
 	m_panning = false;
 }
@@ -252,7 +344,7 @@ void Plot::ProceedZoomSelect(const Point<double> &zoom_sel_proceed_rel_coord)
 		DrawZoomSelection();
 		if (xd < 10 || yd < 10)
 		{
-			iterate_axes_redraw_uniq_commonscales_uniq_plots();
+		
 			m_zoomselecting = false;
 			m_zoomsel_switch = false;
 		}
@@ -276,10 +368,10 @@ void Plot::EndZoomSelect()
 
 	if (m_zoomselecting)
 	{
-		for (auto area : m_areas)
-		{
-			area->ZoomSelection(m_zoom_sel_start_rel_coord, m_zoom_sel_end_rel_coord);
-		}
+		//for (auto area : m_areas)
+		//{
+		//	area->ZoomSelection(m_zoom_sel_start_rel_coord, m_zoom_sel_end_rel_coord);
+		//}
 		//for (auto space : m_spaces)
 		//{
 		//	space->ZoomSelection(m_start_rx_zsel, m_start_ry_zsel, m_end_rx_zsel, m_end_ry_zsel);
@@ -287,65 +379,66 @@ void Plot::EndZoomSelect()
 	}
 
 //	RedrawPlot();
-	iterate_axes_redraw_uniq_commonscales_uniq_plots();
+
 	m_zoomselecting = false;
 	m_zoomsel_switch = false;
+
+	emit_viewchanged();
 }
 
 void Plot::Zoom(const Point<double> &zoom_wheel_rel_coord, double xfactor, double yfactor)
 {
 	DPRINTF("Zoom wheel\n");
 
-	for (auto area : m_areas)
-		area->Zoom(zoom_wheel_rel_coord, xfactor, yfactor);
+	//for (auto area : m_areas)
+	//	area->Zoom(zoom_wheel_rel_coord, xfactor, yfactor);
 
-	iterate_axes_redraw_uniq_commonscales_uniq_plots();
 }
 
-void Plot::iterate_axes_redraw_uniq_commonscales_uniq_plots()
+void plot::Plot::update_dependant_scales()
 {
-	//here all axes are iterated in each area and common scale is redrawn. common scales must be updated once
-	
-	std::vector<Scale *> vcommscales;
-	std::vector<Plot *> vuniqplots;
-	bool this_updated = false;
-	for (auto area : m_areas)
-	{
-		for (size_t indx = 0; area->GetAxis((AXIS_DIR)indx) != nullptr; indx++)
+	std::vector<Scale *> &scales = m_dependant_scales;
+	scales.clear();
+	for_each(m_areas.begin(), m_areas.end(), [&scales](Area *area)
 		{
-			Axis *axis = area->GetAxis((AXIS_DIR)indx);
-			assert(axis != NULL);
-			Scale *commonscale = axis->GetCommonScale();
-			if (commonscale != NULL && std::count(vcommscales.begin(), vcommscales.end(), commonscale) == 0)
-			{
-				commonscale->ScaleRedraw();
-				vcommscales.push_back(commonscale);
-
-				for (auto axisi : commonscale->GetAxes())
-				{
-					Plot *plot = axisi->GetOwner()->GetOwner();
-					if (std::count(vuniqplots.begin(), vuniqplots.end(), plot) == 0)
-					{
-						if (this == plot)
-							this_updated = true;
-						plot->_SetViewModifiedFlag();
-						plot->RedrawPlot();
-						vuniqplots.push_back(plot);
-					}
-				}
-			}
+			auto axes = area->_get_axes();
+			for_each(axes.begin(), axes.end(), [&scales](Axis *axis) {if (axis->GetCommonScale() != nullptr) scales.push_back(axis->GetCommonScale()); });
 		}
-	}
-	if(!this_updated)
-		RedrawPlot();//redraw directly if not bound to any common scale
+	);
+
+	std::string tag("scalebox");
+	for (auto box : m_boxes)
+		if (box->_get_tag().compare(tag) == 0)
+			scales.push_back(dynamic_cast<Scale*>(box));
+
+	scales.erase(std::unique(scales.begin(), scales.end()), scales.end());
 }
+
+void plot::Plot::handler_area_added(PEvent &event)
+{
+	
+	DPRINTF("Plot::handler_area_added\n");
+}
+
+void plot::Plot::handler_series_added(PEvent &event)
+{
+	
+	DPRINTF("Plot::handler_series_added\n");
+}
+
+void plot::Plot::handler_scale_set(PEvent & event)
+{
+	DPRINTF("Plot::handler_scale_set\n");
+}
+
 
 const int PEventSeriesAdded::s_event_id = PEventList::GetNewEventId();
 
-plot::PEventSeriesAdded::PEventSeriesAdded()
+plot::PEventSeriesAdded::PEventSeriesAdded(Series * series, bool f)
 {
 	m_event_id = s_event_id;
-	m_addedoremoved = true;
+	m_addedoremoved = f;
+	m_event_data = series;
 }
 
 plot::PEventSeriesAdded::~PEventSeriesAdded()
@@ -353,12 +446,22 @@ plot::PEventSeriesAdded::~PEventSeriesAdded()
 }
 
 const int PEventAreaAdded::s_event_id = PEventList::GetNewEventId();
+plot::PEventAreaAdded::PEventAreaAdded(bool f)
+{
+	m_event_id = s_event_id;
+	m_addedoremoved = f;
+}
 
-plot::PEventAreaAdded::PEventAreaAdded()
+plot::PEventAreaAdded::~PEventAreaAdded()
+{
+}
+
+const int PEventScaleSet::s_event_id = PEventList::GetNewEventId();
+plot::PEventScaleSet::PEventScaleSet()
 {
 	m_event_id = s_event_id;
 }
 
-plot::PEventAreaAdded::~PEventAreaAdded()
+plot::PEventScaleSet::~PEventScaleSet()
 {
 }

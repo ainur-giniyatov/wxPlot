@@ -53,7 +53,11 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	this->SetMenuBar( m_menubar1 );
 	
-	m_toolBar1 = this->CreateToolBar( wxTB_HORIZONTAL, wxID_ANY ); 
+	m_toolBar1 = this->CreateToolBar( wxTB_FLAT|wxTB_HORIZONTAL, wxID_ANY ); 
+	m_tool_undo_view = m_toolBar1->AddTool( wxID_ANY, wxT("tool"), wxArtProvider::GetBitmap( wxART_GO_BACK, wxART_MENU ), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL ); 
+	
+	m_tool_redo_view = m_toolBar1->AddTool( wxID_ANY, wxT("tool"), wxArtProvider::GetBitmap( wxART_GO_FORWARD, wxART_MENU ), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL ); 
+	
 	m_toolBar1->Realize(); 
 	
 	m_statusBar1 = this->CreateStatusBar( 1, wxST_SIZEGRIP, wxID_ANY );
@@ -111,6 +115,15 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_button_Delete = new wxButton( m_panel1, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer2->Add( m_button_Delete, 0, wxALL|wxEXPAND, 5 );
 	
+	m_button_chartfitx = new wxButton( m_panel1, wxID_ANY, wxT("Chart fit x"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer2->Add( m_button_chartfitx, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button_chartfity = new wxButton( m_panel1, wxID_ANY, wxT("Chart fit y"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer2->Add( m_button_chartfity, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button_chartfitboth = new wxButton( m_panel1, wxID_ANY, wxT("Chart fit both"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer2->Add( m_button_chartfitboth, 0, wxALL|wxEXPAND, 5 );
+	
 	
 	m_panel1->SetSizer( bSizer2 );
 	m_panel1->Layout();
@@ -130,7 +143,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_panel4->SetSizer( bSizer4 );
 	m_panel4->Layout();
 	bSizer4->Fit( m_panel4 );
-	m_notebook1->AddPage( m_panel4, wxT("1st"), false );
+	m_notebook1->AddPage( m_panel4, wxT("1st"), true );
 	m_panel_page2 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
@@ -187,6 +200,8 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( m_menuItem_null->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_nullOnMenuSelection ) );
 	this->Connect( m_menuItem_pan->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_panOnMenuSelection ) );
 	this->Connect( m_menuItem_zoom->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_zoomOnMenuSelection ) );
+	this->Connect( m_tool_undo_view->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::m_tool_undo_viewOnToolClicked ) );
+	this->Connect( m_tool_redo_view->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::m_tool_redo_viewOnToolClicked ) );
 	m_button_newplot->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_newplotOnButtonClick ), NULL, this );
 	m_choice_plots->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::m_choice_plotsOnChoice ), NULL, this );
 	m_choice_series->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::m_choice_seriesOnChoice ), NULL, this );
@@ -198,6 +213,9 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_button_Fit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_FitOnButtonClick ), NULL, this );
 	m_button_Rename->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_RenameOnButtonClick ), NULL, this );
 	m_button_Delete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_DeleteOnButtonClick ), NULL, this );
+	m_button_chartfitx->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_chartfitxOnButtonClick ), NULL, this );
+	m_button_chartfity->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_chartfityOnButtonClick ), NULL, this );
+	m_button_chartfitboth->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_chartfitbothOnButtonClick ), NULL, this );
 	m_button_dataupdated->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_dataupdatedOnButtonClick ), NULL, this );
 	m_button_seriesupdate->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_seriesupdateOnButtonClick ), NULL, this );
 	m_button_spaceupdate->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_spaceupdateOnButtonClick ), NULL, this );
@@ -213,6 +231,8 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_nullOnMenuSelection ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_panOnMenuSelection ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_zoomOnMenuSelection ) );
+	this->Disconnect( m_tool_undo_view->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::m_tool_undo_viewOnToolClicked ) );
+	this->Disconnect( m_tool_redo_view->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::m_tool_redo_viewOnToolClicked ) );
 	m_button_newplot->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_newplotOnButtonClick ), NULL, this );
 	m_choice_plots->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::m_choice_plotsOnChoice ), NULL, this );
 	m_choice_series->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::m_choice_seriesOnChoice ), NULL, this );
@@ -224,6 +244,9 @@ MainFrame::~MainFrame()
 	m_button_Fit->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_FitOnButtonClick ), NULL, this );
 	m_button_Rename->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_RenameOnButtonClick ), NULL, this );
 	m_button_Delete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_DeleteOnButtonClick ), NULL, this );
+	m_button_chartfitx->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_chartfitxOnButtonClick ), NULL, this );
+	m_button_chartfity->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_chartfityOnButtonClick ), NULL, this );
+	m_button_chartfitboth->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_chartfitbothOnButtonClick ), NULL, this );
 	m_button_dataupdated->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_dataupdatedOnButtonClick ), NULL, this );
 	m_button_seriesupdate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_seriesupdateOnButtonClick ), NULL, this );
 	m_button_spaceupdate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_spaceupdateOnButtonClick ), NULL, this );

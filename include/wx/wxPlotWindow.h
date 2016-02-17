@@ -53,6 +53,8 @@ namespace plot
 	#define PlotClickedEventHandler(func) (&func)
 	#define EVT_PLOT_CLICKED(id, func) wx__DECLARE_EVT1(PLOTCLICKED, id, PlotClickedEventHandler(func))
 
+	wxDECLARE_EXPORTED_EVENT(DLLIMPEXP_PLOTLIB, PLOTVIEWCHANGED, wxCommandEvent);
+
 namespace plot
 {
 		class DLLIMPEXP_PLOTLIB wxPlotWindow :
@@ -62,7 +64,7 @@ namespace plot
 		wxPlotWindow(wxWindow *parent);
 		virtual ~wxPlotWindow();
 
-		wxMenu &GetMenu() { return m_menu; }
+		wxMenu &GetMenu() { return m_context_menu; }
 		virtual void RedrawPlot();
 
 		//internal use
@@ -88,39 +90,34 @@ namespace plot
 		wxSizer *m_sizer;
 		std::vector<ScaleWindow *> m_scalewindows;
 
-		wxMenu m_menu;
+		wxMenu m_context_menu;
 
-		wxMenu m_seriesmenu;
-		//Series *m_series_pointed;
+		wxMenu m_series_menu;
+		Series *m_the_series;//the series which has been right-clicked
 
 		//virtual void _spotseries(SeriesSelection &seriesselection) override;
 		
 		/*iterate serie and find if mouse_coords points on any serie mark or line and fills seriesselection object*/
 		void _getspottedseries(Point<int>&mouse_coords, SeriesSelection &seriesselection);
 
-		static const int IDMENUITEM_DELETESERIES;
-		void OnMenuItem_DeleteSeries(wxCommandEvent &event);
+		static const int IDMENUITEM_REMOVESERIES;
+		void OnMenuItem_RemoveSeries(wxCommandEvent &event);
 		
-		static const int IDMENUITEM_SERIESPROPERTIES;
-		void OnMenuItem_SeriesProperties(wxCommandEvent &event);
+		static const int IDMENUITEM_SERIESFITHOR;
+		void OnMenuItem_SeriesFitHor(wxCommandEvent &event);
 
 		static const int IDMENUITEM_SERIESFITVERT;
 		void OnMenuItem_SeriesFitVert(wxCommandEvent &event);
 		
-		static const int IDMENUITEM_SERIESFITHOR;
-		void OnMenuItem_SeriesFitHor(wxCommandEvent &event);
-		
-		static const int IDMENUITEM_SERIESFITALL;
-		void OnMenuItem_SeriesFitAll(wxCommandEvent &event);
-		//wxMenu *m_menu_addwidget;
+		static const int IDMENUITEM_SERIESFITALLDIMS;
+		void OnMenuItem_SeriesFitAllDims(wxCommandEvent &event);
 
-		//static const int ID_MENUITEM_ADDLEGENDS;
-		//void OnMenuItem_AddLegends(wxCommandEvent &event);
+
 
 		wxBitmap *m_bitmap_buffer;
 
-		//wxPopupSeriesTool *m_popup_tool;
 
+		virtual void emit_viewchanged() override;
 		int m_diag_texts_pos_y;
 		DECLARE_EVENT_TABLE()
 	};

@@ -31,97 +31,97 @@ int COLOR_BASE_COUNT = sizeof(COLOR_BASE) / sizeof(long);
 MARKER_STYLES MARKERSTYLES[] = {MARKER_CIRCLE, MARKER_CROSS, MARKER_ROMB, MARKER_SQUARE, MARKER_PLUS};
 int MARKERSTYLES_COUNT = sizeof(MARKERSTYLES) / sizeof(MARKER_STYLES);
 
-wxPoint2DDouble mark_pointsdouble[4];
-
-
-void PutMark(wxGraphicsContext *gc, int x, int y, MARKER_STYLES marker_style, int mark_size)
-{
-
-    static wxPoint2DDouble points2d[5];
-    switch(marker_style)
-    {
-    case MARKER_CIRCLE:
-        gc->DrawEllipse(x - mark_size, y - mark_size, mark_size * 2, mark_size * 2);
-        break;
-    case MARKER_SQUARE:
-        gc->DrawRectangle(x - mark_size, y - mark_size, mark_size * 2, mark_size * 2);
-        break;
-    //case MARKSTYLE_TRIANGLEVERT:
-    //    break;
-    //case MARKSTYLE_TRIANGLEHORIZ:
-    //    break;
-    case MARKER_ROMB:
-        for(int i = 0; i < 4; i++)
-        {
-            points2d[i] = mark_pointsdouble[i] + wxPoint2DDouble(x, y);
-        }
-        points2d[4] = points2d[0];
-        gc->DrawLines(5, points2d);
-        break;
-    case MARKER_CROSS:
-        for(int i = 0; i < 4; i++)
-        {
-            points2d[i] = mark_pointsdouble[i] + wxPoint2DDouble(x, y);
-        }
-        gc->StrokeLines(2, points2d);
-        gc->StrokeLines(2, points2d + 2);
-        break;
-    case MARKER_PLUS:
-        for(int i = 0; i < 4; i++)
-        {
-            points2d[i] = mark_pointsdouble[i] + wxPoint2DDouble(x, y);
-        }
-        gc->StrokeLines(2, points2d);
-        gc->StrokeLines(2, points2d + 2);
-        break;
-    default:
-        assert(0);
-
-    }
-
-}
-
-void PrepareMarkGC(wxGraphicsContext *gc, MARKER_STYLES marker_style, int mark_size, int colour_index)
-{
-	assert(colour_index < COLOR_BASE_COUNT);
-    wxPen pen = wxPen(*wxBLACK);//wxColour(COLOR_BASE[colour_index]));
-	wxBrush brush = wxBrush(wxColour(COLOR_BASE[colour_index]));//colour_index
-
-    switch(marker_style)
-    {
-    //case MARKSTYLE_TRIANGLEVERT:
-    //    break;
-    //case MARKSTYLE_TRIANGLEHORIZ:
-    //    break;
-    case MARKER_ROMB:
-        mark_pointsdouble[0] = wxPoint2DDouble(0, -mark_size);
-        mark_pointsdouble[1] = wxPoint2DDouble(mark_size, 0);
-        mark_pointsdouble[2] = wxPoint2DDouble(0, mark_size);
-        mark_pointsdouble[3] = wxPoint2DDouble(-mark_size, 0);
-        break;
-    case MARKER_CROSS:
-        pen.SetColour(wxColour(COLOR_BASE[colour_index]));
-        mark_pointsdouble[0] = wxPoint2DDouble(-mark_size, -mark_size);
-        mark_pointsdouble[1] = wxPoint2DDouble(mark_size, mark_size);
-        mark_pointsdouble[2] = wxPoint2DDouble(mark_size, -mark_size);
-        mark_pointsdouble[3] = wxPoint2DDouble(-mark_size, mark_size);
-        pen.SetWidth(mark_size > 2 ? 2 : 1);
-        break;
-    case MARKER_PLUS:
-        pen.SetColour(wxColour(COLOR_BASE[colour_index]));
-        mark_pointsdouble[0] = wxPoint2DDouble(0, -mark_size);
-        mark_pointsdouble[1] = wxPoint2DDouble(0, mark_size);
-        mark_pointsdouble[2] = wxPoint2DDouble(-mark_size, 0);
-        mark_pointsdouble[3] = wxPoint2DDouble(mark_size, 0);
-        pen.SetWidth(mark_size > 2 ? 2 : 1);
-        break;
-    default:
-        ;
-
-    }
-    gc->SetPen(pen);
-    gc->SetBrush(brush);
-}
+//wxPoint2DDouble mark_pointsdouble[4];
+//
+//
+//void PutMark(wxGraphicsContext *gc, int x, int y, MARKER_STYLES marker_style, int mark_size)
+//{
+//
+//    static wxPoint2DDouble points2d[5];
+//    switch(marker_style)
+//    {
+//    case MARKER_CIRCLE:
+//        gc->DrawEllipse(x - mark_size, y - mark_size, mark_size * 2, mark_size * 2);
+//        break;
+//    case MARKER_SQUARE:
+//        gc->DrawRectangle(x - mark_size, y - mark_size, mark_size * 2, mark_size * 2);
+//        break;
+//    //case MARKSTYLE_TRIANGLEVERT:
+//    //    break;
+//    //case MARKSTYLE_TRIANGLEHORIZ:
+//    //    break;
+//    case MARKER_ROMB:
+//        for(int i = 0; i < 4; i++)
+//        {
+//            points2d[i] = mark_pointsdouble[i] + wxPoint2DDouble(x, y);
+//        }
+//        points2d[4] = points2d[0];
+//        gc->DrawLines(5, points2d);
+//        break;
+//    case MARKER_CROSS:
+//        for(int i = 0; i < 4; i++)
+//        {
+//            points2d[i] = mark_pointsdouble[i] + wxPoint2DDouble(x, y);
+//        }
+//        gc->StrokeLines(2, points2d);
+//        gc->StrokeLines(2, points2d + 2);
+//        break;
+//    case MARKER_PLUS:
+//        for(int i = 0; i < 4; i++)
+//        {
+//            points2d[i] = mark_pointsdouble[i] + wxPoint2DDouble(x, y);
+//        }
+//        gc->StrokeLines(2, points2d);
+//        gc->StrokeLines(2, points2d + 2);
+//        break;
+//    default:
+//        assert(0);
+//
+//    }
+//
+//}
+//
+//void PrepareMarkGC(wxGraphicsContext *gc, MARKER_STYLES marker_style, int mark_size, int colour_index)
+//{
+//	assert(colour_index < COLOR_BASE_COUNT);
+//    wxPen pen = wxPen(*wxBLACK);//wxColour(COLOR_BASE[colour_index]));
+//	wxBrush brush = wxBrush(wxColour(COLOR_BASE[colour_index]));//colour_index
+//
+//    switch(marker_style)
+//    {
+//    //case MARKSTYLE_TRIANGLEVERT:
+//    //    break;
+//    //case MARKSTYLE_TRIANGLEHORIZ:
+//    //    break;
+//    case MARKER_ROMB:
+//        mark_pointsdouble[0] = wxPoint2DDouble(0, -mark_size);
+//        mark_pointsdouble[1] = wxPoint2DDouble(mark_size, 0);
+//        mark_pointsdouble[2] = wxPoint2DDouble(0, mark_size);
+//        mark_pointsdouble[3] = wxPoint2DDouble(-mark_size, 0);
+//        break;
+//    case MARKER_CROSS:
+//        pen.SetColour(wxColour(COLOR_BASE[colour_index]));
+//        mark_pointsdouble[0] = wxPoint2DDouble(-mark_size, -mark_size);
+//        mark_pointsdouble[1] = wxPoint2DDouble(mark_size, mark_size);
+//        mark_pointsdouble[2] = wxPoint2DDouble(mark_size, -mark_size);
+//        mark_pointsdouble[3] = wxPoint2DDouble(-mark_size, mark_size);
+//        pen.SetWidth(mark_size > 2 ? 2 : 1);
+//        break;
+//    case MARKER_PLUS:
+//        pen.SetColour(wxColour(COLOR_BASE[colour_index]));
+//        mark_pointsdouble[0] = wxPoint2DDouble(0, -mark_size);
+//        mark_pointsdouble[1] = wxPoint2DDouble(0, mark_size);
+//        mark_pointsdouble[2] = wxPoint2DDouble(-mark_size, 0);
+//        mark_pointsdouble[3] = wxPoint2DDouble(mark_size, 0);
+//        pen.SetWidth(mark_size > 2 ? 2 : 1);
+//        break;
+//    default:
+//        ;
+//
+//    }
+//    gc->SetPen(pen);
+//    gc->SetBrush(brush);
+//}
 
 //
 //#00008B	0

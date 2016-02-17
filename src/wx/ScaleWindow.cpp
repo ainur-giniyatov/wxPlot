@@ -2,6 +2,7 @@
 #include <wx/dcbuffer.h>
 #include <wx/graphics.h>
 #include "wx/ScaleWindow.h"
+#include "wx/wxPlotWindow.h"
 
 using namespace plot;
 
@@ -17,7 +18,7 @@ EVT_MOUSE_CAPTURE_LOST(ScaleWindow::OnMouseCaptureLost)
 END_EVENT_TABLE()
 
 
-ScaleWindow::ScaleWindow(wxWindow *parent, wxOrientation orient, double offset, double range):wxPanel()//(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
+ScaleWindow::ScaleWindow(wxWindow *parent, AXIS_DIR axis_dir, wxOrientation orient, double offset, double range):wxPanel(), Scale(axis_dir)//(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
 {
 	SetBackgroundStyle(wxBG_STYLE_PAINT);
 	Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize);
@@ -48,11 +49,11 @@ ScaleWindow::~ScaleWindow()
 }
 
 
-void ScaleWindow::ScaleRedraw()
-{
-	Refresh();
-	Update();
-}
+//void ScaleWindow::ScaleRedraw()
+//{
+//	Refresh();
+//	Update();
+//}
 
 static char s_buff[64];
 
@@ -184,6 +185,11 @@ void ScaleWindow::OnLeftUp(wxMouseEvent & event)
 {
 	EndPanAt();
 	m_ispanning = false;
+
+	wxCommandEvent eventvc(PLOTVIEWCHANGED, GetId());
+	eventvc.SetEventObject(this);
+	ProcessWindowEvent(eventvc);
+
 	if(HasCapture())
         ReleaseMouse();
 }

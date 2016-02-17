@@ -120,7 +120,7 @@ void wxLegendsBox::MouseRightUp(int mx, int my)
 void plot::wxLegendsBox::MouseLeftDown(int mx, int my)
 {
 	DPRINTF("wxLegendsBox::MouseLeftDown");
-	
+
 	Point<int> mp;
 	mp = Point<int>(mx - m_rect.left, my - m_rect.top);
 
@@ -155,7 +155,7 @@ void plot::wxLegendsBox::Render(void *v_gc)
 	gc->DrawRectangle(m_rect.left, m_rect.top, w, h);
 	gc->Clip(m_rect.left, m_rect.top, w, h);
 	int tx = margin +  margin + 28, ty = margin;
-	
+
 	for (auto item : m_items)
 	{
 		wxString text(item->m_series->GetSeriesName());
@@ -189,7 +189,7 @@ void plot::wxLegendsBox::Render(void *v_gc)
 
 void plot::wxLegendsBox::Sizing()
 {
-	
+
 	int w = 15, h = margin;
 	wxClientDC dc((wxPlotWindow *)m_owner);
 	dc.SetFont(*wxNORMAL_FONT);
@@ -204,7 +204,7 @@ void plot::wxLegendsBox::Sizing()
 		if (w < tw)
 			w = tw;
 		item->m_rect.left = margin;
-		
+
 		item->m_rect.top = h;
 		item->m_rect.bottom = item->m_rect.top + th;
 		h += th + margin;

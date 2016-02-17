@@ -4,14 +4,14 @@
 
 using namespace plot;
 
-Axis::Axis()
+Axis::Axis(AXIS_DIR axis_dir)
 {
 	DPRINTF("Axis ctor\n");
 	m_offset = 0.;
 	m_range = 100.0;
 	m_owner = NULL;
 	m_commonscale = NULL;
-
+	m_axis_dir = axis_dir;
 }
 
 
@@ -84,9 +84,22 @@ void Axis::_SetVisibleRange(double offs, double range, bool update)
 		if (m_commonscale != NULL)
 		{
 			m_commonscale->RedrawDependantPlots();
-			m_commonscale->ScaleRedraw();
+//			m_commonscale->ScaleRedraw();
 		}
 		else
 			GetOwner()->GetOwner()->RedrawPlot();
+}
+
+const std::vector<DataNoType*> plot::Axis::_get_adj_datas()
+{
+	std::vector<DataNoType*> datas;
+
+	for (auto series : m_owner->GetSerie())
+	{
+		if (series->GetData(m_axis_dir) != nullptr)
+			datas.push_back(series->GetData(m_axis_dir));
+	}
+
+	return datas;
 }
 

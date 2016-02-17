@@ -10,7 +10,8 @@ namespace plot
 
 	typedef void (PEventHandler::*HandlerMethod )(PEvent &);
 	
-	struct EventHandlerStruct
+
+	struct DLLIMPEXP_PLOTLIB EventHandlerStruct
 	{
 		int event_id;
 		PEventHandler *ev_handler;
@@ -20,15 +21,16 @@ namespace plot
 	class DLLIMPEXP_PLOTLIB PEventHandler
 	{
 	public:
-		PEventHandler();
+		PEventHandler() {};
+		PEventHandler(PEventList *evlist);
 		virtual ~PEventHandler();
 
-		void Connect(int event_id, HandlerMethod handlermethod);
-		void Disconnect(int event_id, HandlerMethod handlermethod);
+		void AddHandler(int event_id, HandlerMethod handlermethod);
+		void RemoveHandler(int event_id, HandlerMethod handlermethod);
 
 		//void Sink();
 		//virtual bool Dispatcher();
-
+		void HandleEvent(PEvent &evt);
 	protected:
 		PEventList *m_eventslist;
 
@@ -59,7 +61,7 @@ namespace plot
 		virtual ~PEventList();
 		
 		static int GetNewEventId();
-		void ProcessEvent(PEvent *evt);
+		void ProcessEvent(PEvent &evt);
 
 	protected:
 	private:

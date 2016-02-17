@@ -18,7 +18,7 @@ Area::Area(int dim_num)
 	for (int indx = 0; indx < m_dim_num; indx++)
 	{
 		Axis *axis;
-		axis = new Axis();
+		axis = new Axis((AXIS_DIR)indx);
 		axis->SetOwner(this);
 		m_axes[indx] = axis;
 	}
@@ -56,11 +56,7 @@ void Area::AddSeries(Series * series)
 		m_serie.push_back(series);
 		if (m_owner_plot != nullptr)
 		{
-			PEventSeriesAdded *evt;
-			evt = new PEventSeriesAdded();
-			evt->SetSeries(series);
-			evt->SetFlag(true);
-			m_owner_plot->_GetEventsList()->ProcessEvent(evt);
+			m_owner_plot->HandleEvent(PEventSeriesAdded(series, true));
 		}
 	}
 }
@@ -72,11 +68,7 @@ void Area::RemoveSeries(Series * series)
 		if (*series_iter == series)
 		{
 			m_serie.erase(series_iter);
-			PEventSeriesAdded *evt;
-			evt = new PEventSeriesAdded();
-			evt->SetSeries(series);
-			evt->SetFlag(false);
-			m_owner_plot->_GetEventsList()->ProcessEvent(evt);
+			m_owner_plot->HandleEvent(PEventSeriesAdded(series, false));
 			break;
 		}
 	}
@@ -89,11 +81,7 @@ void plot::Area::DeleteSeries(Series * series)
 		if (*series_iter == series)
 		{
 			m_serie.erase(series_iter);
-			PEventSeriesAdded *evt;
-			evt = new PEventSeriesAdded();
-			evt->SetSeries(series);
-			evt->SetFlag(false);
-			m_owner_plot->_GetEventsList()->ProcessEvent(evt);
+			m_owner_plot->HandleEvent(PEventSeriesAdded(series, false));
 			delete series;
 			break;
 		}
@@ -124,6 +112,17 @@ Axis * Area::GetAxis(AXIS_DIR axis_dir)
 //void Area::ZoomSelection(double start_rx, double start_ry, double end_rx, double end_ry)
 //{
 //}
+
+const std::vector<Axis*> plot::Area::_get_axes()
+{
+	std::vector<Axis*> axes;
+	for (int indx = 0; indx < m_dim_num; indx++)
+	{
+		if (m_axes[indx] != nullptr)
+			axes.push_back(m_axes[indx]);
+	}
+	return axes;
+}
 
 void plot::Area::_SetOwner(Plot * plot)
 {
@@ -182,157 +181,119 @@ void Area::_SetGrid(Grid * grid)
 //	delete m_yaxis;
 //}
 
-void Area::Zoom(const Point<double>& zoom_wheel_rel_coord, double xfactor, double yfactor)
-{
-	DPRINTF("ZoomAt\n");
-	Axis *xaxis;
-	Axis *yaxis;
-	xaxis = GetAxis(AXIS_X);
-	yaxis = GetAxis(AXIS_Y);
-
-	double offs, range, x, y;
-	range = xaxis->GetRange();
-	offs = xaxis->GetOffset();
-	x = offs + range * zoom_wheel_rel_coord.x;
-	if (xaxis->GetCommonScale() != NULL)
-	{
-		if (xaxis->GetCommonScale()->IsInRange(range * xfactor))
-		{
-			xaxis->SetOffset(x - (x - offs) * xfactor);
-			xaxis->SetRange(range * xfactor);
-		}
-	}
-	else
-	{
-		xaxis->SetOffset(x - (x - offs) * xfactor);
-		xaxis->SetRange(range * xfactor);
-	}
-
-	range = yaxis->GetRange();
-	offs = yaxis->GetOffset();
-	y = offs + range * zoom_wheel_rel_coord.y;
-	if (yaxis->GetCommonScale() != NULL)
-	{
-		if (yaxis->GetCommonScale()->IsInRange(range * yfactor))
-		{
-			yaxis->SetOffset(y - (y - offs) * yfactor);
-			yaxis->SetRange(range * yfactor);
-		}
-	}
-	else
-	{
-		yaxis->SetOffset(y - (y - offs) * yfactor);
-		yaxis->SetRange(range * yfactor);
-	}
-
-	m_owner_plot->_SetViewModifiedFlag();
-}
-
-void Area::StartPan(const Point<double>& pan_start_rel_coord)
-{
-	m_pan_start_rel_coord = pan_start_rel_coord;
-	m_pan_start_axes_offset.x = GetAxis(AXIS_X)->GetOffset();
-	m_pan_start_axes_offset.y = GetAxis(AXIS_Y)->GetOffset();
-}
-
-void Area::ProceedPan(const Point<double>& pan_proceed_rel_coord)
-{
-	Point<double> pdiff;
-	pdiff = m_pan_start_rel_coord - pan_proceed_rel_coord;
-	GetAxis(AXIS_X)->SetOffset(m_pan_start_axes_offset.x + pdiff.x * GetAxis(AXIS_X)->GetRange());
-	GetAxis(AXIS_Y)->SetOffset(m_pan_start_axes_offset.y + pdiff.y * GetAxis(AXIS_Y)->GetRange());
-
-
-
-}
-
-void Area::EndPan()
-{
-}
-
-void Area::ZoomSelection(Point<double>& start_p, Point<double>& end_p)
-{
-	DPRINTF("Area::ZoomSelection\n");
-
-	Axis *xaxis;
-	Axis *yaxis;
-	xaxis = m_axes[AXIS_X]; //let x be 1st dimension
-	yaxis = m_axes[AXIS_Y]; //let y be 2nd dimension
-	double start_rx, end_rx, start_ry, end_ry;
-	start_rx = start_p.x;
-	end_rx = end_p.x;
-	start_ry = start_p.y;
-	end_ry = end_p.y;
-
-	double temp;
-	temp = start_rx;
-	if (start_rx > end_rx)
-	{
-		start_rx = end_rx;
-		end_rx = temp;
-	}
-
-	temp = start_ry;
-	if (start_ry > end_ry)
-	{
-		start_ry = end_ry;
-		end_ry = temp;
-	}
-
-	//TO DO: need to review this code
-	if (xaxis != NULL)
-	{
-		//xaxis->SetOffset(m_pan_start_at_vx - xaxis->GetRange() * (rx - m_pan_start_at_rx));
-		xaxis->SetOffset(xaxis->GetOffset() + xaxis->GetRange() * start_rx);
-		xaxis->SetRange(xaxis->GetRange() * (end_rx - start_rx));
-	}
-
-
-	if (yaxis != NULL)
-	{
-		//yaxis->SetOffset(m_pan_start_at_vy - yaxis->GetRange() * (ry - m_pan_start_at_ry));
-		yaxis->SetOffset(yaxis->GetOffset() + yaxis->GetRange() * start_ry);
-		yaxis->SetRange(yaxis->GetRange() * (end_ry - start_ry));
-	}
-
-}
-
-void plot::Area::Fit(AXIS_DIR axis_dir)
-{
-	assert(axis_dir < m_dim_num);
-
-	if (m_serie.empty())
-		return;
-
-	double max, min;
-
-	for (auto series : m_serie)
-	{
-		DataNoType *data = series->GetData(axis_dir);
-		if (data != nullptr)
-		{
-			max = min = data->GetDataMin();
-			break;
-		}
-	}
-
-	for (auto series : m_serie)
-	{
-		DataNoType *data = series->GetData(axis_dir);
-		if (data != nullptr)
-		{
-			if (min > data->GetDataMin())
-				min = data->GetDataMin();
-			if (max < data->GetDataMax())
-				max = data->GetDataMax();
-		}
-	}
-
-	Axis *axis;
-	axis = GetAxis(axis_dir);
-	if (axis != nullptr)
-	{
-		axis->_SetVisibleRange(min, max - min);
-	}
-}
-
+//void Area::Zoom(const Point<double>& zoom_wheel_rel_coord, double xfactor, double yfactor)
+//{
+//	DPRINTF("ZoomAt\n");
+//	Axis *xaxis;
+//	Axis *yaxis;
+//	xaxis = GetAxis(AXIS_X);
+//	yaxis = GetAxis(AXIS_Y);
+//
+//	double offs, range, x, y;
+//	range = xaxis->GetRange();
+//	offs = xaxis->GetOffset();
+//	x = offs + range * zoom_wheel_rel_coord.x;
+//	if (xaxis->GetCommonScale() != NULL)
+//	{
+//		if (xaxis->GetCommonScale()->IsInRange(range * xfactor))
+//		{
+//			xaxis->SetOffset(x - (x - offs) * xfactor);
+//			xaxis->SetRange(range * xfactor);
+//		}
+//	}
+//	else
+//	{
+//		xaxis->SetOffset(x - (x - offs) * xfactor);
+//		xaxis->SetRange(range * xfactor);
+//	}
+//
+//	range = yaxis->GetRange();
+//	offs = yaxis->GetOffset();
+//	y = offs + range * zoom_wheel_rel_coord.y;
+//	if (yaxis->GetCommonScale() != NULL)
+//	{
+//		if (yaxis->GetCommonScale()->IsInRange(range * yfactor))
+//		{
+//			yaxis->SetOffset(y - (y - offs) * yfactor);
+//			yaxis->SetRange(range * yfactor);
+//		}
+//	}
+//	else
+//	{
+//		yaxis->SetOffset(y - (y - offs) * yfactor);
+//		yaxis->SetRange(range * yfactor);
+//	}
+//
+//	m_owner_plot->_SetViewModifiedFlag();
+//}
+//
+//void Area::StartPan(const Point<double>& pan_start_rel_coord)
+//{
+//	m_pan_start_rel_coord = pan_start_rel_coord;
+//	m_pan_start_axes_offset.x = GetAxis(AXIS_X)->GetOffset();
+//	m_pan_start_axes_offset.y = GetAxis(AXIS_Y)->GetOffset();
+//}
+//
+//void Area::ProceedPan(const Point<double>& pan_proceed_rel_coord)
+//{
+//	Point<double> pdiff;
+//	pdiff = m_pan_start_rel_coord - pan_proceed_rel_coord;
+//	GetAxis(AXIS_X)->SetOffset(m_pan_start_axes_offset.x + pdiff.x * GetAxis(AXIS_X)->GetRange());
+//	GetAxis(AXIS_Y)->SetOffset(m_pan_start_axes_offset.y + pdiff.y * GetAxis(AXIS_Y)->GetRange());
+//
+//
+//
+//}
+//
+//void Area::EndPan()
+//{
+//}
+//
+//void Area::ZoomSelection(Point<double>& start_p, Point<double>& end_p)
+//{
+//	DPRINTF("Area::ZoomSelection\n");
+//
+//	Axis *xaxis;
+//	Axis *yaxis;
+//	xaxis = m_axes[AXIS_X]; //let x be 1st dimension
+//	yaxis = m_axes[AXIS_Y]; //let y be 2nd dimension
+//	double start_rx, end_rx, start_ry, end_ry;
+//	start_rx = start_p.x;
+//	end_rx = end_p.x;
+//	start_ry = start_p.y;
+//	end_ry = end_p.y;
+//
+//	double temp;
+//	temp = start_rx;
+//	if (start_rx > end_rx)
+//	{
+//		start_rx = end_rx;
+//		end_rx = temp;
+//	}
+//
+//	temp = start_ry;
+//	if (start_ry > end_ry)
+//	{
+//		start_ry = end_ry;
+//		end_ry = temp;
+//	}
+//
+//	//TO DO: need to review this code
+//	if (xaxis != NULL)
+//	{
+//		//xaxis->SetOffset(m_pan_start_at_vx - xaxis->GetRange() * (rx - m_pan_start_at_rx));
+//		xaxis->SetOffset(xaxis->GetOffset() + xaxis->GetRange() * start_rx);
+//		xaxis->SetRange(xaxis->GetRange() * (end_rx - start_rx));
+//	}
+//
+//
+//	if (yaxis != NULL)
+//	{
+//		//yaxis->SetOffset(m_pan_start_at_vy - yaxis->GetRange() * (ry - m_pan_start_at_ry));
+//		yaxis->SetOffset(yaxis->GetOffset() + yaxis->GetRange() * start_ry);
+//		yaxis->SetRange(yaxis->GetRange() * (end_ry - start_ry));
+//	}
+//
+//}
+//
+//

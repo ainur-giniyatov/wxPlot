@@ -31,7 +31,8 @@ void SeriesTool::m_bpButton_fitOnButtonClick(wxCommandEvent & event)
 	if (m_series == nullptr)
 		return;
 
-	m_series->Fit();
+	//m_series->Fit();
+	assert(0);
 }
 
 void SeriesTool::m_bpButton_deleteOnButtonClick(wxCommandEvent & event)

@@ -35,6 +35,11 @@ private:
 	virtual void m_menuItem_panOnMenuSelection(wxCommandEvent& event) override;
 	virtual void m_menuItem_zoomOnMenuSelection(wxCommandEvent& event) override;
 	virtual void m_button_add_boxOnButtonClick(wxCommandEvent& event) override;
+	virtual void m_button_chartfitxOnButtonClick(wxCommandEvent& event) override;
+	virtual void m_button_chartfityOnButtonClick(wxCommandEvent& event) override;
+	virtual void m_button_chartfitbothOnButtonClick(wxCommandEvent& event) override;
+	virtual void m_tool_undo_viewOnToolClicked(wxCommandEvent& event) override;
+	virtual void m_tool_redo_viewOnToolClicked(wxCommandEvent& event) override;
 
 	void OnMouseWheel(wxMouseEvent &event);
 	

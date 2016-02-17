@@ -6,7 +6,7 @@
 
 using namespace plot;
 
-Box::Box(Plot * owner):PEventHandler()
+Box::Box(Plot * owner) :PEventHandler(), m_box_tag("box")
 {
 	DPRINTF("Box ctor\n");
 	m_owner = owner;
@@ -324,8 +324,8 @@ void TitleBox::Sizing()
 plot::LegendsBox::LegendsBox(Plot * owner):Box(owner)
 {
 
-	Connect(PEventSeriesAdded::GetEventId(), (HandlerMethod)&LegendsBox::OnSeriesAdded);
-	Connect(PEventSeriesNameChanged::GetEventId(), (HandlerMethod)&LegendsBox::OnSeriesNameChanged);
+	AddHandler(PEventSeriesAdded::GetEventId(), (HandlerMethod)&LegendsBox::OnSeriesAdded);
+	AddHandler(PEventSeriesNameChanged::GetEventId(), (HandlerMethod)&LegendsBox::OnSeriesNameChanged);
 	m_sticked_to = STICKEDTO_RIGHT | STICKEDTO_VER_CENTER;
 	Sizing();
 }
@@ -335,7 +335,7 @@ plot::LegendsBox::~LegendsBox()
 	for (auto item : m_items)
 		delete item;
 
-	Disconnect(PEventSeriesAdded::GetEventId(), (HandlerMethod)&LegendsBox::OnSeriesAdded);
+	RemoveHandler(PEventSeriesAdded::GetEventId(), (HandlerMethod)&LegendsBox::OnSeriesAdded);
 }
 
 void plot::LegendsBox::AddSeries(Series * series)
@@ -361,16 +361,16 @@ void plot::LegendsBox::RemoveSeries(Series * series)
 }
 
 
-void plot::LegendsBox::OnSeriesAdded(PEvent & event)
+void plot::LegendsBox::OnSeriesAdded(PEvent &event)
 {
-	PEventSeriesAdded &evt = *((PEventSeriesAdded *)&event);
+	PEventSeriesAdded &evt = (PEventSeriesAdded&)event;
 	if (evt.GetFlag())
 		AddSeries(evt.GetSeries());
 	else
 		RemoveSeries(evt.GetSeries());
 }
 
-void plot::LegendsBox::OnSeriesNameChanged(PEvent & event)
+void plot::LegendsBox::OnSeriesNameChanged(PEvent &event)
 {
 	Sizing();
 }

@@ -14,6 +14,7 @@ namespace plot
 	class DLLIMPEXP_PLOTLIB PEventHandler;
 	class DLLIMPEXP_PLOTLIB PEvent;
 	class DLLIMPEXP_PLOTLIB PEventSeriesAdded;
+	class DLLIMPEXP_PLOTLIB PEventSeriesNameChanged;
 
 	class DLLIMPEXP_PLOTLIB Box: public PEventHandler
 	{
@@ -53,6 +54,8 @@ namespace plot
 		virtual void Sizing();
 
 		void BringToFront();
+
+		const std::string &_get_tag() { return m_box_tag; }
 	protected:
 		Plot *m_owner;
 		Rect<int> m_rect;
@@ -73,7 +76,7 @@ namespace plot
 
 		bool m_ontop;
 
-		
+		std::string m_box_tag;
 	private:
 
 		int m_snap_distance;
@@ -131,7 +134,7 @@ namespace plot
 
 	private:
 		//virtual void MouseRightUp(int mx, int my) override;
-		void OnSeriesAdded(PEvent& event);
-		void OnSeriesNameChanged(PEvent& event);
+		void OnSeriesAdded(PEvent &event);
+		void OnSeriesNameChanged(PEvent &event);
 	};
 }

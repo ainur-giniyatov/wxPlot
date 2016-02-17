@@ -22,17 +22,20 @@ namespace plot
 		void SetSeriesName(const char *series_name = NULL, bool update = true);
 		const char *GetSeriesName() { return m_series_name; }
 
+		void SetUserData(void *data) { m_user_data = data; }
+		void *GetUserData() { return m_user_data; }
+
 		Area *GetOwner() { return m_owner; }
 
 		void SeriesUpdated();
 
 		void SetData(DataNoType *data, AXIS_DIR axis_dir);
 		DataNoType *GetData(AXIS_DIR axis_dir);
-		//virtual std::vector<DataNoType *> GetDatas() = 0;
+
 		void RemoveData(DataNoType *data);
 		void DeleteData(DataNoType *data);
 
-		void Fit();
+		void Fit(int axis_mask);
 
 		void SetRenderer(Renderer *renderer);//previous renderer will be deleted
 		Renderer *GetRenderer() { return m_renderer; };
@@ -46,6 +49,7 @@ namespace plot
 		Area *m_owner;
 		Renderer *m_renderer;
 
+		void *m_user_data;
 
 	private:
 		int m_dim_num; //number of dimensions

@@ -34,17 +34,15 @@ namespace plot
 
 
 		Axis *GetAxis(AXIS_DIR axis_dir);
+		//virtual void Zoom(const  Point<double> &zoom_wheel_rel_coord, double xfactor, double yfactor);
+		//virtual void StartPan(const  Point<double> &pan_start_rel_coord);
+		//virtual void ProceedPan(const  Point<double> &pan_proceed_rel_coord);
+		//virtual void EndPan();
 
-		virtual void Zoom(const  Point<double> &zoom_wheel_rel_coord, double xfactor, double yfactor);
-		virtual void StartPan(const  Point<double> &pan_start_rel_coord);
-		virtual void ProceedPan(const  Point<double> &pan_proceed_rel_coord);
-		virtual void EndPan();
-
-		virtual void ZoomSelection(Point<double>& start_p, Point<double>& end_p);
-
-		void Fit(AXIS_DIR axis_dir);
+		//virtual void ZoomSelection(Point<double>& start_p, Point<double>& end_p);
 
 		//internal use methods start with _
+		const std::vector<Axis *> _get_axes();
 		void _SetOwner(Plot *plot);
 		void _SetGrid(Grid *grid);
 

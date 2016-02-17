@@ -14,6 +14,7 @@ Series::Series(int dim_num, const char *series_name)
 	DPRINTF("Series ctor\n");
 	m_series_name = NULL;
 	m_owner = NULL;
+	m_user_data = nullptr;
 	SetSeriesName(series_name, false);
 	m_renderer = NULL;
 
@@ -66,9 +67,8 @@ void Series::SetSeriesName(const char * series_name, bool update)
 
 	if (m_owner != nullptr && m_owner->GetOwner() != nullptr)
 	{
-		PEventSeriesNameChanged *evt;
-		evt = new PEventSeriesNameChanged();
-		m_owner->GetOwner()->_GetEventsList()->ProcessEvent(evt);
+		
+		m_owner->GetOwner()->HandleEvent(PEventSeriesNameChanged());
 	}
 
 	if (update)
@@ -121,7 +121,6 @@ void Series::DeleteData(DataNoType * data)
 		if (m_datas[indx] == data)
 		{
 			m_datas[indx] = nullptr;
-			//data->_SetOwner(nullptr);
 			delete data;
 			break;
 		}
@@ -130,17 +129,44 @@ void Series::DeleteData(DataNoType * data)
 
 }
 
-void Series::Fit()
+void Series::Fit(int axis_mask)
 {
-	int axes_num = 0;
-	for (int indx = 0; GetData((AXIS_DIR)indx) != nullptr; indx++, axes_num++);
+	std::vector<Scale *> scales;
 
-	//TO DO double updating causes flicker
-	for (int indx = 0; indx < axes_num  ; indx++)
-	{
-		GetData((AXIS_DIR)indx)->Fit(true);
-	}
-	//GetData((AXIS_DIR)(axes_num - 1))->Fit();
+	for (auto axis : m_owner->_get_axes())
+		if (axis->GetCommonScale() != nullptr && ((1 << axis->_get_axis_dir()) & axis_mask))
+			scales.push_back(axis->GetCommonScale());
+	scales.erase(std::unique(scales.begin(), scales.end()), scales.end());
+
+	for (int xd = 0; xd < 3; xd++)
+		if ((1 << xd) & axis_mask)
+		{
+			double vmax = 0, vmin = 0;
+
+			DataNoType *data = nullptr;
+			data = GetData((AXIS_DIR)xd);
+			if (data == nullptr)
+				continue;
+
+			vmax = data->GetDataMax();
+			vmin = data->GetDataMin();
+
+			for (auto scale : scales)
+			{
+				if (xd != scale->_get_axis_dir())
+					continue;
+
+
+				double range = vmax - vmin;
+				scale->SetOffset(vmin - range / 10.);
+				scale->SetRange(range + range / 5.);
+				scale->RedrawDependantPlots(false);
+			}
+		}
+
+	for (auto scale : scales)
+		scale->RedrawDependantPlots();
+
 }
 
 void Series::SetRenderer(Renderer * renderer)

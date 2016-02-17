@@ -22,10 +22,10 @@ namespace plot
 		public Scale, public wxPanel
 	{
 	public:
-		ScaleWindow(wxWindow *parent, wxOrientation orient = wxVERTICAL, double offset = 0, double range = 1000);
+		ScaleWindow(wxWindow *parent, AXIS_DIR axis_dir, wxOrientation orient = wxVERTICAL, double offset = 0, double range = 1000);
 		virtual ~ScaleWindow();
 
-		virtual void ScaleRedraw() override;
+
 
 	private:
 		void OnPaint(wxPaintEvent &event);

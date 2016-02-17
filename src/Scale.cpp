@@ -1,17 +1,20 @@
 #include <float.h>
 #include <algorithm>
+#include <assert.h>
 
 #include "Scale.h"
 
 using namespace plot;
 
-Scale::Scale()
+Scale::Scale(AXIS_DIR axis_dir)
 {
 	m_offset = 0.;
 	m_range = 1000.;
 
 	m_range_max = DBL_MAX;
 	m_range_min = 3;
+
+	m_axis_dir = axis_dir;
 
 	m_valueadaptor = new TimeAxisValueAdaptor<double>();
 }
@@ -29,34 +32,75 @@ Scale::~Scale()
 
 void Scale::AddAxis(Axis * axis)
 {
+	assert(m_axis_dir == axis->_get_axis_dir());
 	m_axes.push_back(axis);
 	axis->SetCommonScale(this);
 	axis->SetOffset(m_offset);
 	axis->SetRange(m_range);
 	axis->AxisUpdated();
 
+	if(axis->GetOwner() != nullptr && axis->GetOwner()->GetOwner() != nullptr)
+		axis->GetOwner()->GetOwner()->HandleEvent(PEventScaleSet());
 }
 
 void Scale::RemoveAxis(Axis * axis)
 {
-	std::vector<Axis *> axes;
-	bool found = false;
-	for (auto axis_i : m_axes)
+	assert(m_axis_dir == axis->_get_axis_dir());
+
+	std::vector<Axis *>::iterator tail_i;
+	tail_i = std::remove(m_axes.begin(), m_axes.end(), axis);
+
+	if (tail_i != m_axes.end())
 	{
-		if (axis_i == axis)
-		{
-			found = true;
-			continue;
-		}
-		axes.push_back(axis_i);
-	}
-	if (found)
-	{
+		m_axes.erase(tail_i, m_axes.end());
 		axis->SetCommonScale(NULL);
 		axis->AxisUpdated();
 	}
+	else
+	{
+		assert(0);
+	}
 
-	m_axes = axes;
+	//std::vector<Axis *> axes;
+	//bool found = false;
+	//for (auto axis_i : m_axes)
+	//{
+	//	if (axis_i == axis)
+	//	{
+	//		found = true;
+	//		continue;
+	//	}
+	//	axes.push_back(axis_i);
+	//}
+	//if (found)
+	//{
+	//	axis->SetCommonScale(NULL);
+	//	axis->AxisUpdated();
+	//}
+
+	//m_axes = axes;
+}
+
+void plot::Scale::ChangeViewDepth(int vcd, bool swtch)
+{
+
+
+	auto viewstep = m_view_change_steps.find(vcd);
+	if (!swtch)
+	{
+		m_view_change_steps[vcd] = m_previous_view;
+	}
+	else
+	{
+		if (viewstep != m_view_change_steps.end())
+		{
+			VIEWSTEP vstep = m_view_change_steps[vcd];
+			SetOffset(vstep.offset);
+			SetRange(vstep.range);
+			
+		}
+	}
+
 }
 
 void Scale::SetOffset(double offset)
@@ -77,9 +121,9 @@ void Scale::SetRange(double range)
 
 }
 
-void Scale::RedrawDependantPlots()
+void Scale::RedrawDependantPlots(bool redraw_immdiately)
 {
-	//redraw dependant plots uniqly
+	//redraw dependant plots uniqly. use stl algorithms
 	std::vector<Plot *> vuniqplots;
 	for (auto axis : m_axes)
 	{
@@ -87,7 +131,8 @@ void Scale::RedrawDependantPlots()
 		if (plot != NULL && std::none_of(vuniqplots.begin(), vuniqplots.end(), [plot](Plot *p) {return p == plot; }))
 		{
 			plot->_SetViewModifiedFlag();
-			plot->RedrawPlot();
+			if(redraw_immdiately)
+				plot->RedrawPlot();
 			vuniqplots.push_back(plot);
 		}
 	}
@@ -106,7 +151,7 @@ void Scale::ZoomAt(double rv, double factor)
 		SetOffset(x - (x - offs) * factor);
 		SetRange(range * factor);
 
-		ScaleRedraw();
+//		ScaleRedraw();
 		RedrawDependantPlots();
 	}
 }
@@ -116,6 +161,7 @@ void Scale::StartPanAt(double rv)
 	DPRINTF("Scale::StartPanAt\n");
 	m_pan_start_at_rv = rv;
 	m_pan_start_at_vv = m_offset;
+	store_prev_view();
 }
 
 void Scale::ProceedPanAt(double rv)
@@ -124,8 +170,8 @@ void Scale::ProceedPanAt(double rv)
 
 	SetOffset(m_pan_start_at_vv - m_range * (rv - m_pan_start_at_rv));
 
-	ScaleRedraw();
-	RedrawDependantPlots();
+//	ScaleRedraw();
+	RedrawDependantPlots(false);
 }
 
 void Scale::EndPanAt()

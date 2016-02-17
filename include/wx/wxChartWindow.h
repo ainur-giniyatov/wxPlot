@@ -33,6 +33,12 @@ namespace plot
 		void DeletePlot(wxPlotWindow *plot);
 
 		void SetLeftButtonAction(LEFTBUTTON_ACTION lba);
+		LEFTBUTTON_ACTION GetLeftButtonAction() { return m_lbaction; }
+
+		void UndoView();
+		void RedoView();
+
+		void Fit(int axis_mask);
 	private:
 
 		wxSizer *m_sizer;
@@ -42,9 +48,11 @@ namespace plot
 		wxAuiManager m_mgr;
 
 		void OnPlotMenuItem_close(wxCommandEvent &event);
-		//void OnPlotMenuItem_close_queued(wxCommandEvent &event);//for invoking plot deleteion in the next loop iteration to avoid crash of wxMenu
 		static const int ID_PLOTMENUITEM_CLOSE;
 
+		void on_plot_view_changed(wxCommandEvent &event);
+		void plotviewchanged(int vcd, bool swtc);
+		int m_view_change_index;
 		int m_orientation;
 		void addplot(wxPlotWindow *plot);
 
@@ -54,6 +62,7 @@ namespace plot
 
 		//some helpers
 		void close_plot_delayed(wxPlotWindow *plot);
+		std::vector<wxPlotWindow *> getplots();
 	};
 
 }

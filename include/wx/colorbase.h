@@ -15,5 +15,5 @@ extern int DLLIMPEXP_PLOTLIB COLOR_BASE_COUNT;
 extern MARKER_STYLES MARKERSTYLES[];
 extern int MARKERSTYLES_COUNT;
 
-void PutMark(wxGraphicsContext *gc, int x, int y, MARKER_STYLES marker_style, int mark_size);
-void PrepareMarkGC(wxGraphicsContext *gc, MARKER_STYLES marker_style, int mark_size, int colour_index);
+//void PutMark(wxGraphicsContext *gc, int x, int y, MARKER_STYLES marker_style, int mark_size);
+//void PrepareMarkGC(wxGraphicsContext *gc, MARKER_STYLES marker_style, int mark_size, int colour_index);

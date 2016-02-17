@@ -58,6 +58,13 @@ enum AXIS_DIR {
 	AXIS_NONE = 999
 };
 
+enum AXIS_MASK
+{
+	AXIS_MASK_X = (1 << 0),
+	AXIS_MASK_Y = (1 << 1),
+	AXIS_MASK_Z = (1 <<2)
+};
+
 enum Dir {
 	DIR_NONE = 0,
 	DIR_HOR = (1 << 0),
@@ -103,7 +110,7 @@ template <typename T> struct Point {
 	inline Point<T> operator - (const Point<T>& p1) { return Point<T>(x - p1.x, y - p1.y); }
 	inline Point<T> operator + (const Point<T>& p1) { return Point<T>(x + p1.x, y + p1.y); }
 	inline Point<T> operator / (T d) { return Point<T>(x / d, y / d); }
-
+    Point<T>& operator&(Point<T>) {return &this;}
 };
 
 template <typename T> struct Rect {
