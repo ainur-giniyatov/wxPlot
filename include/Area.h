@@ -3,11 +3,9 @@
 
 #include "plot_defs.h"
 #include "Series.h"
-#include "Data.h"
 #include "Axis.h"
 
 #include "Plot.h"
-#include "Grid.h"
 
 namespace plot
 {
@@ -26,25 +24,23 @@ namespace plot
 		Plot *GetOwner() { return m_owner_plot; }
 
 		Grid *GetGrid() { return m_grid; }
+		void SetGrid(Grid *grid);
+
 		void AddSeries(Series *series);
 		void RemoveSeries(Series *series);
 		void DeleteSeries(Series *series);
 
 		std::vector<Series *>& GetSerie() { return m_serie; }
 
+		bool IsValid();
+		void Validate();
 
 		Axis *GetAxis(AXIS_DIR axis_dir);
-		//virtual void Zoom(const  Point<double> &zoom_wheel_rel_coord, double xfactor, double yfactor);
-		//virtual void StartPan(const  Point<double> &pan_start_rel_coord);
-		//virtual void ProceedPan(const  Point<double> &pan_proceed_rel_coord);
-		//virtual void EndPan();
-
-		//virtual void ZoomSelection(Point<double>& start_p, Point<double>& end_p);
 
 		//internal use methods start with _
 		const std::vector<Axis *> _get_axes();
-		void _SetOwner(Plot *plot);
-		void _SetGrid(Grid *grid);
+		void _setowner(Plot *plot) { m_owner_plot = plot; };
+		Plot *_getowner() { return m_owner_plot; };
 
 	protected:
 

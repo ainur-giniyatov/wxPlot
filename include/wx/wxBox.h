@@ -1,61 +1,33 @@
-#pragma once
-#include <wx/event.h>
+#include "../plot_defs.h"
 #include "../Box.h"
-#include "wxPlotWindow.h"
 
 namespace plot
 {
-	class DLLIMPEXP_PLOTLIB wxPlotWindow;
-
-	class DLLIMPEXP_PLOTLIB wxBox : public wxEvtHandler, public Box
+	class wxBox :public Box
 	{
 	public:
-		wxBox(wxPlotWindow *plotwindow);
+		wxBox();
 		virtual ~wxBox();
 
+	protected:
+	private:
+
+		// Inherited via Box
 		virtual void Render(void *) override;
 
-	protected:
-		wxMenu m_menu;
-	private:
-		virtual void MouseRightUp(int mx, int my) override;
-		
-		static const int IDMENUITEM_CLOSE;
-		void OnMenu_Close(wxCommandEvent& event);
-
-		//helpers
-		void deletebox();
 	};
 
-	class DLLIMPEXP_PLOTLIB wxTitleBox : public wxBox
+	class wxTitleBox : public TitleBox
 	{
 	public:
-		wxTitleBox(wxPlotWindow *plotwindow);
+		wxTitleBox();
 		virtual ~wxTitleBox();
-
-		virtual void Render(void *) override;
-
-	protected:
 	private:
-		wxString m_title;
 
-		virtual void Sizing() override;
-	};
 
-	class DLLIMPEXP_PLOTLIB wxLegendsBox : public LegendsBox
-	{
-	public:
-		wxLegendsBox(wxPlotWindow *plotwindow);
-		virtual ~wxLegendsBox();
-
+		// Inherited via TitleBox
 		virtual void Render(void *) override;
+		virtual void _ownersize(int w, int h) override;
 
-	protected:
-	private:
-		void MouseRightUp(int mx, int my) override;
-		virtual void MouseLeftDown(int mx, int my) override;
-		virtual void Sizing() override;
-
-		int margin;
 	};
 }

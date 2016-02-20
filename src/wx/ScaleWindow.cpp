@@ -1,4 +1,6 @@
 //#include "stdafx.h"
+#include <algorithm>
+
 #include <wx/dcbuffer.h>
 #include <wx/graphics.h>
 #include "wx/ScaleWindow.h"
@@ -18,7 +20,7 @@ EVT_MOUSE_CAPTURE_LOST(ScaleWindow::OnMouseCaptureLost)
 END_EVENT_TABLE()
 
 
-ScaleWindow::ScaleWindow(wxWindow *parent, AXIS_DIR axis_dir, wxOrientation orient, double offset, double range):wxPanel(), Scale(axis_dir)//(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
+ScaleWindow::ScaleWindow(wxWindow *parent, AXIS_DIR axis_dir, wxOrientation orient, double offset, double range):wxPanel()
 {
 	SetBackgroundStyle(wxBG_STYLE_PAINT);
 	Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize);
@@ -37,8 +39,9 @@ ScaleWindow::ScaleWindow(wxWindow *parent, AXIS_DIR axis_dir, wxOrientation orie
 		SetMinClientSize(wxSize(50, wxDefaultCoord));
 	}
 
-	m_offset = offset;
-	m_range = range;
+	m_scale = new MyScale(this, axis_dir);
+	m_scale->SetOffset(offset);
+	m_scale->SetRange(range);
 
 	m_font = *wxNORMAL_FONT;
 }
@@ -46,6 +49,7 @@ ScaleWindow::ScaleWindow(wxWindow *parent, AXIS_DIR axis_dir, wxOrientation orie
 
 ScaleWindow::~ScaleWindow()
 {
+	delete m_scale;
 }
 
 
@@ -77,7 +81,7 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 	//dc.DrawRectangle(rect);
 	dc.Clear();
 
-	if (m_valueadaptor == NULL)
+	if (m_scale->GetValueAdaptor() == NULL)
 		return;
 
 	wxGraphicsContext *gc = wxGraphicsContext::Create(dc);
@@ -88,13 +92,15 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 
 	int x;
 	bool isbold;
+	double m_offset = m_scale->GetOffset();
+	double m_range = m_scale->GetRange();
 
-	m_valueadaptor->InitState(m_offset, m_range, 15. / (double)width);
+	m_scale->GetValueAdaptor()->InitState(m_offset, m_range, 15. / (double)width);
 	gc->SetPen(*wxBLACK_PEN);
 
-	while (m_valueadaptor->Step())
+	while (m_scale->GetValueAdaptor()->Step())
 	{
-		double ticker = m_valueadaptor->GetTicker();
+		double ticker = m_scale->GetValueAdaptor()->GetTicker();
 		int tick_len;
 		x = (ticker) / m_range * width;
 		if (m_orient == wxVERTICAL)
@@ -110,9 +116,9 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 		else
 			gc->StrokeLine(0, x, tick_len, x);
 
-		m_valueadaptor->ValToStr(s_buff, 64);
+		m_scale->GetValueAdaptor()->ValToStr(s_buff, 64);
 		text = s_buff;
-		if(m_valueadaptor->IsBold())
+		if(m_scale->GetValueAdaptor()->IsBold())
 		{ 
 			m_font.MakeBold();
 		}
@@ -128,7 +134,7 @@ void ScaleWindow::OnPaint(wxPaintEvent & event)
 
 	}
 
-	if (m_valueadaptor->ValBiggerPart(s_buff, 64))
+	if (m_scale->GetValueAdaptor()->ValBiggerPart(s_buff, 64))
 	{
 		m_font.MakeBold();
 		gc->SetFont(m_font, *wxBLACK);
@@ -160,9 +166,11 @@ void ScaleWindow::OnMouseWheel(wxMouseEvent & event)
 	int w, h;
 	GetClientSize(&w, &h);
 	if (m_orient == wxHORIZONTAL)
-		ZoomAt((double)event.GetX() / (double)w, factor);
+		m_scale->ZoomAt((double)event.GetX() / (double)w, factor);
 	else
-		ZoomAt(1 - (double)event.GetY() / (double)h, factor);
+		m_scale->ZoomAt(1 - (double)event.GetY() / (double)h, factor);
+
+	validate();
 }
 
 void ScaleWindow::OnLeftDown(wxMouseEvent & event)
@@ -173,9 +181,9 @@ void ScaleWindow::OnLeftDown(wxMouseEvent & event)
 	m_ispanning = true;
 
 	if (m_orient == wxHORIZONTAL)
-		StartPanAt((double)event.GetX() / (double)x);
+		m_scale->StartPanAt((double)event.GetX() / (double)x);
 	else
-		StartPanAt(1 - (double)event.GetY() / (double)h);
+		m_scale->StartPanAt(1 - (double)event.GetY() / (double)h);
 
 	if(!HasCapture())
         CaptureMouse();
@@ -183,7 +191,7 @@ void ScaleWindow::OnLeftDown(wxMouseEvent & event)
 
 void ScaleWindow::OnLeftUp(wxMouseEvent & event)
 {
-	EndPanAt();
+	m_scale->EndPanAt();
 	m_ispanning = false;
 
 	wxCommandEvent eventvc(PLOTVIEWCHANGED, GetId());
@@ -201,9 +209,10 @@ void ScaleWindow::OnMouseMove(wxMouseEvent & event)
 	if (m_ispanning)
 	{
 		if (m_orient == wxHORIZONTAL)
-			ProceedPanAt((double)event.GetX() / (double)x);
+			m_scale->ProceedPanAt((double)event.GetX() / (double)x);
 		else
-			ProceedPanAt(1 - (double)event.GetY() / (double)h);
+			m_scale->ProceedPanAt(1 - (double)event.GetY() / (double)h);
+		validate();
 	}
 }
 
@@ -211,3 +220,19 @@ void ScaleWindow::OnMouseCaptureLost(wxMouseCaptureLostEvent &event)
 {
 
 }
+
+void plot::ScaleWindow::validate()
+{
+
+	for (auto plot : m_scale->_get_plots())
+		plot->Validate();
+
+	Refresh();
+	Update();
+}
+
+void plot::ScaleWindow::MyScale::Validate()
+{
+	m_me->Refresh();
+	m_me->Update();
+};

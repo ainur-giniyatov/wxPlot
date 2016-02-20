@@ -17,13 +17,13 @@ namespace plot
 	{
 	public:
 		/*constructor invokes owner_space->SetGrid(this)*/
-		Grid(Area *owner);
+		Grid();
 		virtual ~Grid();
 
 		virtual void Render(void *) = 0;
 		void GridUpdated();
 
-
+		void _setowner(Area *area) { m_owner = area; }
 	protected:
 		Area *m_owner;
 	private:

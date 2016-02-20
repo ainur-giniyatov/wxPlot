@@ -1,5 +1,5 @@
 #include "SeriesTool.h"
-
+#include "../include/wx/wxRenderer.h"
 
 void SeriesTool::m_checkBox_nameOnCheckBox(wxCommandEvent & event)
 {
@@ -7,7 +7,7 @@ void SeriesTool::m_checkBox_nameOnCheckBox(wxCommandEvent & event)
 		return;
 
 	m_series->GetRenderer()->SetVisible(event.IsChecked());
-	m_series->SeriesUpdated();
+	m_series->Validate();
 }
 
 void SeriesTool::m_bpButton_fithorOnButtonClick(wxCommandEvent & event)
@@ -15,7 +15,7 @@ void SeriesTool::m_bpButton_fithorOnButtonClick(wxCommandEvent & event)
 	if (m_series == nullptr)
 		return;
 
-	m_series->GetData(AXIS_X)->Fit();
+//	m_series->GetData(AXIS_X)->Fit();
 }
 
 void SeriesTool::m_bpButton_fitvertOnButtonClick(wxCommandEvent & event)
@@ -23,7 +23,7 @@ void SeriesTool::m_bpButton_fitvertOnButtonClick(wxCommandEvent & event)
 	if (m_series == nullptr)
 		return;
 
-	m_series->GetData(AXIS_Y)->Fit();
+//	m_series->GetData(AXIS_Y)->Fit();
 }
 
 void SeriesTool::m_bpButton_fitOnButtonClick(wxCommandEvent & event)
@@ -40,14 +40,14 @@ void SeriesTool::m_bpButton_deleteOnButtonClick(wxCommandEvent & event)
 	if (m_series == nullptr)
 		return;
 
-	plot::Plot *plotwindow;
-	plotwindow = m_series->GetOwner()->GetOwner();
-	m_series->GetOwner()->DeleteSeries(m_series);
+	//plot::Plot *plotwindow;
+	//plotwindow = m_series->GetOwner()->GetOwner();
+	//m_series->GetOwner()->DeleteSeries(m_series);
 	
 	
 	
-	plotwindow->_SetViewModifiedFlag();
-	plotwindow->RedrawPlot();
+	//plotwindow->_SetViewModifiedFlag();
+	//plotwindow->RedrawPlot();
 	
 	SetSelectedSeries(nullptr);
 }
@@ -58,7 +58,7 @@ void SeriesTool::m_slider_line_weightOnScroll(wxScrollEvent & event)
 		return;
 
 	m_series->GetRenderer()->GetLine()->SetThickness(event.GetPosition());
-	m_series->SeriesUpdated();
+	m_series->Validate();
 }
 
 void SeriesTool::m_slider_marks_sizeOnScroll(wxScrollEvent & event)
@@ -67,7 +67,7 @@ void SeriesTool::m_slider_marks_sizeOnScroll(wxScrollEvent & event)
 		return;
 
 	m_series->GetRenderer()->GetMarker()->SetSize(event.GetPosition());
-	m_series->SeriesUpdated();
+	m_series->Validate();
 
 	m_combo_marks_style->CopyMarkerAttribs((plot::wxMarker*)m_series->GetRenderer()->GetMarker());
 }
@@ -78,7 +78,7 @@ void SeriesTool::m_checkBox_line_visibleOnCheckBox(wxCommandEvent & event)
 		return;
 
 	m_series->GetRenderer()->GetLine()->SetVisible(event.IsChecked());
-	m_series->SeriesUpdated();
+	m_series->Validate();
 }
 
 void SeriesTool::m_checkBox_marks_visibleOnCheckBox(wxCommandEvent & event)
@@ -87,7 +87,7 @@ void SeriesTool::m_checkBox_marks_visibleOnCheckBox(wxCommandEvent & event)
 		return;
 
 	m_series->GetRenderer()->GetMarker()->SetVisible(event.IsChecked());
-	m_series->SeriesUpdated();
+	m_series->Validate();
 }
 
 void SeriesTool::m_combo_line_colourOnSelect(wxCommandEvent & event)
@@ -97,7 +97,7 @@ void SeriesTool::m_combo_line_colourOnSelect(wxCommandEvent & event)
 		return;
 	
 	m_series->GetRenderer()->GetLine()->SetColourIndex(event.GetSelection());
-	m_series->SeriesUpdated();
+	m_series->Validate();
 
 }
 
@@ -109,7 +109,7 @@ void SeriesTool::m_combo_marks_colourOnSelect(wxCommandEvent & event)
 	
 
 	m_series->GetRenderer()->GetMarker()->SetFillColourIndex(event.GetSelection());
-	m_series->SeriesUpdated();
+	m_series->Validate();
 
 	m_combo_marks_style->CopyMarkerAttribs((plot::wxMarker*)m_series->GetRenderer()->GetMarker());
 }
@@ -121,7 +121,7 @@ void SeriesTool::m_combo_marks_styleOnSelect(wxCommandEvent & event)
 		return;
 
 	m_series->GetRenderer()->SetMarker(m_combo_marks_style->GetSelectedMarker()->Clone());
-	m_series->SeriesUpdated();
+	m_series->Validate();
 }
 
 void SeriesTool::m_combo_line_styleOnSelect(wxCommandEvent & event)

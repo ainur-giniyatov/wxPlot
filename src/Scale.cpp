@@ -16,7 +16,7 @@ Scale::Scale(AXIS_DIR axis_dir)
 
 	m_axis_dir = axis_dir;
 
-	m_valueadaptor = new TimeAxisValueAdaptor<double>();
+	m_valueadaptor = new SimpleAxisValueAdaptor<double>();
 }
 
 
@@ -24,7 +24,7 @@ Scale::~Scale()
 {
 	for (auto axis : m_axes)
 	{
-		axis->SetCommonScale(NULL);
+		axis->_setcommonscale(NULL);
 	}
 	if(m_valueadaptor != NULL)
 		delete m_valueadaptor;
@@ -34,57 +34,44 @@ void Scale::AddAxis(Axis * axis)
 {
 	assert(m_axis_dir == axis->_get_axis_dir());
 	m_axes.push_back(axis);
-	axis->SetCommonScale(this);
-	axis->SetOffset(m_offset);
-	axis->SetRange(m_range);
-	axis->AxisUpdated();
+	axis->_setcommonscale(this);
+	axis->_setoffset(m_offset);
+	axis->_setrange(m_range);
+	
+	m_plots.clear();
+	for (auto axis : m_axes)
+	{
+		if (axis->_getowner() != nullptr && axis->_getowner()->_getowner() != nullptr)
+		{
+			m_plots.push_back(axis->_getowner()->_getowner());
+			axis->_getowner()->_getowner()->_refresh_dependant_scales();
+		}
 
-	if(axis->GetOwner() != nullptr && axis->GetOwner()->GetOwner() != nullptr)
-		axis->GetOwner()->GetOwner()->HandleEvent(PEventScaleSet());
+		else
+			assert(0);
+	}
+	
+	m_plots.erase(std::unique(m_plots.begin(), m_plots.end()), m_plots.end());
+
 }
 
 void Scale::RemoveAxis(Axis * axis)
 {
+	assert(axis->_getcommonscale() == this);
 	assert(m_axis_dir == axis->_get_axis_dir());
 
-	std::vector<Axis *>::iterator tail_i;
-	tail_i = std::remove(m_axes.begin(), m_axes.end(), axis);
+	
+	m_axes.erase(std::remove(m_axes.begin(), m_axes.end(), axis), m_axes.end());
 
-	if (tail_i != m_axes.end())
-	{
-		m_axes.erase(tail_i, m_axes.end());
-		axis->SetCommonScale(NULL);
-		axis->AxisUpdated();
-	}
-	else
-	{
-		assert(0);
-	}
+	m_plots.clear();
+	for (auto axis : m_axes)
+		m_plots.push_back(axis->_getowner()->_getowner());
 
-	//std::vector<Axis *> axes;
-	//bool found = false;
-	//for (auto axis_i : m_axes)
-	//{
-	//	if (axis_i == axis)
-	//	{
-	//		found = true;
-	//		continue;
-	//	}
-	//	axes.push_back(axis_i);
-	//}
-	//if (found)
-	//{
-	//	axis->SetCommonScale(NULL);
-	//	axis->AxisUpdated();
-	//}
-
-	//m_axes = axes;
+	m_plots.erase(std::unique(m_plots.begin(), m_plots.end()), m_plots.end());
 }
 
 void plot::Scale::ChangeViewDepth(int vcd, bool swtch)
 {
-
-
 	auto viewstep = m_view_change_steps.find(vcd);
 	if (!swtch)
 	{
@@ -108,8 +95,9 @@ void Scale::SetOffset(double offset)
 	m_offset = offset;
 
 	for (auto axis : m_axes)
-		axis->m_offset = m_offset;
+		axis->_setoffset(m_offset);
 
+//	Validate();
 }
 
 void Scale::SetRange(double range)
@@ -117,26 +105,27 @@ void Scale::SetRange(double range)
 	m_range = range;
 
 	for (auto axis : m_axes)
-		axis->m_range = m_range;
+		axis->_setrange(m_range);
 
+//	Validate();
 }
 
-void Scale::RedrawDependantPlots(bool redraw_immdiately)
-{
-	//redraw dependant plots uniqly. use stl algorithms
-	std::vector<Plot *> vuniqplots;
-	for (auto axis : m_axes)
-	{
-		Plot *plot = axis->GetOwner()->GetOwner();
-		if (plot != NULL && std::none_of(vuniqplots.begin(), vuniqplots.end(), [plot](Plot *p) {return p == plot; }))
-		{
-			plot->_SetViewModifiedFlag();
-			if(redraw_immdiately)
-				plot->RedrawPlot();
-			vuniqplots.push_back(plot);
-		}
-	}
-}
+//void Scale::RedrawDependantPlots(bool redraw_immdiately)
+//{
+//	//redraw dependant plots uniqly. use stl algorithms
+//	std::vector<Plot *> vuniqplots;
+//	for (auto axis : m_axes)
+//	{
+//		Plot *plot = axis->GetOwner()->GetOwner();
+//		if (plot != NULL && std::none_of(vuniqplots.begin(), vuniqplots.end(), [plot](Plot *p) {return p == plot; }))
+//		{
+//			plot->_SetViewModifiedFlag();
+//			if(redraw_immdiately)
+//				plot->RedrawPlot();
+//			vuniqplots.push_back(plot);
+//		}
+//	}
+//}
 
 void Scale::ZoomAt(double rv, double factor)
 {
@@ -151,8 +140,6 @@ void Scale::ZoomAt(double rv, double factor)
 		SetOffset(x - (x - offs) * factor);
 		SetRange(range * factor);
 
-//		ScaleRedraw();
-		RedrawDependantPlots();
 	}
 }
 
@@ -170,8 +157,6 @@ void Scale::ProceedPanAt(double rv)
 
 	SetOffset(m_pan_start_at_vv - m_range * (rv - m_pan_start_at_rv));
 
-//	ScaleRedraw();
-	RedrawDependantPlots(false);
 }
 
 void Scale::EndPanAt()
@@ -190,7 +175,7 @@ void Scale::SetValueAdaptor(AxisValueAdaptor<double>* valueadaptor)
 
 }
 
-void Scale::SetRangeLimits(double max, double min, bool update)
+void Scale::SetLimits(double max, double min, bool update)
 {
 	m_range_max = max;
 	m_range_min = min;

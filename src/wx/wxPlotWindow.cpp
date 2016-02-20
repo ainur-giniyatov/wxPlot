@@ -1,14 +1,13 @@
 //#include "stdafx.h"
+#include <algorithm>
 #include <wx/dcbuffer.h>
 
 #include "wx/wxPlotWindow.h"
 #include "wx/wxChartWindow.h"
 #include "wx/wxGrid.h"
 #include "wx/wxRenderer.h"
-
-//#include "../../other/PopupToolBar.h"
-
-
+#include "wx/wxBox.h"
+#include "wx/wxScaleBox.h"
 
 using namespace plot;
 
@@ -62,9 +61,17 @@ wxPlotWindow::wxPlotWindow(wxWindow * parent) :wxWindow(parent, wxID_ANY, wxDefa
 
 	m_diag_texts_pos_y = 5;
 
-	wxTitleBox *titlebox;
-	titlebox = new wxTitleBox(this);
-	AddBox(titlebox);
+
+	Box *box = new wxBox();
+	AddBox(box);
+
+	box = new wxTitleBox();
+	AddBox(box);
+
+
+//	wxTitleBox *titlebox;
+//	titlebox = new wxTitleBox();
+//	AddBox(titlebox);
 
 //	m_popup_tool = new wxPopupSeriesTool(this);
 }
@@ -119,25 +126,22 @@ void wxPlotWindow::OnResize(wxSizeEvent & event)
 	m_is_data_view_modified = true;
 	
 	wxSize sz(GetClientSize());
-	
-	for (auto area : m_areas)
-		for (auto series : area->GetSerie())
-			series->GetRenderer()->_setsize(sz.GetWidth(), sz.GetHeight());
 		
-	
 	m_bitmap_buffer->Create(sz);
-	for (auto box : m_boxes)
-		box->Sizing();
 
-	Refresh();
-	Layout();
+
+	plot_resized();
+
+
+	plot::Plot::Validate();
+
 }
 
 void plot::wxPlotWindow::_popup_seriesmenu(Series * series)
 {
 	m_the_series = series;
 	series->BringToFront();
-	series->SeriesUpdated();
+	series->Validate();
 	m_series_menu.FindItem(IDMENUITEM_REMOVESERIES)->SetItemLabel(wxString::Format("Remove %s", series->GetSeriesName()));
 	PopupMenu(&m_series_menu);
 }
@@ -155,10 +159,37 @@ void wxPlotWindow::OnLeftDown(wxMouseEvent & event)
 	//process interaction with on-plot boxes
 	for (auto box : m_boxes)
 	{
-		if(box->CheckIsMouseInside(x, y))
+		if (box->_get_rect().IsInside(Point<int>(x, y)) && box->_has_flags(Box::MOVEABLE))
 		{
-			box->MouseLeftDown(x, y);
-			//plotclick_event.SetBox(box);
+			m_selected_box = box;
+			auto &rect = m_selected_box->_get_rect();
+			auto border_thickness = m_selected_box->_get_borderthickenss();
+			m_selected_box_sides = BOXNONESIDE;
+			if (rect.left <= x && rect.left + border_thickness >= x)
+				m_selected_box_sides |= BOXLEFT;
+
+			if ((rect.right >= x && rect.right - border_thickness <= x) && !(m_selected_box_sides & BOXLEFT))
+				m_selected_box_sides |= BOXRIGHT;
+
+			if (rect.top <= y && rect.top + border_thickness >= y)
+				m_selected_box_sides |= BOXTOP;
+
+			if ((rect.bottom >= y && rect.bottom - border_thickness <= y) && !(m_selected_box_sides & BOXTOP))
+				m_selected_box_sides |= BOXBOTTOM;
+
+			m_box_click_delta = Point<int>(x - rect.left, y - rect.top);
+			m_box_click_delta2 = Point<int>(rect.right - x, rect.bottom - y);
+
+			if (m_selected_box_sides == BOXNONESIDE)
+			{
+				m_selected_box_state = BOXMOVING;
+			}
+			else
+			{
+				if(box->_has_flags(Box::RESIZEABLE))
+					m_selected_box_state = BOXRESIZING;
+			}
+
 			return;
 		}
 	}
@@ -168,7 +199,7 @@ void wxPlotWindow::OnLeftDown(wxMouseEvent & event)
 	if (ser_sel.GetSeries() != nullptr)
 	{
 		ser_sel.GetSeries()->BringToFront();
-		ser_sel.GetSeries()->SeriesUpdated();
+		ser_sel.GetSeries()->Validate();
 		plotclick_event.SetSeriesSelection(ser_sel);
 	//	if (m_popup_tool->IsShown())
 	//	{
@@ -226,24 +257,17 @@ void wxPlotWindow::OnLeftUp(wxMouseEvent & event)
 	EndPan();
 	EndZoomSelect();
 
-	//for (auto widget : m_widgets)
-	//{
-	//	if (widget->MouseIsInside(x, y))
-	//	{
-	//		widget->OnMouseLeftUp(x, y);
-	//		//return;
-	//	}
-	//}
+	m_selected_box = nullptr;
 
 	//process interaction with on-plot boxes
-	for (auto box : m_boxes)
-	{
-		if (box->CheckIsMouseInside(x, y))
-		{
-			box->MouseLeftUp(x, y);
-//			return;
-		}
-	}
+//	for (auto box : m_boxes)
+//	{
+//		if (box->CheckIsMouseInside(x, y))
+//		{
+//			box->MouseLeftUp(x, y);
+////			return;
+//		}
+//	}
 
 	if(HasCapture())
         ReleaseMouse();
@@ -258,14 +282,14 @@ void wxPlotWindow::OnRightDown(wxMouseEvent & event)
 	y = event.GetY();
 
 	//process interaction with on-plot boxes
-	for (auto box : m_boxes)
-	{
-		if (box->CheckIsMouseInside(x, y))
-		{
-			box->MouseRightDown(x, y);
-						return;
-		}
-	}
+	//for (auto box : m_boxes)
+	//{
+	//	if (box->CheckIsMouseInside(x, y))
+	//	{
+	//		box->MouseRightDown(x, y);
+	//					return;
+	//	}
+	//}
 
 	//series menu
 	SeriesSelection ser_sel;
@@ -291,14 +315,14 @@ void wxPlotWindow::OnRightUp(wxMouseEvent & event)
 	y = event.GetY();
 
 	//process interaction with on-plot boxes
-	for (auto box : m_boxes)
-	{
-		if (box->CheckIsMouseInside(x, y))
-		{
-			box->MouseRightUp(x, y);
-						return;
-		}
-	}
+	//for (auto box : m_boxes)
+	//{
+	//	if (box->CheckIsMouseInside(x, y))
+	//	{
+	//		box->MouseRightUp(x, y);
+	//					return;
+	//	}
+	//}
 
 }
 
@@ -309,20 +333,92 @@ void wxPlotWindow::OnMouseMove(wxMouseEvent & event)
 	x = event.GetPosition().x;
 	y = event.GetPosition().y;
 
-	//for (auto widget : m_widgets)
-	//{
-	//	if (widget->MouseIsInside(x, y))
-	//	{
-	//		widget->MouseMoving(x, y);
-	//	}
-	//}
-
-	for (auto box : m_boxes)
+	if (event.LeftIsDown() && m_selected_box != nullptr)
 	{
-		if (box->CheckIsMouseInside(x, y))
+		auto &rect = m_selected_box->_get_rect();
+		auto snap_distance = m_selected_box->_getsnapdistance();
+		if (m_selected_box_state == BOXMOVING)
 		{
-			box->MouseMove(x, y);
+			if (!m_selected_box->_has_flags(Box::EXPANDVERT))
+			{
+				auto ny = y - m_box_click_delta.y;
+				if (abs(ny) < snap_distance)
+					ny = 0;
+				if (abs(ny + rect.Height() - h - 1) < snap_distance)
+					ny = h - rect.Height() - 1;
+				rect.SetTop(ny);
+			}
+
+			if (!m_selected_box->_has_flags(Box::EXPANDHOR))
+			{
+				auto nx = x - m_box_click_delta.x;
+				if (abs(nx) < snap_distance)
+					nx = 0;
+				if (abs(nx + rect.Width() - w - 1) < snap_distance)
+					nx = w - rect.Width() - 1;
+				rect.SetLeft(nx);
+			}
 		}
+		if (m_selected_box_state == BOXRESIZING)
+		{
+			int wr, hr, ms, v;
+			wr = rect.Width();
+			hr = rect.Height();
+			ms = m_selected_box->_get_borderthickenss() * 2 + 5;
+
+			if (!m_selected_box->_has_flags(Box::EXPANDVERT))
+			{
+				if (m_selected_box_sides & BOXTOP)
+				{
+					v = y - m_box_click_delta.y;
+					if (abs(v) < snap_distance)
+						v = 0;
+					if (rect.bottom - v > ms)
+						rect.SetTop(v, false);
+					else
+						rect.SetTop(rect.bottom - ms, false);
+				}
+
+				if (m_selected_box_sides & BOXBOTTOM)
+				{
+					v = y + m_box_click_delta2.y;
+					if (abs(h - v - 1) < snap_distance)
+						v = h - 1;
+					if (v - rect.top > ms)
+						rect.SetBottom(v, false);
+					else
+						rect.SetBottom(ms + rect.top, false);
+				}
+
+			}
+
+			if (!m_selected_box->_has_flags(Box::EXPANDHOR))
+			{
+				if (m_selected_box_sides & BOXLEFT)
+				{
+					v = x - m_box_click_delta.x;
+					if (abs(v) < snap_distance)
+						v = 0;
+					if (rect.right - v > ms)
+						rect.SetLeft(v, false);
+					else
+						rect.SetLeft(rect.right - ms, false);
+				}
+
+				if (m_selected_box_sides & BOXRIGHT)
+				{
+					v = x + m_box_click_delta2.x;
+					if (abs(w - v - 1) < snap_distance)
+						v = w - 1;
+					if (v - rect.left > ms)
+						rect.SetRight(v, false);
+					else
+						rect.SetRight(ms + rect.left, false);
+				}
+			}
+		}
+
+		Plot::Validate(false);
 	}
 
 	if (m_lbaction == LBA_PAN && m_panning)
@@ -445,10 +541,11 @@ void wxPlotWindow::Render(wxGraphicsContext * gc)
 	}
 
 //render boxes
-	for (auto box_iter = m_boxes.rbegin(); box_iter != m_boxes.rend(); ++box_iter)
-	{
-		((wxBox*)*box_iter)->Render(gc);
-	}
+	for_each(m_boxes.rbegin(), m_boxes.rend(), [gc](Box *box) { box->Render(gc); });
+	//for (auto box_iter = m_boxes.rbegin(); box_iter != m_boxes.rend(); ++box_iter)
+	//{
+	//	((wxBox*)*box_iter)->Render(gc);
+	//}
 
 #ifdef _DEBUG
 	double t = timer.elapsed() * 1000.;
@@ -487,8 +584,8 @@ void wxPlotWindow::DrawZoomSelection()
 	if (grid != NULL)
 		grid->Render(gc);
 
-	for (auto box : m_boxes)
-		box->Render(gc);
+	//for (auto box : m_boxes)
+	//	box->Render(gc);
 
 	delete gc;
 }
@@ -507,23 +604,23 @@ void wxPlotWindow::OnMouseCaptureLost(wxMouseCaptureLostEvent &event)
 void plot::wxPlotWindow::OnMenuItem_RemoveSeries(wxCommandEvent & event)
 {
 	DPRINTF("wxPlotWindow::OnMenuItem_RemoveSeries\n");
-	Area *area;
-	area = m_the_series->GetOwner();
-	area->DeleteSeries(m_the_series);
-	area->GetOwner()->_SetViewModifiedFlag();
-	area->GetOwner()->RedrawPlot();
+	//Area *area;
+	//area = m_the_series->GetOwner();
+	//area->DeleteSeries(m_the_series);
+	//area->GetOwner()->_SetViewModifiedFlag();
+	//area->GetOwner()->RedrawPlot();
 }
 
 void plot::wxPlotWindow::OnMenuItem_SeriesFitVert(wxCommandEvent & event)
 {
 	DPRINTF("wxPlotWindow::OnMenuItem_SeriesFitVert\n");
-	m_the_series->GetData(AXIS_Y)->Fit();
+	//m_the_series->GetData(AXIS_Y)->Fit();
 }
 
 void plot::wxPlotWindow::OnMenuItem_SeriesFitHor(wxCommandEvent & event)
 {
 	DPRINTF("wxPlotWindow::OnMenuItem_SeriesFitHor\n");
-	m_the_series->GetData(AXIS_X)->Fit();
+	//m_the_series->GetData(AXIS_X)->Fit();
 }
 
 void plot::wxPlotWindow::OnMenuItem_SeriesFitAllDims(wxCommandEvent & event)

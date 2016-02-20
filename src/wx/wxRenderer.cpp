@@ -60,7 +60,7 @@ bool plot::wxRendererTyped<T1, T2>::_isspotted(Point<int>& mouse_coord, SeriesSe
 	Axis *xaxis;
 	Axis *yaxis;
 
-	Area *space = (Area*)m_owner_series->GetOwner();
+	Area *space = (Area*)m_owner_series->_getowner();
 
 	xaxis = space->GetAxis(AXIS_X);
 	yaxis = space->GetAxis(AXIS_Y);
@@ -70,10 +70,10 @@ bool plot::wxRendererTyped<T1, T2>::_isspotted(Point<int>& mouse_coord, SeriesSe
 
 	double xoffset, yoffset, xrange, yrange;
 
-	xoffset = xaxis->GetOffset();
-	xrange = xaxis->GetRange();
-	yoffset = yaxis->GetOffset();
-	yrange = yaxis->GetRange();
+	xoffset = xaxis->_getoffset();
+	xrange = xaxis->_getrange();
+	yoffset = yaxis->_getoffset();
+	yrange = yaxis->_getrange();
 
 	if (m_marker != nullptr && m_marker->_isvisible())
 	{
@@ -126,7 +126,24 @@ void wxRendererTyped<T1, T2>::Render(void* v_gc)
 		
 	Series *series;
 	series = (Series *)m_owner_series;
-	
+	Plot *plot;
+	plot = series->_getowner()->_getowner();
+	plot->GetSize(&m_width, &m_height);
+
+	bool draw_vert = true;
+	int width, height;
+	if (plot->_get_orientation() == Plot::ORIENTATION_NORMAL)
+	{
+		width = m_width;
+		height = m_height;
+	}
+	if (plot->_get_orientation() == Plot::ORIENTATION_ROTATED)
+	{
+		width = m_height;
+		height = m_width;
+		draw_vert = false;
+	}
+
 	DataTyped<T1> *xdata = (DataTyped<T1> *)series->GetData(AXIS_X);
 	DataTyped<T2> *ydata = (DataTyped<T2> *)series->GetData(AXIS_Y);
 	
@@ -144,7 +161,7 @@ void wxRendererTyped<T1, T2>::Render(void* v_gc)
 	Axis *xaxis;
 	Axis *yaxis;
 	
-	Area *area = (Area*)m_owner_series->GetOwner();
+	Area *area = (Area*)m_owner_series->_getowner();
 	
 	xaxis = area->GetAxis(AXIS_X);
 	yaxis = area->GetAxis(AXIS_Y);
@@ -154,18 +171,18 @@ void wxRendererTyped<T1, T2>::Render(void* v_gc)
 	
 	double xoffset, yoffset, xrange, yrange;
 	
-	xoffset = xaxis->GetOffset();
-	xrange = xaxis->GetRange();
-	yoffset = yaxis->GetOffset();
-	yrange = yaxis->GetRange();
+	xoffset = xaxis->_getoffset();
+	xrange = xaxis->_getrange();
+	yoffset = yaxis->_getoffset();
+	yrange = yaxis->_getrange();
 	
 
-	//x1 = ((double)xda[indx] - xoffset) / xrange * (double)m_width;
-	double x_width_div_range = (double)m_width / xrange;
+	//x1 = ((double)xda[indx] - xoffset) / xrange * (double)width;
+	double x_width_div_range = (double)width / xrange;
 	double x_offs_mult_width_div_range = xoffset * x_width_div_range;
 
-	//y1 = m_height - ((double)yda[indx] - yoffset) / yrange * (double)m_height;
-	double y_height_div_range = (double)m_height / yrange;
+	//y1 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+	double y_height_div_range = (double)height / yrange;
 	double y_offs_mult_width_div_range = yoffset * y_height_div_range;
 
 
@@ -186,7 +203,7 @@ void wxRendererTyped<T1, T2>::Render(void* v_gc)
 	{
 		int x;
 		x = (double)xda[indx] * x_width_div_range - x_offs_mult_width_div_range;
-		if (x > m_width)
+		if (x > width)
 			break;
 	}
 
@@ -205,8 +222,8 @@ void wxRendererTyped<T1, T2>::Render(void* v_gc)
 		indx = m_left_index;
 
 		x1 = (double)xda[indx] * x_width_div_range - x_offs_mult_width_div_range;
-		//y1 = m_height - ((double)yda[indx] - yoffset) / yrange * (double)m_height;
-		y1 = m_height - (double)yda[indx] * y_height_div_range + y_offs_mult_width_div_range;
+		//y1 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+		y1 = (double)yda[indx] * y_height_div_range + y_offs_mult_width_div_range;
 		
 	
 		indx++;
@@ -216,10 +233,10 @@ void wxRendererTyped<T1, T2>::Render(void* v_gc)
 		for (; indx <= m_right_index ; indx++)
 		{
 
-			//x2 = ((double)xda[indx] - xoffset) / xrange * (double)m_width;
+			//x2 = ((double)xda[indx] - xoffset) / xrange * (double)width;
 			x2 = (double)xda[indx] * x_width_div_range - x_offs_mult_width_div_range;
-			//y2 = m_height - ((double)yda[indx] - yoffset) / yrange * (double)m_height;
-			y2 = m_height - (double)yda[indx] * y_height_div_range + y_offs_mult_width_div_range;
+			//y2 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+			y2 = (double)yda[indx] * y_height_div_range + y_offs_mult_width_div_range;
 	
 			while (abs(x2 - x1) < 4 && abs(y2 - y1) < 4)
 			{
@@ -227,15 +244,19 @@ void wxRendererTyped<T1, T2>::Render(void* v_gc)
 					break;
 
 				indx++;
-				//x2 = ((double)xda[indx] - xoffset) / xrange * (double)m_width;
+				//x2 = ((double)xda[indx] - xoffset) / xrange * (double)width;
 				x2 = (double)xda[indx] * x_width_div_range - x_offs_mult_width_div_range;
-				//y2 = m_height - ((double)yda[indx] - yoffset) / yrange * (double)m_height;
-				y2 = m_height - (double)yda[indx] * y_height_div_range + y_offs_mult_width_div_range;
+				//y2 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+				y2 = (double)yda[indx] * y_height_div_range + y_offs_mult_width_div_range;
 			}
 #if _DEBUG
 			points_count++;
 #endif
-			m_line->Render(gc, Point<int>(x1, y1), Point<int>(x2, y2));
+			if(draw_vert)
+				m_line->Render(gc, Point<int>(x1, height - y1), Point<int>(x2, height - y2));
+			else
+				m_line->Render(gc, Point<int>(y1, x1), Point<int>(y2, x2));
+
 			x1 = x2;
 			y1 = y2;
 		}
@@ -250,10 +271,10 @@ void wxRendererTyped<T1, T2>::Render(void* v_gc)
 		
 		indx = m_left_index;
 
-		//x2 = x1 = ((double)xda[indx] - xoffset) / xrange * (double)m_width;
+		//x2 = x1 = ((double)xda[indx] - xoffset) / xrange * (double)width;
 		x2 = x1 = (double)xda[indx] * x_width_div_range - x_offs_mult_width_div_range;
-		//y2 = y1 = m_height - ((double)yda[indx] - yoffset) / yrange * (double)m_height;
-		y2 = y1 = m_height - (double)yda[indx] * y_height_div_range + y_offs_mult_width_div_range;
+		//y2 = y1 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+		y2 = y1 = (double)yda[indx] * y_height_div_range + y_offs_mult_width_div_range;
 	
 		indx++;
 	
@@ -261,30 +282,37 @@ void wxRendererTyped<T1, T2>::Render(void* v_gc)
 
 		for (; indx <= m_right_index; indx++)
 		{
-			//x2 = ((double)xda[indx] - xoffset) / xrange * (double)m_width;
+			//x2 = ((double)xda[indx] - xoffset) / xrange * (double)width;
 			x2 = (double)xda[indx] * x_width_div_range - x_offs_mult_width_div_range;
-			//y2 = m_height - ((double)yda[indx] - yoffset) / yrange * (double)m_height;
-			y2 = m_height - (double)yda[indx] * y_height_div_range + y_offs_mult_width_div_range;
+			//y2 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+			y2 = (double)yda[indx] * y_height_div_range + y_offs_mult_width_div_range;
 	
 			while (abs(x2 - x1) < 4 && abs(y2 - y1) < 4)
 			{
 				indx++;
 
-				//x2 = ((double)xda[indx] - xoffset) / xrange * (double)m_width;
+				//x2 = ((double)xda[indx] - xoffset) / xrange * (double)width;
 				x2 = (double)xda[indx] * x_width_div_range - x_offs_mult_width_div_range;
-				//y2 = m_height - ((double)yda[indx] - yoffset) / yrange * (double)m_height;
-				y2 = m_height - (double)yda[indx] * y_height_div_range + y_offs_mult_width_div_range;
+				//y2 = height - ((double)yda[indx] - yoffset) / yrange * (double)height;
+				y2 = (double)yda[indx] * y_height_div_range + y_offs_mult_width_div_range;
 
 				if (indx == m_right_index)
 					break;
 			}
 	
-			m_marker->Render(gc, Point<int>(x1, y1));
+			if(draw_vert)
+				m_marker->Render(gc, Point<int>(x1, height - y1));
+			else
+				m_marker->Render(gc, Point<int>(y1, x1));
 
 			x1 = x2;
 			y1 = y2;
 		}
-		m_marker->Render(gc, Point<int>(x2, y2));
+
+		if(draw_vert)
+			m_marker->Render(gc, Point<int>(x2, height - y2));
+		else
+			m_marker->Render(gc, Point<int>(y2, x2));
 	}
 	
 #ifdef _DEBUG

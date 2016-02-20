@@ -5,10 +5,8 @@
 using namespace plot;
 
 
-wxGrid::wxGrid(Area * owner):Grid(owner)
+wxGrid::wxGrid()
 {
-	if (m_owner->GetOwner() != nullptr)
-		m_owner->GetOwner()->RedrawPlot();
 }
 
 wxGrid::~wxGrid()
@@ -20,25 +18,25 @@ void wxGrid::Render(void * v_gc)
 	wxGraphicsContext *gc = (wxGraphicsContext *)v_gc;
 	wxAntialiasMode antialiasmode = gc->GetAntialiasMode();
 	gc->SetAntialiasMode(wxANTIALIAS_NONE);
-	wxASSERT(m_owner != NULL);
+	wxASSERT(m_owner != nullptr);
 	//return;
 	Axis *xaxis = m_owner->GetAxis(AXIS_X);
 	Axis *yaxis = m_owner->GetAxis(AXIS_Y);
 
-	wxASSERT(xaxis != NULL && yaxis != NULL);
+	wxASSERT(xaxis != nullptr && yaxis != nullptr);
 
-	AxisAdaptor *xaxadaptor = NULL;
+	AxisAdaptor *xaxadaptor = nullptr;
 	
-	if(xaxis->GetCommonScale() != NULL)
-		xaxadaptor = xaxis->GetCommonScale()->GetValueAdaptor();//m_owner_space->GetOwner()->GetCommonScale()
+	if(xaxis->_getcommonscale() != nullptr)
+		xaxadaptor = xaxis->_getcommonscale()->GetValueAdaptor();//m_owner_space->GetOwner()->_getcommonscale()
 
-	AxisAdaptor *yaxadaptor = NULL;
+	AxisAdaptor *yaxadaptor = nullptr;
 
-	if(yaxis->GetCommonScale() != NULL)
-		yaxadaptor = yaxis->GetCommonScale()->GetValueAdaptor();
+	if(yaxis->_getcommonscale() != nullptr)
+		yaxadaptor = yaxis->_getcommonscale()->GetValueAdaptor();
 	
 
-	//wxASSERT(yaxadaptor != NULL);
+	//wxASSERT(yaxadaptor != nullptr);
 
 	int width, height;
 	m_owner->GetOwner()->GetSize(&width, &height);
@@ -47,14 +45,14 @@ void wxGrid::Render(void * v_gc)
 	wxPen pen(*wxBLUE, 0, wxPENSTYLE_DOT);
 	gc->SetPen(pen);
 
-	if (xaxadaptor != NULL)
+	if (xaxadaptor != nullptr)
 	{
-		xaxadaptor->InitState(xaxis->GetOffset(), xaxis->GetRange(), 15. / (double)width);
+		xaxadaptor->InitState(xaxis->_getoffset(), xaxis->_getrange(), 15. / (double)width);
 		while (xaxadaptor->Step())
 		{
 			double ticker = xaxadaptor->GetTicker();
 			int x;
-			x = (ticker) / xaxis->GetRange() * width;
+			x = (ticker) / xaxis->_getrange() * width;
 			if (x < 0)
 				continue;
 			if (x > width)
@@ -64,14 +62,14 @@ void wxGrid::Render(void * v_gc)
 		}
 	}
 
-	if (yaxadaptor != NULL)
+	if (yaxadaptor != nullptr)
 	{
-		yaxadaptor->InitState(yaxis->GetOffset(), yaxis->GetRange(), 15. / (double)height);
+		yaxadaptor->InitState(yaxis->_getoffset(), yaxis->_getrange(), 15. / (double)height);
 		while (yaxadaptor->Step())
 		{
 			double ticker = yaxadaptor->GetTicker();
 			int y;
-			y = (1 - (ticker) / yaxis->GetRange()) * height;
+			y = (1 - (ticker) / yaxis->_getrange()) * height;
 			if (y < 0)
 				continue;
 			if (y > height)

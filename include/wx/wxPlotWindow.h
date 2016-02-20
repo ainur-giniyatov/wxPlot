@@ -8,33 +8,32 @@
 
 #include <wx/bitmap.h>
 
-#include "../Plot.h"
 #include "ScaleWindow.h"
+#include "../Plot.h"
+
 #include "../../other/PopupSeriesTool.h"
-#include "wxBox.h"
 
 namespace plot
 {
 	class DLLIMPEXP_PLOTLIB wxPlotWindow;
-	class DLLIMPEXP_PLOTLIB wxBox;
 
 	class  PlotClickEvent : public wxCommandEvent
 	{
 	public:
-		PlotClickEvent(wxEventType eventType, int winind, wxPlotWindow *plot, Series *series = nullptr, wxBox *box = nullptr) : wxCommandEvent(eventType, winind), m_series_selection(nullptr)
+		PlotClickEvent(wxEventType eventType, int winind, wxPlotWindow *plot, Series *series = nullptr) : wxCommandEvent(eventType, winind), m_series_selection(nullptr)
 		{ 
 			m_plotwindow = nullptr;
-			m_box = nullptr;
+			//m_box = nullptr;
 			m_plotwindow = plot;
-			m_box = box;
+			//m_box = box;
 			m_series_selection = series;
 		}
 		virtual ~PlotClickEvent() {};
 
-		void SetBox(wxBox *box) { m_box = box; }
+		//void SetBox(wxBox *box) { m_box = box; }
 		void SetSeriesSelection(const SeriesSelection &ser_selection) { m_series_selection = ser_selection; }
 		wxPlotWindow *GetPlot() { return m_plotwindow; }
-		wxBox *GetBox() { return m_box; }
+		//wxBox *GetBox() { return m_box; }
 		SeriesSelection *GetSeriesSelection() { return &m_series_selection; };
 
 		virtual wxEvent *Clone() const { return new PlotClickEvent(*this); }
@@ -43,7 +42,7 @@ namespace plot
 	private:
 		SeriesSelection m_series_selection;
 		wxPlotWindow *m_plotwindow;
-		wxBox *m_box;
+		//wxBox *m_box;
 	};
 
 };

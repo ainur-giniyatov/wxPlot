@@ -19,28 +19,21 @@ namespace plot
 	public:
 		Axis(AXIS_DIR axis_dir);
 		virtual ~Axis();
-		void AxisUpdated();
 
-		void SetOwner(Area *area) { m_owner = area; };
-		Area *GetOwner() { return m_owner; }
-
-		void SetOffset(double offset);
-		void SetRange(double range);
-		double inline GetOffset() { return m_offset; }
-		double inline GetRange() { return m_range; }
-
-		void SetCommonScale(Scale *scale) { m_commonscale = scale; };
-		Scale *GetCommonScale() { return m_commonscale; }
-		//void PropagateToCommonScale();
 
 		//internal use methods
-		/*adjust visible range for the axis and redraw dependant plots*/
-		void _SetVisibleRange(double offs, double range, bool update = true);
 		AXIS_DIR _get_axis_dir() { return m_axis_dir; }
 		const std::vector<DataNoType *> _get_adj_datas();
-	protected:
+		void _setowner(Area *area) { m_owner = area; };
+		Area *_getowner() { return m_owner; }
 
-		friend class Scale;
+		void _setoffset(double offset) { m_offset = offset; };
+		void _setrange(double range) { m_range = range; };
+		double inline _getoffset() { return m_offset; }
+		double inline _getrange() { return m_range; }
+		void _setcommonscale(Scale *scale) { m_commonscale = scale; };
+		Scale *_getcommonscale() { return m_commonscale; }
+	protected:
 
 		double m_offset;
 		double m_range;

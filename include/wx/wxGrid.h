@@ -8,7 +8,7 @@ namespace plot
 	class DLLIMPEXP_PLOTLIB wxGrid : public Grid
 	{
 	public:
-		wxGrid(Area *owner);
+		wxGrid();
 		virtual ~wxGrid();
 
 		virtual void Render(void *) override;

@@ -3,7 +3,9 @@
 #include <string.h>
 
 #include "Series.h"
-
+#include "Area.h"
+#include "Data.h"
+#include "Renderer.h"
 
 using namespace plot;
 
@@ -15,7 +17,7 @@ Series::Series(int dim_num, const char *series_name)
 	m_series_name = NULL;
 	m_owner = NULL;
 	m_user_data = nullptr;
-	SetSeriesName(series_name, false);
+	SetSeriesName(series_name);
 	m_renderer = NULL;
 
 	m_dim_num = dim_num;
@@ -43,13 +45,14 @@ Series::~Series()
 	for (int indx = 0; indx < m_dim_num; indx++)
 	{
 		if (m_datas[indx] != nullptr)
-			DeleteData(m_datas[indx]);
+			delete m_datas[indx];
 	}
 
 	free(m_datas);
+	
 }
 
-void Series::SetSeriesName(const char * series_name, bool update)
+void Series::SetSeriesName(const char * series_name)
 {
 	if (m_series_name != NULL && m_series_name != s_series_name_null)
 	{
@@ -64,21 +67,24 @@ void Series::SetSeriesName(const char * series_name, bool update)
 	else
 		m_series_name = (char *)s_series_name_null;
 
-
-	if (m_owner != nullptr && m_owner->GetOwner() != nullptr)
-	{
-		
-		m_owner->GetOwner()->HandleEvent(PEventSeriesNameChanged());
-	}
-
-	if (update)
-		SeriesUpdated();
 }
 
-void Series::SeriesUpdated()
+
+bool plot::Series::IsValid()
 {
-	m_owner->GetOwner()->_SetViewModifiedFlag();
-	m_owner->GetOwner()->RedrawPlot();
+	bool isvalid = true;
+
+	for (size_t indx = 0; indx < m_dim_num; indx++)
+		if (m_datas[indx] == nullptr || !m_datas[indx]->IsValid())
+			isvalid = false;
+	
+	return isvalid;
+}
+
+void plot::Series::Validate()
+{
+	if (m_owner != nullptr)
+		m_owner->Validate();
 }
 
 void Series::SetData(DataNoType * data, AXIS_DIR axis_dir)
@@ -89,7 +95,8 @@ void Series::SetData(DataNoType * data, AXIS_DIR axis_dir)
 		DeleteData(m_datas[axis_dir]);
 
 	m_datas[axis_dir] = data;
-	data->_SetOwner(this);
+	data->_setowner(this);
+
 }
 
 DataNoType * Series::GetData(AXIS_DIR axis_dir)
@@ -100,74 +107,67 @@ DataNoType * Series::GetData(AXIS_DIR axis_dir)
 
 void Series::RemoveData(DataNoType * data)
 {
+	assert(data->_getowner() == this);
+
 	int indx;
 	for (indx = 0; indx < m_dim_num; indx++)
 	{
 		if (m_datas[indx] == data)
 		{
 			m_datas[indx] = nullptr;
-			data->_SetOwner(nullptr);
+			data->_setowner(nullptr);
 			break;
 		}
 	}
+
 	assert(indx != m_dim_num);//not found
 }
 
 void Series::DeleteData(DataNoType * data)
 {
-	int indx;
-	for (indx = 0; indx < m_dim_num; indx++)
-	{
-		if (m_datas[indx] == data)
-		{
-			m_datas[indx] = nullptr;
-			delete data;
-			break;
-		}
-	}
-	assert(indx != m_dim_num);//not found
-
+	RemoveData(data);
+	delete data;
 }
 
-void Series::Fit(int axis_mask)
-{
-	std::vector<Scale *> scales;
-
-	for (auto axis : m_owner->_get_axes())
-		if (axis->GetCommonScale() != nullptr && ((1 << axis->_get_axis_dir()) & axis_mask))
-			scales.push_back(axis->GetCommonScale());
-	scales.erase(std::unique(scales.begin(), scales.end()), scales.end());
-
-	for (int xd = 0; xd < 3; xd++)
-		if ((1 << xd) & axis_mask)
-		{
-			double vmax = 0, vmin = 0;
-
-			DataNoType *data = nullptr;
-			data = GetData((AXIS_DIR)xd);
-			if (data == nullptr)
-				continue;
-
-			vmax = data->GetDataMax();
-			vmin = data->GetDataMin();
-
-			for (auto scale : scales)
-			{
-				if (xd != scale->_get_axis_dir())
-					continue;
-
-
-				double range = vmax - vmin;
-				scale->SetOffset(vmin - range / 10.);
-				scale->SetRange(range + range / 5.);
-				scale->RedrawDependantPlots(false);
-			}
-		}
-
-	for (auto scale : scales)
-		scale->RedrawDependantPlots();
-
-}
+//void Series::Fit(int axis_mask)
+//{
+//	std::vector<Scale *> scales;
+//
+//	for (auto axis : m_owner->_get_axes())
+//		if (axis->GetCommonScale() != nullptr && ((1 << axis->_get_axis_dir()) & axis_mask))
+//			scales.push_back(axis->GetCommonScale());
+//	scales.erase(std::unique(scales.begin(), scales.end()), scales.end());
+//
+//	for (int xd = 0; xd < 3; xd++)
+//		if ((1 << xd) & axis_mask)
+//		{
+//			double vmax = 0, vmin = 0;
+//
+//			DataNoType *data = nullptr;
+//			data = GetData((AXIS_DIR)xd);
+//			if (data == nullptr)
+//				continue;
+//
+//			vmax = data->GetDataMax();
+//			vmin = data->GetDataMin();
+//
+//			for (auto scale : scales)
+//			{
+//				if (xd != scale->_get_axis_dir())
+//					continue;
+//
+//
+//				double range = vmax - vmin;
+//				scale->SetOffset(vmin - range / 10.);
+//				scale->SetRange(range + range / 5.);
+//				scale->RedrawDependantPlots(false);
+//			}
+//		}
+//
+//	for (auto scale : scales)
+//		scale->RedrawDependantPlots();
+//
+//}
 
 void Series::SetRenderer(Renderer * renderer)
 {
@@ -191,16 +191,6 @@ void plot::Series::BringToFront()
 	}
 }
 
-void plot::Series::_setowner(Area * area)
-{
-	m_owner = area;
-	if (m_owner != nullptr && m_owner->GetOwner() != nullptr && m_renderer != nullptr)
-	{
-		int w, h;
-		m_owner->GetOwner()->GetSize(&w, &h);
-		m_renderer->_setsize(w, h);
-	}
-}
 
 //void Series::SeriesUpdated()
 //{
@@ -337,10 +327,3 @@ void plot::Series::_setowner(Area * area)
 //void Series2D::Fit(bool update)
 //{
 //}
-
-const int PEventSeriesNameChanged::s_event_id = PEventList::GetNewEventId();
-
-plot::PEventSeriesNameChanged::PEventSeriesNameChanged()
-{
-	m_event_id = s_event_id;
-}

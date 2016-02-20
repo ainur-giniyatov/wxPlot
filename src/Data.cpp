@@ -1,37 +1,38 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "Data.h"
+#include "Series.h"
 
 using namespace plot;
 
-const char *s_data_name_null = "null";
+const char *s_data_name_null = "nullptr";
 
 DataNoType::DataNoType(size_t size, const char *data_name)
 {
 	DPRINTF("DataNoType ctor\n")
-	m_data_name = NULL;
-	m_owner_series = NULL;
+	m_data_name = nullptr;
+	m_owner_series = nullptr;
 	m_data_size = 0;
 	SetDataName(data_name);
 
-	m_maxmin_manual = false;
+	m_maxmin_override = false;
 
-//	m_axis_dir = AXIS_NONE;
 }
 
 
 DataNoType::~DataNoType()
 {
 	DPRINTF("DataNoType dtor\n")
-	if (m_data_name != NULL && m_data_name != s_data_name_null)
+	if (m_data_name != nullptr && m_data_name != s_data_name_null)
 		free(m_data_name);
 
 }
 
 void DataNoType::SetDataName(const char * name)
 {
-	if (name != NULL)
+	if (name != nullptr)
 	{
 		m_data_name = (char *)malloc(strlen(name) + 1);
 		strcpy(m_data_name, name);
@@ -40,55 +41,42 @@ void DataNoType::SetDataName(const char * name)
 		m_data_name = (char *)s_data_name_null;
 
 }
-//
-//void DataNoType::DataUpdated()
-//{
-//	DPRINTF("Data updated\n");
-//	if (m_owner_series != NULL)
-//		m_owner_series->SeriesUpdated();
-//}
+
 
 void DataNoType::SetMaxMinMode(bool manual)
 {
-    m_maxmin_manual = manual;
+	m_maxmin_override = manual;
     //if(update)
     //    DataUpdated();
 }
 
-void plot::DataNoType::_SetOwner(Series * series)
-{
-	assert(m_owner_series == nullptr);
-	m_owner_series = series;
-}
-
-Axis * DataNoType::get_adj_axis()
-{
-	Axis *axis;
-	int axis_dir = -1;
-	assert(m_owner_series != NULL && m_owner_series->GetOwner() != NULL);
-	for (int indx = 0; m_owner_series->GetData((AXIS_DIR)indx) != nullptr; indx++)
-	{
-		if (m_owner_series->GetData((AXIS_DIR)indx) == this)
-		{
-			axis_dir = indx;
-			break;
-		}
-	}
-
-	assert(axis_dir != -1);
-
-	axis = m_owner_series->GetOwner()->GetAxis((AXIS_DIR)axis_dir);
-	assert(axis != NULL);
-	return axis;
-}
+//Axis * DataNoType::get_adj_axis()
+//{
+//	Axis *axis;
+//	int axis_dir = -1;
+//	assert(m_owner_series != nullptr && m_owner_series->GetOwner() != nullptr);
+//	for (int indx = 0; m_owner_series->GetData((AXIS_DIR)indx) != nullptr; indx++)
+//	{
+//		if (m_owner_series->GetData((AXIS_DIR)indx) == this)
+//		{
+//			axis_dir = indx;
+//			break;
+//		}
+//	}
+//
+//	assert(axis_dir != -1);
+//
+//	axis = m_owner_series->GetOwner()->GetAxis((AXIS_DIR)axis_dir);
+//	assert(axis != nullptr);
+//	return axis;
+//}
 
 template<class T>
 DataTyped<T>::DataTyped( size_t size, const char *data_name):DataNoType( size, data_name)
 {
 	DPRINTF("DataTyped ctor\n")
-	m_data = NULL;
+	m_data = nullptr;
 	Allocate(size, false);
-//	m_valueadaptor = NULL;
 
 	m_manual_max = 100.;
 	m_manual_min = -100.;
@@ -100,22 +88,17 @@ DataTyped<T>::~DataTyped()
 	DPRINTF("DataTyped dtor\n");
 
 //free data arrays
-	Clear(false);
+	Clear();
 
-//delete valueadaptor
-	//if (m_valueadaptor != NULL)
-	//	delete m_valueadaptor;
 }
 
 template<class T>
-void DataTyped<T>::ZeroFill(bool update)
+void DataTyped<T>::ZeroFill()
 {
-	assert(m_data_size != 0 && m_data != NULL);
+	assert(m_data_size != 0 && m_data != nullptr);
 	for (size_t indx = 0; indx < m_data_size; indx++)
 		m_data[indx] = (T)0;
 
-	//if(update)
-	//	DataUpdated();
 }
 
 template<class T>
@@ -124,26 +107,24 @@ void DataTyped<T>::Allocate(size_t size,bool zerofill)
 	if (size == 0)
 		return;
 
-	Clear(false);
+	Clear();
 	m_data_size = size;
 	if (size > 0)
 	{
 		m_data = (T*)malloc(sizeof(T) * size);
 		if (zerofill)
-			ZeroFill(false);
+			ZeroFill();
 	}
 }
 
 template<class T>
-void DataTyped<T>::Clear(bool update)
+void DataTyped<T>::Clear()
 {
-	if (m_data != NULL)
+	if (m_data != nullptr)
 	{
 		free(m_data);
-		m_data = NULL;
+		m_data = nullptr;
 		m_data_size = 0;
-		//if(update)
-		//	DataUpdated();
 	}
 }
 
@@ -152,36 +133,16 @@ void DataTyped<T>::SetValue(T value, size_t indx)
 {
 #ifdef _DEBUG
 	assert(indx < m_data_size);
-	assert(m_data != NULL);
+	assert(m_data != nullptr);
 #endif
 	m_data[indx] = value;
 }
 
-//template<class T>
-//AxisValueAdaptor<T>* DataTyped<T>::GetValueAdaptor()
-//{
-//	return m_valueadaptor;
-//}
-//
-//template<class T>
-//void DataTyped<T>::SetValueAdaptor(AxisValueAdaptor<T>* valueadaptor, bool update)
-//{
-//	if (m_valueadaptor != NULL)
-//		delete m_valueadaptor;
-//
-//	m_valueadaptor = valueadaptor;
-//	m_valueadaptor->SetData(this);
-//	if (update)
-//		DataUpdated();
-//}
-
 template<class T>
-void DataTyped<T>::SetMaxMinValues(T max, T min, bool update)
+void DataTyped<T>::SetMaxMinValues(T max, T min)
 {
     m_manual_max = max;
     m_manual_min = min;
-    //if(update)
-    //    DataUpdated();
 }
 
 template<class T>
@@ -189,7 +150,7 @@ double DataTyped<T>::GetDataMax()
 {
 	assert(m_data_size != 0);
 
-	if (m_maxmin_manual)
+	if (m_maxmin_override)
 		return m_manual_max;
 
 	T tmp;
@@ -207,7 +168,7 @@ double DataTyped<T>::GetDataMin()
 {
 	assert(m_data_size != 0);
 
-	if (m_maxmin_manual)
+	if (m_maxmin_override)
 		return m_manual_min;
 
 	T tmp;
@@ -220,25 +181,38 @@ double DataTyped<T>::GetDataMin()
 	return tmp;
 }
 
+template<class T>
+bool plot::DataTyped<T>::IsValid()
+{
+	return (m_data_size != 0 && m_data != nullptr);
+}
 
 template<class T>
-void DataTyped<T>::Fit(bool update)
+void plot::DataTyped<T>::Validate()
 {
-	T maxv;
-	T minv;
-	T range;
-	maxv = GetDataMax();
-	minv = GetDataMin();
-
-	assert(maxv >= minv);
-
-	range = maxv - minv;
-
-	get_adj_axis()->_SetVisibleRange(minv, range, update);
-
-
-
+	if (m_owner_series != nullptr && IsValid())
+		m_owner_series->Validate();
 }
+
+
+//template<class T>
+//void DataTyped<T>::Fit(bool update)
+//{
+//	T maxv;
+//	T minv;
+//	T range;
+//	maxv = GetDataMax();
+//	minv = GetDataMin();
+//
+//	assert(maxv >= minv);
+//
+//	range = maxv - minv;
+//
+//	get_adj_axis()->_SetVisibleRange(minv, range, update);
+//
+//
+//
+//}
 
 
 

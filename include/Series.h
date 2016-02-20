@@ -2,10 +2,6 @@
 #include <vector>
 
 #include "plot_defs.h"
-#include "Data.h"
-#include "Area.h"
-#include "Renderer.h"
-#include "pevent.h"
 
 namespace plot
 {
@@ -19,15 +15,14 @@ namespace plot
 		Series(int dim_num, const char *series_name = NULL);
 		virtual ~Series();
 
-		void SetSeriesName(const char *series_name = NULL, bool update = true);
+		void SetSeriesName(const char *series_name = NULL);
 		const char *GetSeriesName() { return m_series_name; }
 
 		void SetUserData(void *data) { m_user_data = data; }
 		void *GetUserData() { return m_user_data; }
 
-		Area *GetOwner() { return m_owner; }
-
-		void SeriesUpdated();
+		bool IsValid();
+		void Validate();
 
 		void SetData(DataNoType *data, AXIS_DIR axis_dir);
 		DataNoType *GetData(AXIS_DIR axis_dir);
@@ -35,15 +30,17 @@ namespace plot
 		void RemoveData(DataNoType *data);
 		void DeleteData(DataNoType *data);
 
-		void Fit(int axis_mask);
+		//void Fit(int axis_mask);
 
 		void SetRenderer(Renderer *renderer);//previous renderer will be deleted
 		Renderer *GetRenderer() { return m_renderer; };
 
 		void BringToFront();
 
+		//internal use methods
+		void _setowner(Area *area) { m_owner = area; };
+		Area *_getowner() { return m_owner; }
 
-		void _setowner(Area *area);
 	protected:
 		char *m_series_name;
 		Area *m_owner;
@@ -69,17 +66,6 @@ namespace plot
 		Series *m_series_selected;
 		size_t m_begin;
 		size_t m_end;
-	};
-
-	class DLLIMPEXP_PLOTLIB PEventSeriesNameChanged : public PEvent
-	{
-	public:
-		PEventSeriesNameChanged();
-		virtual ~PEventSeriesNameChanged() {};
-		static int GetEventId() { return s_event_id; }
-	protected:
-	private:
-		static const int s_event_id;
 	};
 
 }

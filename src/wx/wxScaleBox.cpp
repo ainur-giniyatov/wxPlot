@@ -1,107 +1,118 @@
-#include "wx/wxScaleBox.h"
+#include <wx/graphics.h>
+
+#include "wx\wxScaleBox.h"
 
 using namespace plot;
 
-wxScaleBox::wxScaleBox(wxPlotWindow * plot, Dir orient, AXIS_DIR axis_dir):Box(plot)
+plot::wxScaleBox::wxScaleBox(AXIS_DIR axis_dir):ScaleBox(axis_dir)
 {
-	m_scale = new Scale(axis_dir);
-	m_box_tag = "scalebox";
-	m_owner = plot;
-	m_flag_expand_dir = orient;
-	m_orient = orient;
-	m_snap_offset = 0;
-	if (m_orient == DIR_HOR)
-		m_sticked_to |= STICKEDTO_BOTTOM;
-	m_isresizable = false;
-	m_owner->AddBox(this);
-	Sizing();
+
 }
 
-wxScaleBox::~wxScaleBox()
+plot::wxScaleBox::~wxScaleBox()
 {
-	delete m_scale;
 }
 
-static char s_buff[64];
-void wxScaleBox::Render(void * v_gc)
+static char s_buff[32];
+
+void plot::wxScaleBox::Render(void *vgc)
 {
-	DPRINTF("wxScaleBox::Render\n");
-	wxGraphicsContext *gc = (wxGraphicsContext *)v_gc;
+	wxGraphicsContext *gc = (wxGraphicsContext *)vgc;
+	gc->SetPen(*wxRED_PEN);
 	gc->SetFont(*wxNORMAL_FONT, *wxBLACK);
-	//wxBrush brush;
-	//brush.SetColour(((wxPlotWindow *)m_owner)->GetBackgroundColour());
-	//gc->SetBrush(brush);
-	//gc->DrawRectangle(m_rect.left, m_rect.top, m_rect.Width(), m_rect.Height());
 
-	int width, height;
-
-	if (m_orient & DIR_HOR)
+	int pw, ph;
+	m_owner->GetSize(&pw, &ph);
+	Rect<int> rect;
+	bool text_is_vert = false;
+	if (m_owner->_get_orientation() == Plot::ORIENTATION_NORMAL)
 	{
-		width = m_rect.Width();
-		height = m_rect.Height();
+		if (m_axis_dir == AXIS_Y)
+		{
+			rect = m_rect;
+			text_is_vert = true;
+		}
+		if (m_axis_dir == AXIS_X)
+		{
+			rect.top = m_rect.left;
+			rect.bottom = m_rect.right;
+			rect.left = ph - m_rect.bottom;
+			rect.right = ph - m_rect.top;
+			text_is_vert = false;
+		}
 	}
-	else
+	if (m_owner->_get_orientation() == Plot::ORIENTATION_ROTATED)
 	{
-		width = m_rect.Height();
-		height = m_rect.Width();
+		if (m_axis_dir == AXIS_Y)
+		{
+			rect.top = m_rect.left;
+			rect.left = ph - m_rect.bottom;
+			rect.bottom = m_rect.right;
+			rect.right = ph - m_rect.top;
+			text_is_vert = false;
+		}
+		if (m_axis_dir == AXIS_X)
+		{
+			rect = m_rect;
+			text_is_vert = true;
+		}
 	}
 
 	AxisValueAdaptor<double> *m_valueadaptor;
-	double m_offset, m_range;
-	m_valueadaptor = m_scale->GetValueAdaptor();
-	m_offset = m_scale->GetOffset();
-	m_range = m_scale->GetRange();
-
+	m_valueadaptor = GetValueAdaptor();
 	if (m_valueadaptor == NULL)
 		return;
 
 
 	wxString text;
 	wxDouble fh, fw;
-	
-	int x;
+
+	int i;
 	bool isbold;
 
-	m_valueadaptor->InitState(m_offset, m_range, 15. / (double)width);
+	m_valueadaptor->InitState(m_offset, m_range, 15. / (double)rect.Height());
 	gc->SetPen(*wxBLACK_PEN);
-	wxGraphicsBrush gbrush = gc->CreateBrush(*wxWHITE_BRUSH);// wxBrush(((wxPlotWindow *)m_owner)->GetBackgroundColour()));
+	gc->DrawRectangle(m_rect.left, m_rect.top, m_rect.Width(), m_rect.Height());
+	wxGraphicsBrush gbrush = gc->CreateBrush(*wxWHITE_BRUSH);
 
 	while (m_valueadaptor->Step())
 	{
 		double ticker = m_valueadaptor->GetTicker();
 		int tick_len;
-		x = (ticker) / m_range * width;
-		if (m_orient & DIR_VER)
-			x = width - x;
-		if (x < 0)
+		i = (ticker) / m_range * rect.Height();
+		if (m_axis_dir == AXIS_Y && m_owner->_get_orientation() == Plot::ORIENTATION_NORMAL)
+			i = rect.Height() - i;
+		
+			if (i < 0)
 			continue;
-		if (x > width)
+		if (i > rect.Height())
 			break;
+		
 		tick_len = 5.;
 
-		/*if (m_orient == wxHORIZONTAL)
-		gc->StrokeLine(x, m_widget_y, x, m_widget_y + tick_len);
-		else
-		gc->StrokeLine(m_widget_x, x, m_widget_x + tick_len, x);*/
 
 		m_valueadaptor->ValToStr(s_buff, 20);
 		text = wxString::Format(" %s ", s_buff);
 
 		gc->GetTextExtent(text, &fw, &fh);
 		wxDouble align_offset = 0;
-		
-		if (!(m_orient & DIR_HOR) && (m_sticked_to & STICKEDTO_RIGHT) )
-			align_offset = fw - 7;
 
-		if ((m_orient & DIR_HOR) && (m_sticked_to & STICKEDTO_BOTTOM))
-			align_offset = fw - 7;
+		//if (!(m_orient & DIR_HOR) && (m_sticked_to & STICKEDTO_RIGHT))
+		//	align_offset = fw - 7;
 
-		if (m_orient & DIR_HOR)
-			gc->DrawText(text, x + fh / 2 + 3, m_rect.top + 7 - align_offset, M_PI / 2. * 3., gbrush);
-		else
-			gc->DrawText(text, m_rect.left + 7 - align_offset, x - fh / 2., gbrush);
+		//if ((m_orient & DIR_HOR) && (m_sticked_to & STICKEDTO_BOTTOM))
+			align_offset = fw ;
+
+//		if (m_orient & DIR_HOR)
+//			gc->DrawText(text, x + fh / 2 + 3, m_rect.top + 7 - align_offset, M_PI / 2. * 3., gbrush);
+	//	else
+			if(text_is_vert)
+				gc->DrawText(text, m_rect.right - align_offset, i - fh / 2., gbrush);
+			else
+				gc->DrawText(text, i - fh / 2., m_rect.bottom - align_offset, M_PI / 2. * 3., gbrush);
 
 	}
 
-}
 
+
+}

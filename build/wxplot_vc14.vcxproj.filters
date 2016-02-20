@@ -48,22 +48,13 @@
     <ClInclude Include="..\include\Grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Box.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\Area.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\wx\ScaleWindow.h">
       <Filter>Header Files\wx</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\wx\wxBox.h">
-      <Filter>Header Files\wx</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\wx\wxGrid.h">
-      <Filter>Header Files\wx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\wx\wxScaleBox.h">
       <Filter>Header Files\wx</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Renderer.h">
@@ -80,9 +71,6 @@
     </ClInclude>
     <ClInclude Include="..\include\wx\colorbase.h">
       <Filter>Header Files\wx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\pevent.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\other\toolbarmenu.h">
       <Filter>other</Filter>
@@ -120,6 +108,18 @@
     <ClInclude Include="..\include\wx\wxLine.h">
       <Filter>Header Files\wx</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\Box.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\wx\wxBox.h">
+      <Filter>Header Files\wx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ScaleBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\wx\wxScaleBox.h">
+      <Filter>Header Files\wx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Axis.cpp">
@@ -140,9 +140,6 @@
     <ClCompile Include="..\src\ValueAdaptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Box.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Area.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -152,13 +149,7 @@
     <ClCompile Include="..\src\wx\ScaleWindow.cpp">
       <Filter>Source Files\wx</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\wx\wxBox.cpp">
-      <Filter>Source Files\wx</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\wx\wxGrid.cpp">
-      <Filter>Source Files\wx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\wx\wxScaleBox.cpp">
       <Filter>Source Files\wx</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Renderer.cpp">
@@ -175,9 +166,6 @@
     </ClCompile>
     <ClCompile Include="..\src\wx\colorbase.cpp">
       <Filter>Source Files\wx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\pevent.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\other\toolbarmenu.cpp">
       <Filter>other</Filter>
@@ -213,6 +201,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\wx\wxLine.cpp">
+      <Filter>Source Files\wx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Box.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wx\wxBox.cpp">
+      <Filter>Source Files\wx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ScaleBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wx\wxScaleBox.cpp">
       <Filter>Source Files\wx</Filter>
     </ClCompile>
   </ItemGroup>

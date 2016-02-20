@@ -83,8 +83,8 @@ void plot::wxChartWindow::on_plot_view_changed(wxCommandEvent & event)
 void plot::wxChartWindow::plotviewchanged(int vcd, bool swtc)
 {
 	std::vector<Scale *> scales;
-	scales.push_back(m_scale);
-	auto plots = getplots();
+	//scales.push_back(m_scale);
+	//auto plots = getplots();
 
 	////collect all scales
 	//std::vector<Scales *> p_scales = m_s
@@ -139,7 +139,7 @@ wxPlotWindow * wxChartWindow::CreatewxPlotWindow()
 	wxPlotWindow *plotwindow = new wxPlotWindow(m_plotscontainer);
 	plotwindow->SetLeftButtonAction(m_lbaction);
 	addplot(plotwindow);
-	plotwindow->SetCommonScale(m_scale);
+	//plotwindow->SetCommonScale(m_scale->GetScale());
 
 	return plotwindow;
 }

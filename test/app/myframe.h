@@ -3,7 +3,6 @@
 #include "wx/wxPlotWindow.h"
 #include "Area.h"
 #include "wx/wxChartWindow.h"
-#include "wx/wxBox.h"
 #include "../../other/PopupSeriesTool.h"
 
 class MyFrame :
@@ -61,7 +60,7 @@ private:
 	plot::wxPlotWindow *m_2ndpageplotwindow;
 	plot::DataNoType *m_2ndpagexdata, *m_2ndpageydata;
 	plot::Area *m_2ndpagearea;
-	plot::wxLegendsBox *m_2ndlegendsbox;
+
 	
 	wxPopupSeriesTool *m_popup_tool;
 

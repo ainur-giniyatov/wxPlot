@@ -7,13 +7,12 @@
 #include "Series.h"
 #include "Data.h"
 #include "Area.h"
-#include "wx/wxBox.h"
-#include "wx/wxScaleBox.h"
 #include "wx/wxGrid.h"
 #include "wx/wxRenderer.h"
 #include "wx/colorbase.h"
 #include "wx/wxMarker.h"
 #include "wx/wxLine.h"
+#include "wx/wxScaleBox.h"
 
 const int MyFrame::ID_MENUPLOT_ADDLEGEND = wxNewId();
 const int MyFrame::ID_MENUPLOT_ADDVERTICALSCALE = wxNewId();
@@ -47,7 +46,6 @@ MyFrame::MyFrame():MainFrame(NULL)
 	bSizer7->Add(m_2ndpageplotwindow, 1, wxEXPAND);
 	m_panel_page2->Layout();
 
-	m_2ndlegendsbox = new plot::wxLegendsBox(m_2ndpageplotwindow);
 
 	m_2ndpagearea = new plot::Area(2);
 
@@ -112,18 +110,25 @@ MyFrame::MyFrame():MainFrame(NULL)
 	//m_2ndlegendsbox->AddSeries(series);
 
 	plot::wxScaleBox *scalebox;
-	scalebox = new plot::wxScaleBox(m_2ndpageplotwindow, DIR_VER, AXIS_Y);
-	scalebox->GetScale()->AddAxis(m_2ndpagearea->GetAxis(AXIS_Y));
-	scalebox->GetScale()->SetRangeLimits(DBL_MAX, DBL_MIN);
-	scalebox->GetScale()->SetValueAdaptor(new plot::SimpleAxisValueAdaptor<double>());
+	scalebox = new plot::wxScaleBox(AXIS_Y);
 
-	scalebox = new plot::wxScaleBox(m_2ndpageplotwindow, DIR_HOR, AXIS_X);
-	scalebox->GetScale()->AddAxis(m_2ndpagearea->GetAxis(AXIS_X));
-	scalebox->GetScale()->SetRangeLimits(DBL_MAX, DBL_MIN);
-	scalebox->GetScale()->SetValueAdaptor(new plot::SimpleAxisValueAdaptor<double>());
+	
+	m_2ndpageplotwindow->AddBox(scalebox);
+
+	scalebox->AddAxis(m_2ndpagearea->GetAxis(AXIS_Y));
+	//scalebox->GetScale()->SetLimits(DBL_MAX, DBL_MIN);
+	//scalebox->GetScale()->SetValueAdaptor(new plot::SimpleAxisValueAdaptor<double>());
+
+	scalebox = new plot::wxScaleBox(AXIS_X);
+	m_2ndpageplotwindow->AddBox(scalebox);
+
+	scalebox->AddAxis(m_2ndpagearea->GetAxis(AXIS_X));
+	//scalebox->GetScale()->SetLimits(DBL_MAX, DBL_MIN);
+	//scalebox->GetScale()->SetValueAdaptor(new plot::SimpleAxisValueAdaptor<double>());
 
 	plot::Grid *grid;
-	grid = new plot::wxGrid(m_2ndpagearea);
+	grid = new plot::wxGrid();
+	m_2ndpagearea->SetGrid(grid);
 
 	m_popup_tool = new wxPopupSeriesTool(m_notebook1->GetPage(1));
 	//m_popup_tool->Position(wxGetMousePosition(), wxSize(0, 0));
@@ -158,6 +163,7 @@ void MyFrame::m_button1OnButtonClick(wxCommandEvent & event)
 	}
 
 	plot::Series *series = new plot::Series(2, "SERIES");
+	series->SetRenderer(new plot::wxRendererTyped<int, int>());
 
 
 	plot::Area *area = m_wxPlotWindow->GetArea(0);
@@ -172,14 +178,13 @@ void MyFrame::m_button1OnButtonClick(wxCommandEvent & event)
 	//Renderer2D *renderer2d;
 	//renderer2d = new Renderer2DTyped<int, int>();
 
-	series->SetRenderer(new plot::wxRendererTyped<int, int>());
 
 //	TimeAxisValueAdaptor<int> *tvadap = new TimeAxisValueAdaptor<int>();
 //	xdata->SetValueAdaptor(tvadap);
 	area->AddSeries(series);
 
 
-
+	m_wxPlotWindow->plot::Plot::Validate();
 
 	fill_series_choices();
 }
@@ -207,6 +212,10 @@ void MyFrame::m_button2OnButtonClick(wxCommandEvent & event)
 	}
 
 	plot::Series *series = new plot::Series(2, "FSERIES");
+	plot::wxRendererTyped<double, double> *renderer;
+	renderer = new plot::wxRendererTyped<double, double>();
+	renderer->SetMarker(new plot::wxMarkerCircle());
+	series->SetRenderer(renderer);
 
 	plot::Area *area = m_wxPlotWindow->GetArea(0);
 
@@ -217,12 +226,7 @@ void MyFrame::m_button2OnButtonClick(wxCommandEvent & event)
 
 
 
-	//Renderer2D *renderer2d;
-	//renderer2d = new Renderer2DTyped<double, double>();
-	plot::wxRendererTyped<double, double> *renderer;
-	renderer = new plot::wxRendererTyped<double, double>();
-	renderer->SetMarker(new plot::wxMarkerCircle());
-	series->SetRenderer(renderer);
+	m_wxPlotWindow->plot::Plot::Validate();
 
 	wxTextEntryDialog dlg(this, "Series name");
 	if (dlg.ShowModal() == wxID_OK)
@@ -270,7 +274,9 @@ void MyFrame::m_button_newplotOnButtonClick(wxCommandEvent & event)
 	plot::wxPlotWindow *plotwindow;
 	plotwindow= m_chartwindow->CreatewxPlotWindow();
 
-	plot::wxLegendsBox *legendsbox = new plot::wxLegendsBox(plotwindow);
+	//plot::wxLegendsBox *legendsbox = new plot::wxLegendsBox();
+	//plotwindow->AddBox(legendsbox);
+
 	wxTextEntryDialog dlg(this, "Plot name");
 
 	if (dlg.ShowModal() == wxID_OK)
@@ -282,18 +288,20 @@ void MyFrame::m_button_newplotOnButtonClick(wxCommandEvent & event)
 	area = new plot::Area(2);
 	plotwindow->AddArea(area);
 
-	m_chartwindow->GetScaleWindow()->AddAxis(area->GetAxis(AXIS_X));
+	m_chartwindow->GetScaleWindow()->GetScale()->AddAxis(area->GetAxis(AXIS_X));
 //	wxPlotWindow->GetYScale()->AddAxis(space->GetAxis(AXIS_Y));
 
 	//ScaleWidget *scalewidget;
 	//scalewidget = new ScaleWidget(wxPlotWindow, wxVERTICAL);
-	plot::wxScaleBox *scalebox = new plot::wxScaleBox(plotwindow, DIR_VER, AXIS_Y);
+	//plot::wxScaleBox *scalebox = new plot::wxScaleBox(DIR_VER, AXIS_Y);
+	//plotwindow->AddBox(scalebox);
 
 	plot::Grid *grid;
-	grid = new plot::wxGrid(area);
+	grid = new plot::wxGrid();
+	area->SetGrid(grid);
 
-	scalebox->GetScale()->AddAxis(area->GetAxis(AXIS_Y));
-	scalebox->GetScale()->SetValueAdaptor(new plot::SimpleAxisValueAdaptor<double>());
+	//scalebox->GetScale()->AddAxis(area->GetAxis(AXIS_Y));
+	//scalebox->GetScale()->SetValueAdaptor(new plot::SimpleAxisValueAdaptor<double>());
 
 	plotwindow->RedrawPlot();
 	//LegendsWidget *legendswidget;
@@ -317,7 +325,7 @@ void MyFrame::m_choice_plotsOnChoice(wxCommandEvent & event)
 {
 	m_wxPlotWindow = (plot::wxPlotWindow *)event.GetClientData();
 	plot::Area *area= m_wxPlotWindow->GetArea(0);
-	m_checkBox_connecttoscale->SetValue(area->GetAxis(AXIS_X)->GetCommonScale() != NULL);
+	m_checkBox_connecttoscale->SetValue(area->GetAxis(AXIS_X)->_getcommonscale() != NULL);
 
 	fill_series_choices();
 
@@ -326,7 +334,7 @@ void MyFrame::m_choice_plotsOnChoice(wxCommandEvent & event)
 void MyFrame::m_menuItem_timeOnMenuSelection(wxCommandEvent & event)
 {
 	plot::TimeAxisValueAdaptor<double> *tvadaptor = new plot::TimeAxisValueAdaptor<double>();
-	m_chartwindow->GetScaleWindow()->SetValueAdaptor(tvadaptor);
+	m_chartwindow->GetScaleWindow()->GetScale()->SetValueAdaptor(tvadaptor);
 }
 
 void MyFrame::m_menuItem_secsOnMenuSelection(wxCommandEvent & event)
@@ -337,7 +345,7 @@ void MyFrame::m_menuItem_secsOnMenuSelection(wxCommandEvent & event)
 
 void MyFrame::m_menuItem_nullOnMenuSelection(wxCommandEvent & event)
 {
-	m_chartwindow->GetScaleWindow()->SetValueAdaptor(NULL);
+	m_chartwindow->GetScaleWindow()->GetScale()->SetValueAdaptor(NULL);
 }
 
 void MyFrame::m_checkBox_connecttoscaleOnCheckBox(wxCommandEvent & event)
@@ -353,11 +361,11 @@ void MyFrame::m_checkBox_connecttoscaleOnCheckBox(wxCommandEvent & event)
 	wxASSERT(axis != NULL);
 	if (event.IsChecked())
 	{
-		scalewindow->AddAxis(axis);
+		scalewindow->GetScale()->AddAxis(axis);
 	}
 	else
 	{
-		scalewindow->RemoveAxis(axis);
+		scalewindow->GetScale()->RemoveAxis(axis);
 	}
 
 }
@@ -378,13 +386,13 @@ void MyFrame::m_button_FitOnButtonClick(wxCommandEvent & event)
 {
 	if (m_data != NULL)
 	{
-		m_data->Fit();
+//		m_data->Fit();
 		return;
 	}
 	if (m_series != NULL)
 	{
 		
-		m_series->Fit(AXIS_MASK_Y | AXIS_MASK_X);
+//		m_series->Fit(AXIS_MASK_Y | AXIS_MASK_X);
 		return;
 	}
 	if (m_wxPlotWindow != NULL)
@@ -432,7 +440,7 @@ void MyFrame::m_button_dataupdatedOnButtonClick(wxCommandEvent & event)
 
 void MyFrame::m_button_seriesupdateOnButtonClick(wxCommandEvent & event)
 {
-	m_2ndpageseries->SeriesUpdated();
+	m_2ndpageseries->Validate();
 }
 
 void MyFrame::m_button_spaceupdateOnButtonClick(wxCommandEvent & event)
@@ -454,8 +462,9 @@ void MyFrame::m_menuItem_zoomOnMenuSelection(wxCommandEvent & event)
 
 void MyFrame::m_button_add_boxOnButtonClick(wxCommandEvent & event)
 {
-	plot::wxBox *box;
-	box = new plot::wxBox(m_2ndpageplotwindow);
+	//plot::wxBox *box;
+	//box = new plot::wxBox();
+	//m_2ndpageplotwindow->AddBox(box);
 }
 
 void MyFrame::m_button_chartfitxOnButtonClick(wxCommandEvent & event)
@@ -540,10 +549,10 @@ void MyFrame::OnPlotClicked(plot::PlotClickEvent & event)
 	else
 		m_popup_tool->SetSelectedSeries(nullptr);
 
-	if (event.GetBox() != nullptr)
-	{
-		printf("box: __\n");
-	}
+	//if (event.GetBox() != nullptr)
+	//{
+	//	printf("box: __\n");
+	//}
 }
 
 void MyFrame::fill_plot_choices()

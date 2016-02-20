@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+#include <map>
+
 #include "plot_defs.h"
 
 #include "Series.h"
@@ -7,9 +10,6 @@
 #include "Plot.h"
 #include "Axis.h"
 #include "ValueAdaptor.h"
-
-#include <vector>
-#include <map>
 
 namespace plot
 {
@@ -27,10 +27,8 @@ namespace plot
 		virtual ~Scale();
 
 		void AddAxis(Axis *axis);
-
 		void RemoveAxis(Axis *axis);
 
-		std::vector<Axis *> &GetAxes() { return m_axes; };
 
 		void ChangeViewDepth(int vcd, bool swtch);
 
@@ -43,7 +41,7 @@ namespace plot
 		double GetOffset() { return m_offset; }
 		double GetRange() { return m_range; }
 		/*iterate plots and redraw them uniqly*/
-		void RedrawDependantPlots(bool redraw_immdiately = true);
+		//void RedrawDependantPlots(bool redraw_immdiately = true);
 
 
 		/*redraw scale gui component*/
@@ -56,15 +54,18 @@ namespace plot
 
 		void SetValueAdaptor(AxisValueAdaptor<double > *valueadaptor);
 		AxisValueAdaptor<double> *GetValueAdaptor() { return m_valueadaptor; }
-		void SetRangeLimits(double max, double min, bool update = true);
+		void SetLimits(double max, double min, bool update = true);
 		bool IsInRange(double new_range);
 		double inline GetRangeMax() { return m_range_max; };
 		double inline GetRangeMin() { return m_range_min; };
 
+		virtual void Validate() {};
 		AXIS_DIR _get_axis_dir() { return m_axis_dir; }
+		const auto &_get_axes() { return m_axes; };
+		const auto &_get_plots() { return m_plots; }
 	protected:
 		std::vector<Axis *> m_axes;
-
+		std::vector<Plot *> m_plots;//for keeping track of plots that are affected
 		AXIS_DIR m_axis_dir;
 		
 		double m_offset;

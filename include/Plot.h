@@ -4,10 +4,8 @@
 #include "Data.h"
 #include "Axis.h"
 #include "Scale.h"
-#include "Box.h"
 #include "Area.h"
-#include "pevent.h"
-
+#include "Box.h"
 
 #include <vector>
 
@@ -15,22 +13,21 @@ namespace plot
 {
 	class DLLIMPEXP_PLOTLIB DataNoType;
 	class DLLIMPEXP_PLOTLIB Series;
-	class SeriesSelection;
 	class DLLIMPEXP_PLOTLIB Axis;
 	class DLLIMPEXP_PLOTLIB Scale;
-	class DLLIMPEXP_PLOTLIB Box;
-	class DLLIMPEXP_PLOTLIB ScaleBox;
 	class DLLIMPEXP_PLOTLIB Area;
-	class DLLIMPEXP_PLOTLIB PEvent;
-	class DLLIMPEXP_PLOTLIB PEventList;
-	class DLLIMPEXP_PLOTLIB PEventHandler;
+	class SeriesSelection;
 
-	class DLLIMPEXP_PLOTLIB PEventAreaAdded;
-	class DLLIMPEXP_PLOTLIB PEventSeriesAdded;
 
-	class DLLIMPEXP_PLOTLIB Plot: public PEventHandler
+	class DLLIMPEXP_PLOTLIB Plot
 	{
 	public:
+		enum ORIENTATION
+		{
+			ORIENTATION_NORMAL,
+			ORIENTATION_ROTATED
+		};
+
 		Plot(const char *plotname = NULL);
 		virtual ~Plot();
 
@@ -48,22 +45,26 @@ namespace plot
 		virtual void RedrawPlot() = 0;
 		virtual void GetSize(int *width, int *height) = 0;
 
-		void SetCommonScale(Scale *scale);
-		Scale *GetCommonScale() { return m_commonscale; }
+		void Validate(bool refresh_buffer = true);
 
-		void RemoveBox(Box *box);
-		void DeleteBox(Box *box);
+		void SetCommonScale(Scale *scale);
+//		Scale *GetCommonScale() { return m_commonscale; }
+
+		//void RemoveBox(Box *box);
+		//void DeleteBox(Box *box);
 		void AddBox(Box *box);
+		//void ArrangeBoxes();
 
 		void SetLeftButtonAction(LEFTBUTTON_ACTION lba) { m_lbaction = lba; };
 
 		void Fit(int axis_mask);
 
 		//internal use methods start with _
-		//virtual void _spotseries(SeriesSelection &seriesselection) = 0;
+
 		void _SetViewModifiedFlag();
-		PEventList *_GetEventsList() { return m_eventslist; }
-		//std::vector<Scale *> _get_scales();
+
+		void _refresh_dependant_scales();
+		ORIENTATION _get_orientation() { return m_orientation; }
 	protected:
 		virtual void emit_viewchanged() = 0;
 //		PEventList *m_eventslist;
@@ -83,7 +84,7 @@ namespace plot
 
 		/*holds pointers to Scale objects that depend on the plot*/
 		std::vector<Scale *> m_dependant_scales;
-		void update_dependant_scales();
+		//void update_dependant_scales();
 		bool m_panning;
 
 		bool m_zoomsel_switch;
@@ -92,69 +93,25 @@ namespace plot
 		Point<double> m_zoom_sel_end_rel_coord;
 		char *m_plot_name;
 
-		Scale *m_commonscale;
+		//Scale *m_commonscale;
 
+		Box *m_selected_box;
+		BOXSTATE m_selected_box_state;
+		int m_selected_box_sides;
+		Point<int> m_box_click_delta;//distance between top left and mouse
+		Point<int> m_box_click_delta2;//distance between bottom right and mouse
 		std::vector<Box *> m_boxes;
+		void plot_resized();
+
+		std::vector<Scale *> m_scales;
 
 		LEFTBUTTON_ACTION m_lbaction;
 
 		bool m_is_data_view_modified;
-
+		ORIENTATION m_orientation;
 		//helpers
 		
-		friend class Box;
-		//friend class ScaleBox;
 
-
-		//handlers
-		void handler_area_added(PEvent &event);
-		void handler_series_added(PEvent &event);
-		void handler_scale_set(PEvent &event);
-	};
-
-
-	//event types
-	class DLLIMPEXP_PLOTLIB PEventSeriesAdded : public PEvent
-	{
-	public:
-		PEventSeriesAdded(Series * series, bool f);//true if added, false if removed
-		virtual ~PEventSeriesAdded();
-		Series *GetSeries() { return (Series *)m_event_data; };
-		static int GetEventId() { return s_event_id; }
-		bool GetFlag() { return m_addedoremoved; }
-	protected:
-	private:
-		static const int s_event_id;
-		bool m_addedoremoved;
-	};
-
-	class DLLIMPEXP_PLOTLIB PEventAreaAdded : public PEvent
-	{
-	public:
-		PEventAreaAdded(bool f);//true if added, false if removed
-		virtual ~PEventAreaAdded();
-		void SetArea(Area *area) { m_event_data = area; };
-		Area *GetArea() { return (Area *)m_event_data; };
-		static int GetEventId() { return s_event_id; }
-		bool GetFlag() { return m_addedoremoved; }
-	protected:
-	private:
-		static const int s_event_id;
-		bool m_addedoremoved;
-	};
-
-
-	class DLLIMPEXP_PLOTLIB PEventScaleSet : public PEvent
-	{
-	public:
-		PEventScaleSet();//true if added, false if removed
-		virtual ~PEventScaleSet();
-		static int GetEventId() { return s_event_id; }
-		bool GetFlag() { return m_addedoremoved; }
-	protected:
-	private:
-		static const int s_event_id;
-		bool m_addedoremoved;
 	};
 
 }

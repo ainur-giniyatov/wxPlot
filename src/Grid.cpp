@@ -2,18 +2,17 @@
 
 using namespace plot;
 
-Grid::Grid(Area *owner)
+Grid::Grid()
 {
 	DPRINTF("Grid ctor\n");
-	m_owner = owner;
-	m_owner->_SetGrid(this);
+	m_owner = nullptr;
 	
 }
 
 Grid::~Grid()
 {
 	DPRINTF("Grid dtor\n");
-	m_owner->_SetGrid(nullptr);
+	
 }
 
 //void Grid::Render(wxGraphicsContext * gc)

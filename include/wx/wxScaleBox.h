@@ -1,24 +1,21 @@
 #pragma once
 
-#include "wxPlotWindow.h"
-#include "../Box.h"
-#include "../Scale.h"
+#include "../ScaleBox.h"
 
 namespace plot
 {
-	class DLLIMPEXP_PLOTLIB wxScaleBox : public Box
+	class DLLIMPEXP_PLOTLIB wxScaleBox : public ScaleBox
 	{
 	public:
-		wxScaleBox(wxPlotWindow *plot, Dir orient, AXIS_DIR axis_dir);
+		wxScaleBox(AXIS_DIR axis_dir);
 		virtual ~wxScaleBox();
-		Scale *GetScale() { return m_scale; }
+
+	private:
+
+
+		// Inherited via ScaleBox
 		virtual void Render(void *) override;
 
-	protected:
-	private:
-		Dir m_orient;
-		Scale *m_scale;
-		// Inherited via Scale
-		//virtual void ScaleRedraw() override;
 	};
+
 }

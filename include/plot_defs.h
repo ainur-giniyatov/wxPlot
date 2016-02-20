@@ -147,6 +147,9 @@ template <typename T> struct Rect {
 	inline T Width() { return right - left; }
 	inline T Height() { return bottom - top; }
 
+	inline void SetWidth(T w) { right = left + w; }
+	inline void SetHeight(T h) { bottom = top + h; }
+
 	inline void SetLeft(T l, bool keepwidth = true)
 	{
 		T w = right - left;

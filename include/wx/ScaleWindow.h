@@ -19,15 +19,25 @@ namespace plot
 	class DLLIMPEXP_PLOTLIB Scale;
 
 	class ScaleWindow :
-		public Scale, public wxPanel
+		public wxPanel
 	{
 	public:
 		ScaleWindow(wxWindow *parent, AXIS_DIR axis_dir, wxOrientation orient = wxVERTICAL, double offset = 0, double range = 1000);
 		virtual ~ScaleWindow();
 
+		Scale *GetScale() { return m_scale; }
 
 
 	private:
+		class MyScale : public Scale
+		{
+		public:
+			MyScale(ScaleWindow *me, AXIS_DIR axis_dir):Scale(axis_dir) { m_me = me; }
+			virtual ~MyScale() {};
+			virtual void Validate() override;
+		private:
+			ScaleWindow *m_me;
+		};
 		void OnPaint(wxPaintEvent &event);
 		void OnEraseBackground(wxEraseEvent &event);
 		void OnResize(wxSizeEvent &event);
@@ -36,10 +46,11 @@ namespace plot
 		void OnLeftUp(wxMouseEvent &event);
 		void OnMouseMove(wxMouseEvent &event);
 		void OnMouseCaptureLost(wxMouseCaptureLostEvent &event);
-
+		void validate();
 		bool m_ispanning;
 		wxOrientation m_orient;
 		wxFont m_font;
+		Scale *m_scale;
 		DECLARE_EVENT_TABLE()
 	};
 

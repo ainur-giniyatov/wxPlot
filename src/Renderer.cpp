@@ -29,8 +29,6 @@ Renderer::~Renderer()
 void Renderer::_setowner(Series * series)
 {
 	m_owner_series = series;
-	if (m_owner_series != nullptr && m_owner_series->GetOwner() != nullptr && m_owner_series->GetOwner()->GetOwner() != nullptr)
-		m_owner_series->GetOwner()->GetOwner()->GetSize(&m_width, &m_height);
 }
 
 void plot::Renderer::SetMarker(Marker * marker)
