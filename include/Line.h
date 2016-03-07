@@ -9,7 +9,7 @@ namespace plot
 		Line();
 		virtual ~Line();
 
-		virtual void Render(void *, Point<int> &line_coord1, Point<int> &line_coord2) = 0;
+		virtual void Render(void *, const Point<int> &line_coord1, const Point<int> &line_coord2) = 0;
 
 		void SetColourIndex(int color_indx) { m_colour_indx = color_indx; };
 		void SetThickness(int thickness) { m_thickness = thickness; };

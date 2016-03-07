@@ -6,7 +6,7 @@ namespace plot
 	class wxBox :public Box
 	{
 	public:
-		wxBox();
+		wxBox(int flags);
 		virtual ~wxBox();
 
 	protected:
@@ -27,7 +27,7 @@ namespace plot
 
 		// Inherited via TitleBox
 		virtual void Render(void *) override;
-		virtual void _ownersize(int w, int h) override;
+		virtual void _ownersize(const Size<int> &ownersize) override;
 
 	};
 }

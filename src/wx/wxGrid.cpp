@@ -18,66 +18,74 @@ void wxGrid::Render(void * v_gc)
 	wxGraphicsContext *gc = (wxGraphicsContext *)v_gc;
 	wxAntialiasMode antialiasmode = gc->GetAntialiasMode();
 	gc->SetAntialiasMode(wxANTIALIAS_NONE);
-	wxASSERT(m_owner != nullptr);
+//	wxASSERT(m_owner != nullptr);
 	//return;
-	Axis *xaxis = m_owner->GetAxis(AXIS_X);
-	Axis *yaxis = m_owner->GetAxis(AXIS_Y);
+	//Axis *xaxis = m_owner->GetAxis(AXIS_X);
+	//Axis *yaxis = m_owner->GetAxis(AXIS_Y);
 
-	wxASSERT(xaxis != nullptr && yaxis != nullptr);
+	//wxASSERT(xaxis != nullptr && yaxis != nullptr);
 
-	AxisAdaptor *xaxadaptor = nullptr;
-	
-	if(xaxis->_getcommonscale() != nullptr)
-		xaxadaptor = xaxis->_getcommonscale()->GetValueAdaptor();//m_owner_space->GetOwner()->_getcommonscale()
+	//AxisAdaptor *xaxadaptor = nullptr;
+	//
+	//if(xaxis->_getcommonscale() != nullptr)
+	//	xaxadaptor = xaxis->_getcommonscale()->GetValueAdaptor();
 
-	AxisAdaptor *yaxadaptor = nullptr;
+	//AxisAdaptor *yaxadaptor = nullptr;
 
-	if(yaxis->_getcommonscale() != nullptr)
-		yaxadaptor = yaxis->_getcommonscale()->GetValueAdaptor();
-	
+	//if(yaxis->_getcommonscale() != nullptr)
+	//	yaxadaptor = yaxis->_getcommonscale()->GetValueAdaptor();
+	//
 
-	//wxASSERT(yaxadaptor != nullptr);
+	////wxASSERT(yaxadaptor != nullptr);
 
-	int width, height;
-	m_owner->GetOwner()->GetSize(&width, &height);
+	//int width, height;
+	//auto size = m_owner->GetOwner()->_get_size();
+	//width = size.w;
+	//height = size.h;
 
 
-	wxPen pen(*wxBLUE, 0, wxPENSTYLE_DOT);
-	gc->SetPen(pen);
+	//wxPen pen(*wxBLUE, 0, wxPENSTYLE_DOT);
+	//gc->SetPen(pen);
 
-	if (xaxadaptor != nullptr)
-	{
-		xaxadaptor->InitState(xaxis->_getoffset(), xaxis->_getrange(), 15. / (double)width);
-		while (xaxadaptor->Step())
-		{
-			double ticker = xaxadaptor->GetTicker();
-			int x;
-			x = (ticker) / xaxis->_getrange() * width;
-			if (x < 0)
-				continue;
-			if (x > width)
-				break;
+	//if (xaxadaptor != nullptr)
+	//{
+	//	xaxadaptor->InitState(xaxis->_getoffset(), xaxis->_getrange(), 15. / (double)width);
+	//	while (xaxadaptor->MajorStep())
+	//	{
+	//		double ticker = xaxadaptor->GetTicker();
+	//		int x;
+	//		x = (ticker) / xaxis->_getrange() * width;
+	//		if (x < 0)
+	//			continue;
+	//		if (x > width)
+	//			break;
 
-			gc->StrokeLine(x, 0, x, height);
-		}
-	}
+	//		if(m_owner->GetOwner()->_get_orientation() == Plot::ORIENTATION_NORMAL)
+	//			gc->StrokeLine(x, 0, x, height);
+	//		else
+	//			gc->StrokeLine(0, x, height, x);
+	//	}
+	//}
 
-	if (yaxadaptor != nullptr)
-	{
-		yaxadaptor->InitState(yaxis->_getoffset(), yaxis->_getrange(), 15. / (double)height);
-		while (yaxadaptor->Step())
-		{
-			double ticker = yaxadaptor->GetTicker();
-			int y;
-			y = (1 - (ticker) / yaxis->_getrange()) * height;
-			if (y < 0)
-				continue;
-			if (y > height)
-				break;
+	//if (yaxadaptor != nullptr)
+	//{
+	//	yaxadaptor->InitState(yaxis->_getoffset(), yaxis->_getrange(), 15. / (double)height);
+	//	while (yaxadaptor->MajorStep())
+	//	{
+	//		double ticker = yaxadaptor->GetTicker();
+	//		int y;
+	//		y = (ticker) / yaxis->_getrange() * height;
+	//		if (y < 0)
+	//			continue;
+	//		if (y > height)
+	//			break;
 
-			gc->StrokeLine(0, y, width, y);
-		}
-	}
+	//		if (m_owner->GetOwner()->_get_orientation() == Plot::ORIENTATION_NORMAL)
+	//			gc->StrokeLine(0, height - y + 1, width, height - y + 1);
+	//		else
+	//			gc->StrokeLine(y, width, y, 0);
+	//	}
+	//}
 
 	gc->SetAntialiasMode(antialiasmode);
 }

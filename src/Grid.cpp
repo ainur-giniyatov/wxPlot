@@ -5,7 +5,7 @@ using namespace plot;
 Grid::Grid()
 {
 	DPRINTF("Grid ctor\n");
-	m_owner = nullptr;
+//	m_owner = nullptr;
 	
 }
 
@@ -47,7 +47,7 @@ Grid::~Grid()
 //	if (xaxadaptor != NULL)
 //	{
 //		xaxadaptor->InitState(xaxis->GetOffset(), xaxis->GetRange(), 15. / (double)width);
-//		while (xaxadaptor->Step())
+//		while (xaxadaptor->MajorStep())
 //		{
 //			double ticker = xaxadaptor->GetTicker();
 //			int x;
@@ -64,7 +64,7 @@ Grid::~Grid()
 //	if (yaxadaptor != NULL)
 //	{
 //		yaxadaptor->InitState(yaxis->GetOffset(), yaxis->GetRange(), 15. / (double)height);
-//		while (yaxadaptor->Step())
+//		while (yaxadaptor->MajorStep())
 //		{
 //			double ticker = yaxadaptor->GetTicker();
 //			int y;

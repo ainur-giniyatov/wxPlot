@@ -1,31 +1,35 @@
 #include <algorithm>
 #include <assert.h>
 #include <string.h>
+#include <iterator>
 
 #include "Series.h"
-#include "Area.h"
-#include "Data.h"
 #include "Renderer.h"
 
 using namespace plot;
 
 const char *s_series_name_null = "null";
 
-Series::Series(int dim_num, const char *series_name)
+Series::Series(size_t size, const char *series_name)
 {
 	DPRINTF("Series ctor\n");
-	m_series_name = NULL;
-	m_owner = NULL;
+	m_owner = nullptr;
+	m_series_name = nullptr;
 	m_user_data = nullptr;
+	m_xscale = nullptr;
+	m_yscale = nullptr;
+	m_xscale = nullptr;
+	m_yscale = nullptr;
 	SetSeriesName(series_name);
-	m_renderer = NULL;
-
-	m_dim_num = dim_num;
-	assert(m_dim_num > 0 && m_dim_num < 3);
-
-	m_datas = (DataNoType **)malloc(sizeof(DataNoType *) * m_dim_num);
-	for (int indx = 0; indx < m_dim_num; indx++)
-		m_datas[indx] = nullptr;
+	m_renderer = nullptr;
+	data_size = size;
+	m_xdata = (double *)malloc(sizeof(double) * size);
+	m_ydata = (double *)malloc(sizeof(double) * size);
+	for (size_t indx = 0; indx < size; indx++)
+	{
+		m_xdata[indx] = 0;
+		m_ydata[indx] = 0;
+	}
 }
 
 Series::~Series()
@@ -42,13 +46,8 @@ Series::~Series()
 	}
 
 //delete data
-	for (int indx = 0; indx < m_dim_num; indx++)
-	{
-		if (m_datas[indx] != nullptr)
-			delete m_datas[indx];
-	}
-
-	free(m_datas);
+	free(m_xdata);
+	free(m_ydata);
 	
 }
 
@@ -70,16 +69,16 @@ void Series::SetSeriesName(const char * series_name)
 }
 
 
-bool plot::Series::IsValid()
-{
-	bool isvalid = true;
-
-	for (size_t indx = 0; indx < m_dim_num; indx++)
-		if (m_datas[indx] == nullptr || !m_datas[indx]->IsValid())
-			isvalid = false;
-	
-	return isvalid;
-}
+//bool plot::Series::IsValid()
+//{
+//	bool isvalid = true;
+//
+//	for (size_t indx = 0; indx < m_dim_num; indx++)
+//		if (m_datas[indx] == nullptr || !m_datas[indx]->IsValid())
+//			isvalid = false;
+//	
+//	return isvalid;
+//}
 
 void plot::Series::Validate()
 {
@@ -87,87 +86,105 @@ void plot::Series::Validate()
 		m_owner->Validate();
 }
 
-void Series::SetData(DataNoType * data, AXIS_DIR axis_dir)
+void plot::Series::SetXScale(Scale * scale)
 {
-	assert(axis_dir < m_dim_num);
-	assert(data != nullptr);
-	if (m_datas[axis_dir] != nullptr)
-		DeleteData(m_datas[axis_dir]);
-
-	m_datas[axis_dir] = data;
-	data->_setowner(this);
-
+	m_xscale = scale;
+	m_xscale->_addseries(this);
 }
 
-DataNoType * Series::GetData(AXIS_DIR axis_dir)
+void plot::Series::SetYScale(Scale * scale)
 {
-	//assert(axis_dir < m_dim_num);
-	return axis_dir < m_dim_num ? m_datas[axis_dir] : nullptr;
+	m_yscale = scale;
+	m_yscale->_addseries(this);
 }
 
-void Series::RemoveData(DataNoType * data)
-{
-	assert(data->_getowner() == this);
-
-	int indx;
-	for (indx = 0; indx < m_dim_num; indx++)
-	{
-		if (m_datas[indx] == data)
-		{
-			m_datas[indx] = nullptr;
-			data->_setowner(nullptr);
-			break;
-		}
-	}
-
-	assert(indx != m_dim_num);//not found
-}
-
-void Series::DeleteData(DataNoType * data)
-{
-	RemoveData(data);
-	delete data;
-}
-
-//void Series::Fit(int axis_mask)
+//void Series::SetData(DataNoType * data, AXIS_DIR axis_dir)
 //{
-//	std::vector<Scale *> scales;
+//	assert(axis_dir < m_dim_num);
+//	assert(data != nullptr);
+//	if (m_datas[axis_dir] != nullptr)
+//		DeleteData(m_datas[axis_dir]);
 //
-//	for (auto axis : m_owner->_get_axes())
-//		if (axis->GetCommonScale() != nullptr && ((1 << axis->_get_axis_dir()) & axis_mask))
-//			scales.push_back(axis->GetCommonScale());
-//	scales.erase(std::unique(scales.begin(), scales.end()), scales.end());
-//
-//	for (int xd = 0; xd < 3; xd++)
-//		if ((1 << xd) & axis_mask)
-//		{
-//			double vmax = 0, vmin = 0;
-//
-//			DataNoType *data = nullptr;
-//			data = GetData((AXIS_DIR)xd);
-//			if (data == nullptr)
-//				continue;
-//
-//			vmax = data->GetDataMax();
-//			vmin = data->GetDataMin();
-//
-//			for (auto scale : scales)
-//			{
-//				if (xd != scale->_get_axis_dir())
-//					continue;
-//
-//
-//				double range = vmax - vmin;
-//				scale->SetOffset(vmin - range / 10.);
-//				scale->SetRange(range + range / 5.);
-//				scale->RedrawDependantPlots(false);
-//			}
-//		}
-//
-//	for (auto scale : scales)
-//		scale->RedrawDependantPlots();
+//	m_datas[axis_dir] = data;
+//	data->_setowner(this);
 //
 //}
+//
+//DataNoType * Series::GetData(AXIS_DIR axis_dir)
+//{
+//	//assert(axis_dir < m_dim_num);
+//	return axis_dir < m_dim_num ? m_datas[axis_dir] : nullptr;
+//}
+//
+//void Series::RemoveData(DataNoType * data)
+//{
+//	assert(data->_getowner() == this);
+//
+//	int indx;
+//	for (indx = 0; indx < m_dim_num; indx++)
+//	{
+//		if (m_datas[indx] == data)
+//		{
+//			m_datas[indx] = nullptr;
+//			data->_setowner(nullptr);
+//			break;
+//		}
+//	}
+//
+//	assert(indx != m_dim_num);//not found
+//}
+//
+//void Series::DeleteData(DataNoType * data)
+//{
+//	RemoveData(data);
+//	delete data;
+//}
+
+void Series::Fit(int axis_mask)
+{
+	//std::vector<Scale *> scales;
+
+	//for (auto axis : m_owner->_get_axes())
+	//	if (axis->_getcommonscale() != nullptr && ((1 << axis->_get_axis_dir()) & axis_mask))
+	//		scales.push_back(axis->_getcommonscale());
+	//scales.erase(std::unique(scales.begin(), scales.end()), scales.end());
+
+	//for (int xd = 0; xd < 3; xd++)
+	//	if ((1 << xd) & axis_mask)
+	//	{
+	//		double vmax = 0, vmin = 0;
+
+	//		DataNoType *data = nullptr;
+	//		data = GetData((AXIS_DIR)xd);
+	//		if (data == nullptr)
+	//			continue;
+
+	//		vmax = data->GetDataMax();
+	//		vmin = data->GetDataMin();
+
+	//		for (auto scale : scales)
+	//		{
+	//			if (xd != scale->_get_axis_dir())
+	//				continue;
+
+
+	//			double range = vmax - vmin;
+	//			scale->SetOffset(vmin - range / 10.);
+	//			scale->SetRange(range + range / 5.);
+	//			scale->Validate();
+	//		}
+	//	}
+
+	//std::vector<Plot *> plots;
+	//for (auto scale : scales)
+	//{
+	//	auto p = scale->_get_plots();
+	//	std::copy(p.begin(), p.end(), std::back_inserter(plots));
+	//}
+	//plots.erase(std::unique(plots.begin(), plots.end()), plots.end());
+	//for_each(plots.begin(), plots.end(), [](Plot *plot) {plot->Validate(true); });
+
+}
 
 void Series::SetRenderer(Renderer * renderer)
 {
@@ -179,16 +196,16 @@ void Series::SetRenderer(Renderer * renderer)
 
 void plot::Series::BringToFront()
 {
-	assert(m_owner != nullptr);
-	for (auto series_iter = m_owner->GetSerie().begin(); series_iter != m_owner->GetSerie().end(); ++series_iter)
-	{
-		if (*series_iter == this)
-		{
-			m_owner->GetSerie().erase(series_iter);
-			m_owner->GetSerie().push_back(this);
-			break;
-		}
-	}
+	//assert(m_owner != nullptr);
+	//for (auto series_iter = m_owner->GetSerie().begin(); series_iter != m_owner->GetSerie().end(); ++series_iter)
+	//{
+	//	if (*series_iter == this)
+	//	{
+	//		m_owner->GetSerie().erase(series_iter);
+	//		m_owner->GetSerie().push_back(this);
+	//		break;
+	//	}
+	//}
 }
 
 

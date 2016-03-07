@@ -2,23 +2,17 @@
 
 #include "plot_defs.h"
 #include "Series.h"
-#include "Data.h"
-#include "Plot.h"
-#include "Area.h"
-#include "Axis.h"
+#include "SubPlot.h"
 #include "ValueAdaptor.h"
 #include "Marker.h"
 #include "Line.h"
 
 namespace plot
 {
-	template <typename T> class DLLIMPEXP_PLOTLIB DataTyped;
-	class DLLIMPEXP_PLOTLIB DataNoType;
 	class DLLIMPEXP_PLOTLIB Series;
-	class DLLIMPEXP_PLOTLIB Plot;
-	class DLLIMPEXP_PLOTLIB Axis;
+	class DLLIMPEXP_PLOTLIB Subplot;
 	class SeriesSelection;
-	template <typename T> class DLLIMPEXP_PLOTLIB AxisValueAdaptor;
+	class DLLIMPEXP_PLOTLIB AxisValueAdaptor;
 
 	class DLLIMPEXP_PLOTLIB Renderer
 	{
@@ -38,8 +32,8 @@ namespace plot
 		void SetLine(Line *line);
 		Line *GetLine() { return m_line; }
 
-		virtual bool _isspotted(Point<int> &mouse_coord, SeriesSelection & series_selection) = 0;
-		void _setsize(int w, int h) { m_width = w; m_height = h; };
+		virtual Series * _isspotted(Point<int> &mouse_coord, int *dotindex_first, int *dotindex_last) = 0;
+	
 		void _setowner(Series *series);
 
 	protected:
@@ -51,7 +45,6 @@ namespace plot
 		Marker *m_marker;
 		Line *m_line;
 
-		int m_width, m_height; //size of draw area, updated on plot resizing, adding items
 
 	};
 

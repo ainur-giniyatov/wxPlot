@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  5 2014)
+// C++ code generated with wxFormBuilder (version Jun 17 2015)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -57,6 +57,8 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_tool_undo_view = m_toolBar1->AddTool( wxID_ANY, wxT("tool"), wxArtProvider::GetBitmap( wxART_GO_BACK, wxART_MENU ), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL ); 
 	
 	m_tool_redo_view = m_toolBar1->AddTool( wxID_ANY, wxT("tool"), wxArtProvider::GetBitmap( wxART_GO_FORWARD, wxART_MENU ), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL ); 
+	
+	m_tool_orient = m_toolBar1->AddTool( wxID_ANY, wxT("tool"), wxArtProvider::GetBitmap( wxART_REPORT_VIEW, wxART_MENU ), wxNullBitmap, wxITEM_CHECK, wxEmptyString, wxEmptyString, NULL ); 
 	
 	m_toolBar1->Realize(); 
 	
@@ -202,6 +204,7 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( m_menuItem_zoom->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_zoomOnMenuSelection ) );
 	this->Connect( m_tool_undo_view->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::m_tool_undo_viewOnToolClicked ) );
 	this->Connect( m_tool_redo_view->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::m_tool_redo_viewOnToolClicked ) );
+	this->Connect( m_tool_orient->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::m_tool_orientOnToolClicked ) );
 	m_button_newplot->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_newplotOnButtonClick ), NULL, this );
 	m_choice_plots->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::m_choice_plotsOnChoice ), NULL, this );
 	m_choice_series->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::m_choice_seriesOnChoice ), NULL, this );
@@ -233,6 +236,7 @@ MainFrame::~MainFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::m_menuItem_zoomOnMenuSelection ) );
 	this->Disconnect( m_tool_undo_view->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::m_tool_undo_viewOnToolClicked ) );
 	this->Disconnect( m_tool_redo_view->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::m_tool_redo_viewOnToolClicked ) );
+	this->Disconnect( m_tool_orient->GetId(), wxEVT_COMMAND_TOOL_CLICKED, wxCommandEventHandler( MainFrame::m_tool_orientOnToolClicked ) );
 	m_button_newplot->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame::m_button_newplotOnButtonClick ), NULL, this );
 	m_choice_plots->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::m_choice_plotsOnChoice ), NULL, this );
 	m_choice_series->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrame::m_choice_seriesOnChoice ), NULL, this );

@@ -34,7 +34,9 @@ void wxLineStyleComboBox::OnDrawBackground(wxDC& dc, const wxRect& rect, int ite
         return;
     int ii;
     ii = (int)GetClientData(item);
-    wxPen pen(wxColour(COLOR_BASE[m_colour_indx]), m_width);
+    wxPen pen;
+    pen.SetColour(wxColour(COLOR_BASE[m_colour_indx]));
+    pen.SetWidth( m_width);
     if(ii != 0)
     {
         pen.SetStyle(wxPENSTYLE_USER_DASH);

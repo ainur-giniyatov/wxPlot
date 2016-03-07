@@ -19,7 +19,7 @@ static int get_new_marker_id()
 const int wxMarkerCircle::s_id = get_new_marker_id();
 wxMarkerCircle::wxMarkerCircle()
 {
-	
+
 }
 
 plot::wxMarkerCircle::wxMarkerCircle(int border_color_indx, int fill_color_indx, int size, bool vsbl)
@@ -56,7 +56,7 @@ bool wxMarkerCircle::_isspotted(Point<int> &mouse_coord, Point<int> &marker_coor
 	return (r < m_size);
 }
 
-void wxMarkerCircle::Render(void *v_gc, Point<int>& coord)
+void wxMarkerCircle::Render(void *v_gc, const Point<int>& coord)
 {
 	wxGraphicsContext *gc = (wxGraphicsContext *)v_gc;
 	gc->DrawEllipse(coord.x - m_size, coord.y - m_size, m_size * 2, m_size * 2);
@@ -124,7 +124,7 @@ plot::wxMarkerSquare::~wxMarkerSquare()
 {
 }
 
-void plot::wxMarkerSquare::Render(void *v_gc, Point<int>& coord)
+void plot::wxMarkerSquare::Render(void *v_gc, const Point<int>& coord)
 {
 	wxGraphicsContext *gc = (wxGraphicsContext *)v_gc;
 	gc->DrawRectangle(coord.x - m_size, coord.y - m_size, m_size * 2, m_size * 2);
@@ -162,7 +162,7 @@ plot::wxMarkerRomb::~wxMarkerRomb()
 {
 }
 
-void plot::wxMarkerRomb::Render(void *v_gc, Point<int>& coord)
+void plot::wxMarkerRomb::Render(void *v_gc, const Point<int>& coord)
 {
 	wxGraphicsContext *gc = (wxGraphicsContext *)v_gc;
 	//gc->DrawRectangle(coord.x - m_size, coord.y - m_size, m_size * 2, m_size * 2);

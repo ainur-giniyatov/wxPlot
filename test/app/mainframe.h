@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  5 2014)
+// C++ code generated with wxFormBuilder (version Jun 17 2015)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -48,6 +48,7 @@ class MainFrame : public wxFrame
 		wxToolBar* m_toolBar1;
 		wxToolBarToolBase* m_tool_undo_view; 
 		wxToolBarToolBase* m_tool_redo_view; 
+		wxToolBarToolBase* m_tool_orient; 
 		wxStatusBar* m_statusBar1;
 		wxNotebook* m_notebook1;
 		wxPanel* m_panel4;
@@ -86,6 +87,7 @@ class MainFrame : public wxFrame
 		virtual void m_menuItem_zoomOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_tool_undo_viewOnToolClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_tool_redo_viewOnToolClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_tool_orientOnToolClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_newplotOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choice_plotsOnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choice_seriesOnChoice( wxCommandEvent& event ) { event.Skip(); }

@@ -15,7 +15,7 @@ namespace plot
 
 		virtual int _getid() = 0;
 	protected:
-		
+
 	private:
 	};
 
@@ -26,7 +26,7 @@ namespace plot
 		wxMarkerCircle(int border_color_indx, int fill_color_indx, int size = 4, bool vsbl = true);
 		virtual wxMarker *Clone() override;
 		virtual ~wxMarkerCircle();
-		virtual void Render(void *, Point<int> &coord) override;
+		virtual void Render(void *, const Point<int> &coord) override;
 		virtual bool _isspotted(Point<int> &mouse_coord, Point<int> &marker_coord) override;
 		virtual int _getid() override { return s_id; };
 	protected:
@@ -41,7 +41,7 @@ namespace plot
 		wxMarkerSquare(int border_color_indx, int fill_color_indx, int size = 4, bool vsbl = true);
 		virtual wxMarker *Clone() override;
 		virtual ~wxMarkerSquare();
-		virtual void Render(void *, Point<int> &coord) override;
+		virtual void Render(void *, const Point<int> &coord) override;
 		virtual bool _isspotted(Point<int> &mouse_coord, Point<int> &marker_coord) override;
 		virtual int _getid() override { return s_id; };
 	protected:
@@ -56,7 +56,7 @@ namespace plot
 		wxMarkerRomb(int border_color_indx, int fill_color_indx, int size = 4, bool vsbl = true);
 		virtual wxMarker *Clone() override;
 		virtual ~wxMarkerRomb();
-		virtual void Render(void *, Point<int> &coord) override;
+		virtual void Render(void *, const Point<int> &coord) override;
 		virtual bool _isspotted(Point<int> &mouse_coord, Point<int> &marker_coord) override;
 		virtual int _getid() override { return s_id; };
 	protected:

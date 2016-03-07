@@ -25,7 +25,7 @@ namespace plot
 		virtual ~wxSimpleLine() {};
 
 		virtual bool _isspotted(Point<int> &mouse_coord, Point<int> &line_coord1, Point<int> &line_coord2) override;
-		virtual void Render(void *, Point<int> &line_coord1, Point<int> &line_coord2) override;
+		virtual void Render(void *, const Point<int> &line_coord1, const Point<int> &line_coord2) override;
 
 	protected:
 	private:

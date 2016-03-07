@@ -15,8 +15,6 @@ Renderer::Renderer()
 
 	m_visible = true;
 
-	m_width = 0;
-	m_height = 0;
 }
 
 

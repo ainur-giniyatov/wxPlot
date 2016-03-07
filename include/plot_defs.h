@@ -110,13 +110,23 @@ template <typename T> struct Point {
 	inline Point<T> operator - (const Point<T>& p1) { return Point<T>(x - p1.x, y - p1.y); }
 	inline Point<T> operator + (const Point<T>& p1) { return Point<T>(x + p1.x, y + p1.y); }
 	inline Point<T> operator / (T d) { return Point<T>(x / d, y / d); }
-    Point<T>& operator&(Point<T>) {return &this;}
+    //Point<T>& operator&(Point<T>) {return &this;}
+    //Point<T> operator() (T x, T y) { return Point(x, y); }
+};
+
+template <typename T> struct Size {
+	T w;
+	T h;
+	Size() : w(0), h(0) {};
+	Size(T _w, T _h) { w = _w; h = _h; }
+	Size(const Size<T>& s) { w = s.w; h = s.h; }
 };
 
 template <typename T> struct Rect {
 
 	Rect() :left(0), right(0), top(0), bottom(0) {};
-	Rect(T l, T t, T w, T h) { left = l; right = left + w; top = t; bottom = top + h; }
+	Rect(T l, T b, T w, T h) { left = l; right = left + w; bottom = b; top = bottom + h; }
+	Rect(const Rect<T> &r) { left = r.left; right = r.right; top = r.top; bottom = r.bottom; }
 	Rect(const Point<T> &p1, const Point<T> &p2)
 	{
 		if (p2.x > p1.x)
@@ -132,23 +142,23 @@ template <typename T> struct Rect {
 
 		if (p2.y > p1.y)
 		{
-			top = p1.y;
-			bottom = p2.y;
+			top = p2.y;
+			bottom = p1.y;
 		}
 		else
 		{
-			top = p2.y;
-			bottom = p1.y;
+			top = p1.y;
+			bottom = p2.y;
 		}
 	}
 
 	Rect(Rect &r) { left = r.left; right = r.right; top = r.top; bottom = r.bottom; }
 
 	inline T Width() { return right - left; }
-	inline T Height() { return bottom - top; }
+	inline T Height() { return top - bottom; }
 
 	inline void SetWidth(T w) { right = left + w; }
-	inline void SetHeight(T h) { bottom = top + h; }
+	inline void SetHeight(T h) { top = bottom + h; }
 
 	inline void SetLeft(T l, bool keepwidth = true)
 	{
@@ -168,19 +178,19 @@ template <typename T> struct Rect {
 
 	inline void SetTop(T t, bool keepheight = true)
 	{
-		T h = bottom - top;
+		T h = top - bottom;
 		top = t;
 		if (keepheight)
-			bottom = top + h;
+			bottom = top - h;
 
 	}
 
 	inline void SetBottom(T b, bool keepheight = true)
 	{
-		T h = bottom - top;
+		T h = top - bottom;
 		bottom = b;
 		if (keepheight)
-			top = bottom - h;
+			top = bottom + h;
 
 	}
 
@@ -196,27 +206,27 @@ template <typename T> struct Rect {
 	inline void SetCenterVer(T c)
 	{
 		T h1, h2;
-		h1 = (bottom - top) / 2;
-		h2 = (bottom - top) - h1;
-		top = c - h1;
-		bottom = c + h2;
+		h1 = (top - bottom) / 2;
+		h2 = (top - bottom) - h1;
+		top = c + h1;
+		bottom = c - h2;
 	}
 
 	inline void Inflate(T dd)
 	{
 		left -= dd;
 		right += dd;
-		top -= dd;
-		bottom += dd;
+		top += dd;
+		bottom -= dd;
 	}
 
 	inline bool IsInside(const Point<T> &p)
 	{
-		return p.x >= left && p.x <= right && p.y >= top && p.y <= bottom;
+		return p.x >= left && p.x <= right && p.y <= top && p.y >= bottom;
 	}
 
-	inline Point<T> Middle() { return Point<T>((right - left) / (T)2, (bottom - top) / (T)2); }
-	inline void MoveTo(const Point<T>& p) { T w = right - left, h = bottom - top; left = p.x; top = p.y, right = left + w; bottom = top + h; }
+	inline Point<T> Middle() { return Point<T>((right - left) / (T)2, (top - bottom) / (T)2); }
+	inline void MoveTo(const Point<T>& p) { T w = right - left, h = top - bottom; left = p.x; bottom = p.y, right = left + w; top = bottom + h; }
 
 	T left, right, top, bottom;
 private:

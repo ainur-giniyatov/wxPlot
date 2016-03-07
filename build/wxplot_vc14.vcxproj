@@ -263,30 +263,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\Area.h" />
-    <ClInclude Include="..\include\Axis.h" />
     <ClInclude Include="..\include\Box.h" />
-    <ClInclude Include="..\include\Data.h" />
     <ClInclude Include="..\include\Grid.h" />
     <ClInclude Include="..\include\Line.h" />
     <ClInclude Include="..\include\Marker.h" />
-    <ClInclude Include="..\include\Plot.h" />
+    <ClInclude Include="..\include\SubPlot.h" />
     <ClInclude Include="..\include\plot_defs.h" />
     <ClInclude Include="..\include\Renderer.h" />
     <ClInclude Include="..\include\Scale.h" />
-    <ClInclude Include="..\include\ScaleBox.h" />
     <ClInclude Include="..\include\Series.h" />
     <ClInclude Include="..\include\ValueAdaptor.h" />
     <ClInclude Include="..\include\wx\colorbase.h" />
     <ClInclude Include="..\include\wx\wxBox.h" />
-    <ClInclude Include="..\include\wx\wxChartWindow.h" />
+    <ClInclude Include="..\include\wx\wxMultiPlot.h" />
     <ClInclude Include="..\include\wx\wxLine.h" />
     <ClInclude Include="..\include\wx\wxMarker.h" />
-    <ClInclude Include="..\include\wx\wxPlotWindow.h" />
-    <ClInclude Include="..\include\wx\ScaleWindow.h" />
+    <ClInclude Include="..\include\wx\wxSinglePlot.h" />
+    <ClInclude Include="..\include\wx\wxSubPlot.h" />
+    <ClInclude Include="..\include\wx\wxScaleWidget.h" />
     <ClInclude Include="..\include\wx\wxGrid.h" />
     <ClInclude Include="..\include\wx\wxRenderer.h" />
-    <ClInclude Include="..\include\wx\wxScaleBox.h" />
+    <ClInclude Include="..\other\Pane_fb.h" />
     <ClInclude Include="..\other\PopupSeriesTool.h" />
     <ClInclude Include="..\other\PopupToolBar.h" />
     <ClInclude Include="..\other\SeriesTool.h" />
@@ -297,6 +294,7 @@
     <ClInclude Include="..\other\wxMarkStyleComboBox.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\other\Pane_fb.cpp" />
     <ClCompile Include="..\other\PopupSeriesTool.cpp" />
     <ClCompile Include="..\other\PopupToolBar.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">true</ExcludedFromBuild>
@@ -315,29 +313,25 @@
     <ClCompile Include="..\other\wxColorComboBox.cpp" />
     <ClCompile Include="..\other\wxLineStyleComboBox.cpp" />
     <ClCompile Include="..\other\wxMarkStyleComboBox.cpp" />
-    <ClCompile Include="..\src\Area.cpp" />
-    <ClCompile Include="..\src\Axis.cpp" />
     <ClCompile Include="..\src\Box.cpp" />
-    <ClCompile Include="..\src\Data.cpp" />
     <ClCompile Include="..\src\Grid.cpp" />
     <ClCompile Include="..\src\Line.cpp" />
     <ClCompile Include="..\src\Marker.cpp" />
-    <ClCompile Include="..\src\Plot.cpp" />
+    <ClCompile Include="..\src\SubPlot.cpp" />
     <ClCompile Include="..\src\Renderer.cpp" />
     <ClCompile Include="..\src\Scale.cpp" />
-    <ClCompile Include="..\src\ScaleBox.cpp" />
     <ClCompile Include="..\src\Series.cpp" />
     <ClCompile Include="..\src\ValueAdaptor.cpp" />
     <ClCompile Include="..\src\wx\colorbase.cpp" />
     <ClCompile Include="..\src\wx\wxBox.cpp" />
-    <ClCompile Include="..\src\wx\wxChartWindow.cpp" />
+    <ClCompile Include="..\src\wx\wxMultiPlot.cpp" />
     <ClCompile Include="..\src\wx\wxLine.cpp" />
     <ClCompile Include="..\src\wx\wxMarker.cpp" />
-    <ClCompile Include="..\src\wx\wxPlotWindow.cpp" />
-    <ClCompile Include="..\src\wx\ScaleWindow.cpp" />
+    <ClCompile Include="..\src\wx\wxSinglePlot.cpp" />
+    <ClCompile Include="..\src\wx\wxSubPlot.cpp" />
+    <ClCompile Include="..\src\wx\wxScaleWidget.cpp" />
     <ClCompile Include="..\src\wx\wxGrid.cpp" />
     <ClCompile Include="..\src\wx\wxRenderer.cpp" />
-    <ClCompile Include="..\src\wx\wxScaleBox.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

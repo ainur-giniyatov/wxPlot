@@ -1,8 +1,7 @@
 #pragma once
 #include "mainframe.h"
-#include "wx/wxPlotWindow.h"
-#include "Area.h"
-#include "wx/wxChartWindow.h"
+#include "wx/wxSinglePlot.h"
+#include "wx/wxMultiPlot.h"
 #include "../../other/PopupSeriesTool.h"
 
 class MyFrame :
@@ -39,6 +38,7 @@ private:
 	virtual void m_button_chartfitbothOnButtonClick(wxCommandEvent& event) override;
 	virtual void m_tool_undo_viewOnToolClicked(wxCommandEvent& event) override;
 	virtual void m_tool_redo_viewOnToolClicked(wxCommandEvent& event) override;
+	virtual void m_tool_orientOnToolClicked(wxCommandEvent& event) override;
 
 	void OnMouseWheel(wxMouseEvent &event);
 	
@@ -50,16 +50,12 @@ private:
 
 	void OnPlotClicked(plot::PlotClickEvent &event);
 
-	plot::wxChartWindow *m_chartwindow;
-	plot::wxPlotWindow *m_wxPlotWindow;
+	plot::wxSinglePlot *m_singleplot;
 	plot::Series *m_series;
-	plot::DataNoType *m_data;
+	plot::wxSubplot *m_subplot;
 
-
+	plot::wxMultiPlot *m_multiplot;
 	plot::Series *m_2ndpageseries;
-	plot::wxPlotWindow *m_2ndpageplotwindow;
-	plot::DataNoType *m_2ndpagexdata, *m_2ndpageydata;
-	plot::Area *m_2ndpagearea;
 
 	
 	wxPopupSeriesTool *m_popup_tool;
@@ -67,7 +63,7 @@ private:
 	//help functions
 	void fill_plot_choices();
 	void fill_series_choices();
-	void fill_datas_choices();
+
 	DECLARE_EVENT_TABLE()
 };
 

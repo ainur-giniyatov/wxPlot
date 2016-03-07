@@ -2,80 +2,72 @@
 #include <time.h>
 #include "plot_defs.h"
 #include "Series.h"
-#include "Data.h"
-#include "Plot.h"
+#include "SubPlot.h"
 #include "Scale.h"
-#include "Axis.h"
 
 namespace plot
 {
-	class DLLIMPEXP_PLOTLIB DataNoType;
 	class DLLIMPEXP_PLOTLIB Series;
-	class DLLIMPEXP_PLOTLIB Plot;
+	class DLLIMPEXP_PLOTLIB Subplot;
 	class DLLIMPEXP_PLOTLIB Renderer2D;
 	class DLLIMPEXP_PLOTLIB Scale;
-	class DLLIMPEXP_PLOTLIB Axis;
-	template <class T> class DLLIMPEXP_PLOTLIB DataTyped;
 
 	class DLLIMPEXP_PLOTLIB AxisAdaptor
 	{
 	public:
-		AxisAdaptor() { DPRINTF("AxisAdaptor ctor\n"); };
+		AxisAdaptor();
 		virtual ~AxisAdaptor() { DPRINTF("AxisAdaptor dtor\n"); };
 
-		virtual void InitState(double offset, double range, double wdth);
-		virtual bool Step();
-		virtual double GetTicker() { return m_ticker; };
-		//virtual int GetTickLenght() = 0;
-		//virtual int GetTickWeight() = 0;
-		//void SetOffset(double offset);
-		//void SetRange(double range);
+		virtual void InitState(double offset, double range, double rwidth);
+		virtual bool MajorStep();
+		virtual bool MinorStep();
+		double GetMajorTick() { return m_major_stepper; };
+		double GetMinorTick() { return m_minor_stepper + m_major_stepper; };
+		virtual bool IsMiddleMinor();
+		virtual void SetLimitsForScale(Scale *scale);
 	protected:
 		double m_offset;
 		double m_range;
-		double m_ticker;
-		double m_step;
+		double m_major_tick_step;
+		double m_minor_tick_step;
+		double m_major_stepper;
+		double m_minor_stepper;
 
-		virtual double GetStep(double r);
-
-
+		const char *m_format_str;
 	private:
-
 	};
 
-	template<typename T> class DLLIMPEXP_PLOTLIB AxisValueAdaptor : public AxisAdaptor
+	class DLLIMPEXP_PLOTLIB AxisValueAdaptor : public AxisAdaptor
 	{
 	public:
 		AxisValueAdaptor();
-		void SetData(DataTyped<T> * data);
 		virtual ~AxisValueAdaptor();
-		size_t ConvertToStr(char *str, size_t len, size_t indx);
-		virtual size_t ValToStr(char *str, size_t len, T val) = 0;
+
+		virtual size_t ValToStr(char *str, size_t len, double val) = 0;
 		virtual size_t ValToStr(char *str, size_t len) = 0;
 		virtual bool ValBiggerPart(char *str, size_t len) = 0;
 		bool IsBold() { return m_makebold; }
 
 	protected:
-		DataTyped<T> *m_data;
 		bool m_makebold;
 	};
 
 
-	template<typename T> class DLLIMPEXP_PLOTLIB TimeAxisValueAdaptor :public AxisValueAdaptor<T>
+	class DLLIMPEXP_PLOTLIB TimeAxisValueAdaptor :public AxisValueAdaptor
 	{
 	public:
 		TimeAxisValueAdaptor();
 		virtual ~TimeAxisValueAdaptor();
 		virtual size_t ValToStr(char *str, size_t len) override;
-		virtual size_t ValToStr(char *str, size_t len, T val) override;
+		virtual size_t ValToStr(char *str, size_t len, double val) override;
 		virtual bool ValBiggerPart(char *str, size_t len) override;
 
-		virtual void InitState(double offset, double range, double wdth) override;
-		virtual bool Step() override;
-		virtual double GetTicker() override;
+		virtual void InitState(double offset, double range, double rwidth) override;
+		virtual bool MajorStep() override;
+		virtual bool MinorStep() override;
+		virtual bool IsMiddleMinor() override;
+		virtual void SetLimitsForScale(Scale *scale) override;
 	protected:
-
-		virtual double GetStep(double r) override;
 
 	private:
 
@@ -96,42 +88,23 @@ namespace plot
 		};
 
 		TIME_TICK_GRAN m_timetick_granularity;
-		time_t time_value_integer;
-		float time_value_fraction;
+
+		double _getstep(double r);
 	};
 
-	template<typename T> class DLLIMPEXP_PLOTLIB SimpleAxisValueAdaptor :public AxisValueAdaptor<T>
+	class DLLIMPEXP_PLOTLIB SimpleAxisValueAdaptor :public AxisValueAdaptor
 	{
 	public:
 		SimpleAxisValueAdaptor();
 		virtual ~SimpleAxisValueAdaptor();
 
 		virtual size_t ValToStr(char *str, size_t len) override;
-		virtual size_t ValToStr(char *str, size_t len, T val) override;
+		virtual size_t ValToStr(char *str, size_t len, double val) override;
 		virtual bool ValBiggerPart(char *str, size_t len) override;
 
-		//virtual void InitState(double offset, double range, double wdth) override;
-		//virtual bool Step() override;
-		//virtual double GetTicker() override;
 	protected:
 
-		//virtual double GetStep(double r) override;
 	private:
-	};
-
-
-
-
-	template class DLLIMPEXP_PLOTLIB AxisValueAdaptor<int>;
-	template class DLLIMPEXP_PLOTLIB AxisValueAdaptor<time_t>;
-	template class DLLIMPEXP_PLOTLIB AxisValueAdaptor<double>;
-
-
-	template class DLLIMPEXP_PLOTLIB TimeAxisValueAdaptor<int>;
-	template class DLLIMPEXP_PLOTLIB TimeAxisValueAdaptor<time_t>;
-	template class DLLIMPEXP_PLOTLIB TimeAxisValueAdaptor<double>;
-
-	template class DLLIMPEXP_PLOTLIB SimpleAxisValueAdaptor<double>;
-
+};
 
 }

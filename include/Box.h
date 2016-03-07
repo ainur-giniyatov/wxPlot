@@ -19,7 +19,7 @@ namespace plot
 		BOXLEFT = (1 << 3)
 	};
 
-	class DLLIMPEXP_PLOTLIB Plot;
+	class DLLIMPEXP_PLOTLIB Subplot;
 
 	class DLLIMPEXP_PLOTLIB Box
 	{
@@ -28,10 +28,11 @@ namespace plot
 			MOVEABLE = (1 << 0),
 			RESIZEABLE = (1 << 1),
 			EXPANDVERT = (1 << 2),
-			EXPANDHOR = (1 << 3)
+			EXPANDHOR = (1 << 3),
+			BACKENDORIENTED = (1 << 4)
 		};
 
-		Box();
+		Box(int flags = MOVEABLE | RESIZEABLE);
 		virtual ~Box();
 
 		virtual void Render(void *) = 0;
@@ -39,14 +40,16 @@ namespace plot
 		auto &_get_rect() { return m_rect; }
 		bool _has_flags(int flags) { return (m_flags & flags) == flags; }
 		int _get_borderthickenss() { return m_border_thickness; }
-		virtual void _ownersize(int w, int h);
-		virtual void _setowner(Plot *plot) { m_owner = plot; };
+		virtual void _ownersize(const Size<int> &ownersize);
+		virtual void _setowner(Subplot *subplot) { m_owner = subplot; };
 		static int _getsnapdistance() { return s_snapdistance; }
+
 	protected:
 		int m_flags;
 		Rect<int> m_rect;
 		int m_border_thickness;
-		Plot *m_owner;
+		Subplot *m_owner;
+
 	private:
 		Box *m_stickbox[4];//left top right bottom
 		static const int s_snapdistance;
@@ -56,10 +59,10 @@ namespace plot
 	class TitleBox : public Box
 	{
 	public:
-		TitleBox();
+		TitleBox(int flags = MOVEABLE);
 		virtual ~TitleBox();
 	protected:
-		virtual void _setowner(Plot *plot) override;
+		virtual void _setowner(Subplot *subplot) override;
 		const char *m_title;
 	};
 }

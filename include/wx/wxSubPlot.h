@@ -8,23 +8,22 @@
 
 #include <wx/bitmap.h>
 
-#include "ScaleWindow.h"
-#include "../Plot.h"
+#include "wxScaleWidget.h"
+#include "SubPlot.h"
 
 #include "../../other/PopupSeriesTool.h"
 
 namespace plot
 {
-	class DLLIMPEXP_PLOTLIB wxPlotWindow;
+	class DLLIMPEXP_PLOTLIB wxSubplot;
 
 	class  PlotClickEvent : public wxCommandEvent
 	{
 	public:
-		PlotClickEvent(wxEventType eventType, int winind, wxPlotWindow *plot, Series *series = nullptr) : wxCommandEvent(eventType, winind), m_series_selection(nullptr)
+		PlotClickEvent(wxEventType eventType, int winind, wxSubplot *subplot, Series *series = nullptr) : wxCommandEvent(eventType, winind), m_series_selection(nullptr)
 		{ 
-			m_plotwindow = nullptr;
 			//m_box = nullptr;
-			m_plotwindow = plot;
+			m_subplot = subplot;
 			//m_box = box;
 			m_series_selection = series;
 		}
@@ -32,7 +31,7 @@ namespace plot
 
 		//void SetBox(wxBox *box) { m_box = box; }
 		void SetSeriesSelection(const SeriesSelection &ser_selection) { m_series_selection = ser_selection; }
-		wxPlotWindow *GetPlot() { return m_plotwindow; }
+		wxSubplot *GetSubplot() { return m_subplot; }
 		//wxBox *GetBox() { return m_box; }
 		SeriesSelection *GetSeriesSelection() { return &m_series_selection; };
 
@@ -41,7 +40,7 @@ namespace plot
 	protected:
 	private:
 		SeriesSelection m_series_selection;
-		wxPlotWindow *m_plotwindow;
+		wxSubplot *m_subplot;
 		//wxBox *m_box;
 	};
 
@@ -56,19 +55,27 @@ namespace plot
 
 namespace plot
 {
-		class DLLIMPEXP_PLOTLIB wxPlotWindow :
-		public wxWindow, public Plot
+		class DLLIMPEXP_PLOTLIB wxSubplot :
+		public wxPanel, public Subplot
 	{
 	public:
-		wxPlotWindow(wxWindow *parent);
-		virtual ~wxPlotWindow();
+		wxSubplot(wxWindow *parent);
+		virtual ~wxSubplot();
 
 		wxMenu &GetMenu() { return m_context_menu; }
 		virtual void RedrawPlot();
 
+		//void AddLeftScaleWidget(wxScaleWidget *scalewidget);
+		//void AddRightScaleWidget(wxScaleWidget *scalewidget);
+		//void AddTopScaleWidget(wxScaleWidget *scalewidget);
+		//void AddBottomScaleWidget(wxScaleWidget *scalewidget);
+
 		//internal use
 		void _popup_seriesmenu(Series *series);
-		
+		//void _setphysicaloffsets(int hphoff, int vphoff) { m_hphoff = hphoff; m_vphoff = vphoff; };
+		//void _getphysicaloffsets(int *hphoff, int *vphoff) { *hphoff = m_hphoff; *vphoff = m_vphoff; };
+		//void _setphysicalranges(int hphrange, int vphrange) { m_hphrange = hphrange; m_vphrange = vphrange; };
+		//void _getphysicalranges(int *hphrange, int *vphrange) { *hphrange = m_hphrange; *vphrange = m_vphrange; };
 	private:
 		void OnPaint(wxPaintEvent &event);
 		void OnEraseBackground(wxEraseEvent &event);
@@ -83,11 +90,11 @@ namespace plot
 
 
 		void Render(wxGraphicsContext *gc);
-		virtual void DrawZoomSelection() override;
+//		virtual void DrawZoomSelection() override;
 		virtual void GetSize(int *width, int *height);
 
-		wxSizer *m_sizer;
-		std::vector<ScaleWindow *> m_scalewindows;
+		//wxSizer *m_sizer;
+		std::vector<wxScaleWidget *> m_scalewidgets;
 
 		wxMenu m_context_menu;
 
@@ -97,7 +104,7 @@ namespace plot
 		//virtual void _spotseries(SeriesSelection &seriesselection) override;
 		
 		/*iterate serie and find if mouse_coords points on any serie mark or line and fills seriesselection object*/
-		void _getspottedseries(Point<int>&mouse_coords, SeriesSelection &seriesselection);
+		//void _getspottedseries(Point<int>&mouse_coords, SeriesSelection &seriesselection);
 
 		static const int IDMENUITEM_REMOVESERIES;
 		void OnMenuItem_RemoveSeries(wxCommandEvent &event);
@@ -117,7 +124,14 @@ namespace plot
 
 
 		virtual void emit_viewchanged() override;
+		virtual const Size<int> _get_backend_size() override;
 		int m_diag_texts_pos_y;
+		
+		int m_hphoff;
+		int m_vphoff;
+		int m_hphrange;
+		int m_vphrange;
+
 		DECLARE_EVENT_TABLE()
 	};
 

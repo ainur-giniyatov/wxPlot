@@ -70,7 +70,7 @@ bool plot::wxSimpleLine::_isspotted(Point<int>& mouse_coord, Point<int>& line_co
 	return (dist < (double)m_thickness / 2.);
 }
 
-void plot::wxSimpleLine::Render(void *v_gc, Point<int>& line_coord1, Point<int>& line_coord2)
+void plot::wxSimpleLine::Render(void *v_gc, const Point<int>& line_coord1, const Point<int>& line_coord2)
 {
 	wxGraphicsContext *gc = (wxGraphicsContext *)v_gc;
 	gc->StrokeLine(line_coord1.x, line_coord1.y, line_coord2.x, line_coord2.y);

@@ -9,7 +9,7 @@ namespace plot
 		Marker();
 		virtual ~Marker();
 
-		virtual void Render(void *, Point<int> &coord) = 0;
+		virtual void Render(void *, const Point<int> &coord) = 0;
 
 		void SetFillColourIndex(int color_indx) { m_fill_colour_indx = color_indx; };
 		void SetBorderColourIndex(int color_indx) { m_border_colour_indx = color_indx; };

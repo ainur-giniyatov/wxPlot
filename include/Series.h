@@ -2,17 +2,20 @@
 #include <vector>
 
 #include "plot_defs.h"
+#include "Scale.h"
+#include "SubPlot.h"
 
 namespace plot
 {
-	class DLLIMPEXP_PLOTLIB DataNoType;
-	class DLLIMPEXP_PLOTLIB Area;
+	
+	class DLLIMPEXP_PLOTLIB Scale;
 	class DLLIMPEXP_PLOTLIB Renderer;
+	class DLLIMPEXP_PLOTLIB Subplot;
 
 	class DLLIMPEXP_PLOTLIB Series
 	{
 	public:
-		Series(int dim_num, const char *series_name = NULL);
+		Series(size_t size, const char *series_name = NULL);
 		virtual ~Series();
 
 		void SetSeriesName(const char *series_name = NULL);
@@ -24,33 +27,38 @@ namespace plot
 		bool IsValid();
 		void Validate();
 
-		void SetData(DataNoType *data, AXIS_DIR axis_dir);
-		DataNoType *GetData(AXIS_DIR axis_dir);
+		void SetXScale(Scale *scale);
+		void SetYScale(Scale *scale);
 
-		void RemoveData(DataNoType *data);
-		void DeleteData(DataNoType *data);
-
-		//void Fit(int axis_mask);
+		void Fit(int axis_mask);
 
 		void SetRenderer(Renderer *renderer);//previous renderer will be deleted
 		Renderer *GetRenderer() { return m_renderer; };
 
 		void BringToFront();
 
-		//internal use methods
-		void _setowner(Area *area) { m_owner = area; };
-		Area *_getowner() { return m_owner; }
+		auto GetXData() { return m_xdata; }
+		auto GetYData() { return m_ydata; }
+		auto GetDataSize() { return data_size; }
 
+		//internal use methods
+		void _setowner(Subplot *subplot) { m_owner = subplot; };
+		Subplot *_getowner() { return m_owner; }
+		Scale *_getxscale() { return m_xscale; }
+		Scale *_getyscale() { return m_yscale; }
 	protected:
 		char *m_series_name;
-		Area *m_owner;
+		Subplot *m_owner;
 		Renderer *m_renderer;
 
 		void *m_user_data;
-
+		Scale *m_xscale;
+		Scale *m_yscale;
 	private:
-		int m_dim_num; //number of dimensions
-		DataNoType **m_datas;
+
+		double *m_xdata;
+		double *m_ydata;
+		size_t data_size;
 	};
 
 	class SeriesSelection

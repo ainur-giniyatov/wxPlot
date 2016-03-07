@@ -13,7 +13,7 @@
 	"Plot.h"
 	"Grid.h"
 
-1455573813 d:\git-rep\wxplot\include\plot_defs.h
+1457334317 d:\git-rep\wxplot\include\plot_defs.h
 	<stdlib.h>
 	<crtdbg.h>
 	<stdio.h>
@@ -2557,13 +2557,11 @@
 1387201349 d:\dev\wxpython-src-3.0.2.0\include\wx\cocoa\mdi.h
 	"wx/frame.h"
 
-1455602296 d:\git-rep\wxplot\include\series.h
+1456582418 d:\git-rep\wxplot\include\series.h
 	<vector>
 	"plot_defs.h"
-	"Data.h"
-	"Area.h"
-	"Renderer.h"
-	"pevent.h"
+	"Scale.h"
+	"SubPlot.h"
 
 1451853757 d:\git-rep\wxplot\include\data.h
 	"plot_defs.h"
@@ -2572,13 +2570,10 @@
 	"pevent.h"
 	<time.h>
 
-1453942918 d:\git-rep\wxplot\include\renderer.h
+1457255079 d:\git-rep\wxplot\include\renderer.h
 	"plot_defs.h"
 	"Series.h"
-	"Data.h"
-	"Plot.h"
-	"Area.h"
-	"Axis.h"
+	"SubPlot.h"
 	"ValueAdaptor.h"
 	"Marker.h"
 	"Line.h"
@@ -2602,14 +2597,13 @@
 	"Plot.h"
 	"Scale.h"
 
-1455598579 d:\git-rep\wxplot\include\scale.h
+1457254958 d:\git-rep\wxplot\include\scale.h
+	<vector>
+	<map>
 	"plot_defs.h"
 	"Series.h"
-	"Data.h"
-	"Plot.h"
-	"Axis.h"
+	"SubPlot.h"
 	"ValueAdaptor.h"
-	<vector>
 
 1450361437 d:\git-rep\wxplot\include\space.h
 	"plot_defs.h"
@@ -2835,10 +2829,10 @@
 	"wx/dcclient.h"
 	"wx/window.h"
 
-1453931969 source:d:\git-rep\wxplot\src\renderer.cpp
+1456071310 source:d:\git-rep\wxplot\src\renderer.cpp
 	"Renderer.h"
 
-1455598578 source:d:\git-rep\wxplot\src\scale.cpp
+1457255079 source:d:\git-rep\wxplot\src\scale.cpp
 	<float.h>
 	<algorithm>
 	<assert.h>
@@ -2848,30 +2842,32 @@
 	<wx/dcbuffer.h>
 	"ScaleWindow.h"
 
-1455602733 source:d:\git-rep\wxplot\src\series.cpp
+1457280536 source:d:\git-rep\wxplot\src\series.cpp
 	<algorithm>
 	<assert.h>
 	<string.h>
+	<iterator>
 	"Series.h"
+	"Renderer.h"
 
 1450364552 source:d:\git-rep\wxplot\src\space.cpp
 	"Space.h"
 
-1453947300 source:d:\git-rep\wxplot\src\valueadaptor.cpp
+1457332807 source:d:\git-rep\wxplot\src\valueadaptor.cpp
 	<time.h>
 	<algorithm>
 	<assert.h>
 	<string.h>
+	<limits.h>
+	<float.h>
 	"ValueAdaptor.h"
 
-1451655719 d:\git-rep\wxplot\include\valueadaptor.h
+1457254983 d:\git-rep\wxplot\include\valueadaptor.h
 	<time.h>
 	"plot_defs.h"
 	"Series.h"
-	"Data.h"
-	"Plot.h"
+	"SubPlot.h"
 	"Scale.h"
-	"Axis.h"
 
 1446435032 source:d:\wxplot\src\area.cpp
 	"Area.h"
@@ -5854,11 +5850,9 @@
 	<time.h>
 	<math.h>
 
-1451655434 d:\git-rep\wxplot\include\grid.h
+1456465215 d:\git-rep\wxplot\include\grid.h
 	"plot_defs.h"
 	"Series.h"
-	"Axis.h"
-	"Area.h"
 
 1450115219 d:\git-rep\wxplot\include\widget.h
 	"plot_defs.h"
@@ -5870,7 +5864,7 @@
 	<wx/menu.h>
 	<wx/event.h>
 
-1451657150 source:d:\git-rep\wxplot\src\grid.cpp
+1457046373 source:d:\git-rep\wxplot\src\grid.cpp
 	"Grid.h"
 
 1447828425 source:d:\git-rep\wxplot\src\scalewidget.cpp
@@ -5905,12 +5899,8 @@
 	"Widget.h"
 	"PlotWindow.h"
 
-1455584412 d:\git-rep\wxplot\include\box.h
+1456582463 d:\git-rep\wxplot\include\box.h
 	"plot_defs.h"
-	"pevent.h"
-	"Series.h"
-	"Data.h"
-	"Plot.h"
 
 1451426324 source:d:\git-rep\wxplot\src\wx\chartwindow.cpp
 	"wx/ChartWindow.h"
@@ -5950,22 +5940,21 @@
 	<wx/graphics.h>
 	"wx/ScaleWindow.h"
 
-1451771144 source:d:\git-rep\wxplot\src\wx\wxbox.cpp
-	<wx/dcclient.h>
+1456584435 source:d:\git-rep\wxplot\src\wx\wxbox.cpp
 	<wx/graphics.h>
+	<wx/dcclient.h>
 	"wx/wxBox.h"
+	"wx/wxSubPlot.h"
 
-1451771144 d:\git-rep\wxplot\include\wx\wxbox.h
-	<wx/event.h>
+1456293777 d:\git-rep\wxplot\include\wx\wxbox.h
+	"../plot_defs.h"
 	"../Box.h"
-	"wxPlotWindow.h"
 
-1451657150 source:d:\git-rep\wxplot\src\wx\wxgrid.cpp
+1457046373 source:d:\git-rep\wxplot\src\wx\wxgrid.cpp
 	<wx/graphics.h>
 	"wx/wxGrid.h"
 
-1451656034 d:\git-rep\wxplot\include\wx\wxgrid.h
-	"../Area.h"
+1456464483 d:\git-rep\wxplot\include\wx\wxgrid.h
 	"../Grid.h"
 
 1451655930 source:d:\git-rep\wxplot\src\wx\wxscalebox.cpp
@@ -5987,11 +5976,11 @@
 	<vector>
 	"plot_defs.h"
 
-1455585868 source:d:\git-rep\wxplot\src\box.cpp
-	<assert.h>
-	<stdlib.h>
+1457332683 source:d:\git-rep\wxplot\src\box.cpp
 	<algorithm>
+	<string.h>
 	"Box.h"
+	"SubPlot.h"
 
 1451760049 source:d:\git-rep\wxplot\src\pevent.cpp
 	<assert.h>
@@ -6029,13 +6018,17 @@
 	"wxPlotWindow.h"
 	"ScaleWindow.h"
 
-1451678829 source:d:\git-rep\wxplot\src\wx\wxrenderer.cpp
+1457334322 source:d:\git-rep\wxplot\src\wx\wxrenderer.cpp
 	<wx/graphics.h>
 	"wx/wxRenderer.h"
 	"wx/colorbase.h"
+	"wx/wxMarker.h"
+	"wx/wxLine.h"
+	"wx/wxSubPlot.h"
 
-1451678491 d:\git-rep\wxplot\include\wx\wxrenderer.h
-	"Renderer.h"
+1456494418 d:\git-rep\wxplot\include\wx\wxrenderer.h
+	"plot_defs.h"
+	"../Renderer.h"
 
 1451775741 source:d:\git-rep\wxplot\src\wx\wxplotwindow.cpp
 	<wx/dcbuffer.h>
@@ -6045,10 +6038,10 @@
 	"wx/wxGrid.h"
 	"wx/wxRenderer.h"
 
-1453872456 d:\git-rep\wxplot\include\marker.h
+1457334386 d:\git-rep\wxplot\include\marker.h
 	"plot_defs.h"
 
-1453873066 d:\git-rep\wxplot\include\line.h
+1457334277 d:\git-rep\wxplot\include\line.h
 	"plot_defs.h"
 
 1453789547 source:d:\git-rep\wxplot\src\line.cpp
@@ -6056,4 +6049,321 @@
 
 1455246483 source:d:\git-rep\wxplot\src\marker.cpp
 	"Marker.h"
+
+1457276926 d:\git-rep\wxplot\include\subplot.h
+	"plot_defs.h"
+	"Series.h"
+	"Scale.h"
+	"Box.h"
+	<vector>
+
+1457332950 source:d:\git-rep\wxplot\src\subplot.cpp
+	<algorithm>
+	<math.h>
+	<assert.h>
+	<string>
+	<string.h>
+	<vector>
+	<iterator>
+	"SubPlot.h"
+	"Series.h"
+	"Renderer.h"
+
+1456697197 d:\git-rep\wxplot\include\wx\wxsubplot.h
+	<wx/event.h>
+	<wx/window.h>
+	<wx/panel.h>
+	<wx/graphics.h>
+	<wx/menu.h>
+	<wx/bitmap.h>
+	"wxScaleWidget.h"
+	"SubPlot.h"
+	"../../other/PopupSeriesTool.h"
+
+1457051824 d:\git-rep\wxplot\include\wx\wxscalewidget.h
+	<wx/panel.h>
+	<wx/layout.h>
+	<vector>
+	"plot_defs.h"
+	"Series.h"
+	"SubPlot.h"
+	"Scale.h"
+
+1453958663 d:\git-rep\wxplot\other\popupseriestool.h
+	<wx/popupwin.h>
+	<wx/minifram.h>
+	<wx/event.h>
+	"plot_defs.h"
+	"SeriesTool.h"
+	"Series.h"
+
+1387201350 d:\dev\wxpython-src-3.0.2.0\include\wx\popupwin.h
+	"wx/defs.h"
+	"wx/nonownedwnd.h"
+	"wx/msw/popupwin.h"
+	"wx/os2/popupwin.h"
+	"wx/gtk/popupwin.h"
+	"wx/gtk1/popupwin.h"
+	"wx/x11/popupwin.h"
+	"wx/motif/popupwin.h"
+	"wx/dfb/popupwin.h"
+	"wx/osx/popupwin.h"
+
+1403646181 d:\dev\wxpython-src-3.0.2.0\include\wx\msw\popupwin.h
+
+1387201349 d:\dev\wxpython-src-3.0.2.0\include\wx\gtk\popupwin.h
+
+1387201349 d:\dev\wxpython-src-3.0.2.0\include\wx\gtk1\popupwin.h
+	"wx/defs.h"
+	"wx/panel.h"
+	"wx/icon.h"
+
+1387201350 d:\dev\wxpython-src-3.0.2.0\include\wx\x11\popupwin.h
+	"wx/defs.h"
+	"wx/panel.h"
+	"wx/icon.h"
+
+1387201349 d:\dev\wxpython-src-3.0.2.0\include\wx\dfb\popupwin.h
+
+1388526511 d:\dev\wxpython-src-3.0.2.0\include\wx\osx\popupwin.h
+
+1453955423 d:\git-rep\wxplot\other\seriestool.h
+	"SeriesTool_fb.h"
+	"Series.h"
+
+1453955076 d:\git-rep\wxplot\other\seriestool_fb.h
+	<wx/artprov.h>
+	<wx/xrc/xmlres.h>
+	<wx/treectrl.h>
+	<wx/gdicmn.h>
+	<wx/font.h>
+	<wx/colour.h>
+	<wx/settings.h>
+	<wx/string.h>
+	<wx/checkbox.h>
+	<wx/bitmap.h>
+	<wx/image.h>
+	<wx/icon.h>
+	<wx/toolbar.h>
+	<wx/bmpbuttn.h>
+	<wx/button.h>
+	<wx/sizer.h>
+	<wx/stattext.h>
+	"wxLineStyleComboBox.h"
+	<wx/slider.h>
+	"wxColorComboBox.h"
+	<wx/statbox.h>
+	"wxMarkStyleComboBox.h"
+	<wx/panel.h>
+
+1387201350 d:\dev\wxpython-src-3.0.2.0\include\wx\xrc\xmlres.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/dynarray.h"
+	"wx/arrstr.h"
+	"wx/datetime.h"
+	"wx/list.h"
+	"wx/gdicmn.h"
+	"wx/filesys.h"
+	"wx/bitmap.h"
+	"wx/icon.h"
+	"wx/artprov.h"
+	"wx/colour.h"
+	"wx/vector.h"
+	"wx/xrc/xmlreshandler.h"
+
+1387201349 d:\dev\wxpython-src-3.0.2.0\include\wx\filesys.h
+	"wx/defs.h"
+	"wx/stream.h"
+	"wx/datetime.h"
+	"wx/filename.h"
+	"wx/hashmap.h"
+
+1368902274 d:\dev\wxpython-src-3.0.2.0\include\wx\xrc\xmlreshandler.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/artprov.h"
+	"wx/colour.h"
+	"wx/filesys.h"
+	"wx/imaglist.h"
+	"wx/window.h"
+
+1387201350 d:\dev\wxpython-src-3.0.2.0\include\wx\treectrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/treebase.h"
+	"wx/textctrl.h"
+	"wx/generic/treectlg.h"
+	"wx/msw/treectrl.h"
+	"wx/generic/treectlg.h"
+	"wx/generic/treectlg.h"
+	"wx/generic/treectlg.h"
+	"wx/generic/treectlg.h"
+	"wx/generic/treectlg.h"
+
+1387201350 d:\dev\wxpython-src-3.0.2.0\include\wx\treebase.h
+	"wx/defs.h"
+	"wx/window.h"
+	"wx/event.h"
+	"wx/dynarray.h"
+	"wx/itemid.h"
+
+1387201349 d:\dev\wxpython-src-3.0.2.0\include\wx\itemid.h
+
+1387201349 d:\dev\wxpython-src-3.0.2.0\include\wx\generic\treectlg.h
+	"wx/scrolwin.h"
+	"wx/pen.h"
+
+1388526511 d:\dev\wxpython-src-3.0.2.0\include\wx\msw\treectrl.h
+	"wx/textctrl.h"
+	"wx/dynarray.h"
+	"wx/treebase.h"
+	"wx/hashmap.h"
+
+1435410229 d:\git-rep\wxplot\other\wxlinestylecombobox.h
+	<wx/odcombo.h>
+
+1387201350 d:\dev\wxpython-src-3.0.2.0\include\wx\odcombo.h
+	"wx/defs.h"
+	"wx/combo.h"
+	"wx/ctrlsub.h"
+	"wx/vlbox.h"
+	"wx/timer.h"
+
+1388526477 d:\dev\wxpython-src-3.0.2.0\include\wx\combo.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/renderer.h"
+	"wx/bitmap.h"
+	"wx/textentry.h"
+	"wx/msw/combo.h"
+	"wx/generic/combo.h"
+
+1387201350 d:\dev\wxpython-src-3.0.2.0\include\wx\renderer.h
+	"wx/gdicmn.h"
+	"wx/colour.h"
+	"wx/font.h"
+	"wx/bitmap.h"
+	"wx/string.h"
+
+1387201350 d:\dev\wxpython-src-3.0.2.0\include\wx\msw\combo.h
+	"wx/timer.h"
+
+1387201349 d:\dev\wxpython-src-3.0.2.0\include\wx\generic\combo.h
+	"wx/dcbuffer.h"
+
+1387201350 d:\dev\wxpython-src-3.0.2.0\include\wx\vlbox.h
+	"wx/vscroll.h"
+	"wx/bitmap.h"
+
+1387201350 d:\dev\wxpython-src-3.0.2.0\include\wx\vscroll.h
+	"wx/panel.h"
+	"wx/position.h"
+	"wx/scrolwin.h"
+
+1387201350 d:\dev\wxpython-src-3.0.2.0\include\wx\position.h
+	"wx/gdicmn.h"
+
+1435328423 d:\git-rep\wxplot\other\wxcolorcombobox.h
+	<wx/odcombo.h>
+
+1454299408 d:\git-rep\wxplot\other\wxmarkstylecombobox.h
+	<vector>
+	<wx/odcombo.h>
+	"wx/wxMarker.h"
+
+1457334431 d:\git-rep\wxplot\include\wx\wxmarker.h
+	<wx/graphics.h>
+	"../Marker.h"
+
+1457334277 source:d:\git-rep\wxplot\src\wx\wxline.cpp
+	"wx/wxLine.h"
+	"wx/colorbase.h"
+
+1457334277 d:\git-rep\wxplot\include\wx\wxline.h
+	<wx/graphics.h>
+	"Line.h"
+
+1457334451 source:d:\git-rep\wxplot\src\wx\wxmarker.cpp
+	<math.h>
+	<wx/colour.h>
+	"wx/wxMarker.h"
+	"wx/colorbase.h"
+
+1457277736 source:d:\git-rep\wxplot\src\wx\wxmultiplot.cpp
+	<algorithm>
+	<wx/dcclient.h>
+	<wx/dcmemory.h>
+	"wx/wxMultiPlot.h"
+
+1457277710 d:\git-rep\wxplot\include\wx\wxmultiplot.h
+	<wx/panel.h>
+	<wx/sizer.h>
+	<wx/aui/aui.h>
+	"plot_defs.h"
+	"Series.h"
+	"wxSubPlot.h"
+	"wxScaleWidget.h"
+
+1457096232 source:d:\git-rep\wxplot\src\wx\wxscalewidget.cpp
+	<algorithm>
+	<math.h>
+	<wx/dcbuffer.h>
+	<wx/graphics.h>
+	"wx/wxScaleWidget.h"
+	"wx/wxSubPlot.h"
+
+1456896723 source:d:\git-rep\wxplot\src\wx\wxsingleplot.cpp
+	"wx/wxSinglePlot.h"
+
+1456698288 d:\git-rep\wxplot\include\wx\wxsingleplot.h
+	<wx/panel.h>
+	<wx/sizer.h>
+	<wx/aui/aui.h>
+	"plot_defs.h"
+	"Series.h"
+	"wxScaleWidget.h"
+	"../other/Pane_fb.h"
+
+1456879685 d:\git-rep\wxplot\other\pane_fb.h
+	<wx/artprov.h>
+	<wx/xrc/xmlres.h>
+	<wx/sizer.h>
+	<wx/gdicmn.h>
+	"wx/wxSubPlot.h"
+	<wx/font.h>
+	<wx/colour.h>
+	<wx/settings.h>
+	<wx/string.h>
+	<wx/panel.h>
+
+1457190215 source:d:\git-rep\wxplot\src\wx\wxsubplot.cpp
+	<algorithm>
+	<wx/dcbuffer.h>
+	"wx/wxSubPlot.h"
+	"wx/wxGrid.h"
+	"wx/wxRenderer.h"
+	"wx/wxBox.h"
+
+1456879685 source:d:\git-rep\wxplot\other\pane_fb.cpp
+	"Pane_fb.h"
+
+1454301591 source:d:\git-rep\wxplot\other\wxcolorcombobox.cpp
+	<wx/dcclient.h>
+	<assert.h>
+	"wxColorComboBox.h"
+	"wx/colorbase.h"
+
+1454301279 source:d:\git-rep\wxplot\other\wxmarkstylecombobox.cpp
+	"wxMarkStyleComboBox.h"
+	"wx/colorbase.h"
+
+1457335282 source:d:\git-rep\wxplot\other\wxlinestylecombobox.cpp
+	<wx/dcclient.h>
+	"wxLineStyleComboBox.h"
+	"wx/colorbase.h"
+
+1454288212 source:d:\git-rep\wxplot\other\popupseriestool.cpp
+	<wx/sizer.h>
+	"PopupSeriesTool.h"
 

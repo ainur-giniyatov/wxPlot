@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Area.h"
+//#include "../Area.h"
 #include "../Grid.h"
 
 namespace plot
